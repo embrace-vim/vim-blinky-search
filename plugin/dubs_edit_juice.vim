@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2015.01.27
+" Last Modified: 2015.03.09
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -1185,6 +1185,25 @@ vnoremap <M-]> :<C-U>
 ":tjump /<pattern>
 ":ptselect /<pattern>
 ":ptjump /<pattern>
+
+" ------------------------------------------------------
+" easytags configuration
+" ------------------------------------------------------
+
+" Don't print message when tags are updated.
+let g:easytags_suppress_report = 1
+
+" Use project-specific tags files and not the global ~/.vimtags.
+set tags=./tags
+"let g:easytags_dynamic_files = 1
+let g:easytags_dynamic_files = 2
+
+" [lb] seeing a sluggish Vim after saving a file (closing and reopening
+" the file works until the next save; this problem does not always happen,
+" either), so trying aynchronous easytags updating.
+let g:easytags_async = 1
+
+let g:easytags_auto_update = 0
 
 " ------------------------------------------------------
 " Vim Wild Menu (wildmenu)
