@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2015.03.09
+" Last Modified: 2015.04.02
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -1310,7 +1310,8 @@ command! -nargs=+ -complete=command
 "   :TabMessage highlight
 "   :TabMessage ec g:
 " Shortcut
-"   :Ta<TAB> should invoke autocompletion
+"   :Ta<TAB> invokes autocompletion
+"   :ta<TAB><TAB> also works.
 
 " ------------------------------------------------------
 " Start Command w/ Selected Text
