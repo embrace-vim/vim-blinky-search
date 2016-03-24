@@ -1,11 +1,11 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2015.04.02
+" Last Modified: 2016.03.24
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
 " -------------------------------------------------------------------
-" Copyright © 2009, 2015 Landon Bouma.
+" Copyright © 2009, 2015-2016 Landon Bouma.
 " 
 " This file is part of Dubsacks.
 " 
@@ -901,15 +901,40 @@ onoremap <C-l> <C-C>:call <sid>MoveParagraphDown()<CR>
 "      just do a vmap and force the user to highlight the lines s/he wants 
 "      formatted.
 " NOTE For some reason, I sometimes get a suffix, so explictly set to 0 chars.
+" 2015.08.07: The author of par is tabist so I made my own.
+"             See: https://github.com/landonb/parT
+" FIXME:
 "vnoremap <F2> :<C-U>'<,'>!par w79 s0<CR>
 "vnoremap <F2> :<C-U>'<,'>!par 79gqr<CR>
-vnoremap <F2> :<C-U>'<,'>!par 79qr<CR>
+"vnoremap <F2> :<C-U>'<,'>!par 79qr<CR>
+" FIXME: Implement something like `par 79qrT4` to specify size of tab stop,
+"        and then call
+"   vnoremap <F2> :<C-U>execute "'<,'>!parT 79qr" . ((&expandtab == 0) ? "T".&tabstop : "")<CR>
+vnoremap <F2> :<C-U>'<,'>!parT 79qr<CR>
 " For commit files, I like narrower columns, 60 chars in width.
 "vnoremap <S-F2> :<C-U>'<,'>!par 59gqr<CR>
-vnoremap <S-F2> :<C-U>'<,'>!par 59qr<CR>
+"vnoremap <S-F2> :<C-U>'<,'>!par 59qr<CR>
+vnoremap <S-F2> :<C-U>'<,'>!parT 59qr<CR>
 " 2014.11.25: Can we also throw in seventy-wides?
 "vnoremap <C-S-F2> :<C-U>'<,'>!par 69gqr<CR>
-vnoremap <C-S-F2> :<C-U>'<,'>!par 69qr<CR>
+"vnoremap <C-S-F2> :<C-U>'<,'>!par 69qr<CR>
+vnoremap <C-S-F2> :<C-U>'<,'>!parT 69qr<CR>
+" 2015.11.25: 64? Hrmm
+vnoremap <C-S-F3> :<C-U>'<,'>!parT 64qr<CR>
+vnoremap <C-S-F4> :<C-U>'<,'>!parT 74qr<CR>
+
+" Example of fetching input for command on vnoremap:
+"    https://stackoverflow.com/questions/12805922/vim-vmap-send-selected-text-as-parameter-to-function
+"  function s:My_Function(the_input)
+"    echo(a:My_Function)
+"  endfunction
+"  func! GetSelectedText()
+"    normal gv"xy
+"    let result = getreg("x")
+"    normal gv
+"    return result
+"  endfunc
+"  vnoremap <F2> :<C-U>call <SID>My_Function(GetSelectedText())<CR>
 
 " 2015.01.14: For pesky, very-wide reST tables, do a fluid re-widen,
 "             and use the length of the first selected line rather
@@ -1373,4 +1398,32 @@ if !exists(":DiffOrig")
   command DiffOrig vert new | set bt=nofile | r ++edit # | 0d_ | diffthis
     \ | wincmd p | diffthis
 endif
+
+" ------------------------------------------------------
+" Toggle diff highlighting in a single window
+" ------------------------------------------------------
+" From:
+"  http://vim.wikia.com/wiki/A_better_Vimdiff_Git_mergetool
+" Disable one diff window during a three-way diff allowing you to cut out the
+" noise of a three-way diff and focus on just the changes between two versions
+" at a time. Inspired by Steve Losh's Splice
+function! DiffToggle(window)
+  " Save the cursor position and turn on diff for all windows
+  let l:save_cursor = getpos('.')
+  windo :diffthis
+  " Turn off diff for the specified window (but keep scrollbind) and move
+  " the cursor to the left-most diff window
+  exe a:window . "wincmd w"
+  diffoff
+  set scrollbind
+  set cursorbind
+  exe a:window . "wincmd " . (a:window == 1 ? "l" : "h")
+  " Update the diff and restore the cursor position
+  diffupdate
+  call setpos('.', l:save_cursor)
+endfunction
+" Toggle diff view on the left, center, or right windows
+nmap <silent> <leader>dl :call DiffToggle(1)<cr>
+nmap <silent> <leader>dc :call DiffToggle(2)<cr>
+nmap <silent> <leader>dr :call DiffToggle(3)<cr>
 
