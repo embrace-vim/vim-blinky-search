@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2016.03.24
+" Last Modified: 2016.07.12
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -1426,4 +1426,39 @@ endfunction
 nmap <silent> <leader>dl :call DiffToggle(1)<cr>
 nmap <silent> <leader>dc :call DiffToggle(2)<cr>
 nmap <silent> <leader>dr :call DiffToggle(3)<cr>
+
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+" Other Functions
+" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+" ------------------------------------------------------
+" Insert today's date. 2016-07-12: [lb] tired of doing this manually.
+" ------------------------------------------------------
+
+" The obvious typing and insertion shortcuts in Vim are to use
+" an Fkey, a control and/or meta key combo, a leader key sequence,
+" or an abbreviation. Generally, abbreviations kind of suck (or,
+" rather, they do suck) because you have to type a space or an
+" enter to trigger the abbreviation, and then your Vim iabbrev
+" generally has to gobble that whitespace up and reposition the
+" cursor. But here, typing TTT: immediately triggers the substition
+" (upon pressing the colon key). So this might be the best example
+" yet of a good use of iabbrev (at least for me, since I don't use
+" it for word shortcuts (e.g.,, in the Vim help, the example is
+"  iabbrev ms Microsoft, how corny is that! I type ms for
+"  millisecond anyway so that would just blow)).
+
+" An old dog can learn new tricks, like the P in <CR>P
+" and the <expr> in iabbrev <expr>.
+"
+" http://vim.wikia.com/wiki/Insert_current_date_or_time
+"
+" "The uppercase P at the end inserts before the current character,
+" which allows datestamps inserted at the beginning of an existing line."
+":nnoremap <F5> "=strftime("%Y-%m-%d")<CR>P
+":inoremap <F5> <C-R>=strftime("%Y-%m-%d")<CR>
+"
+" Re: <expr>, see:
+"  http://vimdoc.sourceforge.net/htmldoc/map.html#:map-expression
+:iabbrev <expr> TTT strftime("%Y-%m-%d")
 
