@@ -1442,11 +1442,13 @@ nmap <silent> <leader>dr :call DiffToggle(3)<cr>
 " enter to trigger the abbreviation, and then your Vim iabbrev
 " generally has to gobble that whitespace up and reposition the
 " cursor. But here, typing TTT: immediately triggers the substition
-" (upon pressing the colon key). So this might be the best example
+" (upon pressing the colon key)*. So this might be the best example
 " yet of a good use of iabbrev (at least for me, since I don't use
 " it for word shortcuts (e.g.,, in the Vim help, the example is
 "  iabbrev ms Microsoft, how corny is that! I type ms for
 "  millisecond anyway so that would just blow)).
+
+" * 2016-07-12: This seems to happen in .vim files but not .rst files. WTWHY?
 
 " An old dog can learn new tricks, like the P in <CR>P
 " and the <expr> in iabbrev <expr>.
