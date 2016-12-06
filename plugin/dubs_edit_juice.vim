@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2016.07.12
+" Last Modified: 2016.12.02
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -1431,9 +1431,9 @@ nmap <silent> <leader>dr :call DiffToggle(3)<cr>
 " Other Functions
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-" ------------------------------------------------------
-" Insert today's date. 2016-07-12: [lb] tired of doing this manually.
-" ------------------------------------------------------
+" ----------------------------------------------------------------------------------
+" Insert today's date. 2016-07-12: [lb] tired of doing this [typing dates] manually.
+" ----------------------------------------------------------------------------------
 
 " The obvious typing and insertion shortcuts in Vim are to use
 " an Fkey, a control and/or meta key combo, a leader key sequence,
@@ -1462,5 +1462,8 @@ nmap <silent> <leader>dr :call DiffToggle(3)<cr>
 "
 " Re: <expr>, see:
 "  http://vimdoc.sourceforge.net/htmldoc/map.html#:map-expression
-:iabbrev <expr> TTT strftime("%Y-%m-%d")
+iabbrev <expr> TTT strftime("%Y-%m-%d")
+
+nnoremap <silent> <leader>x :left<cr><END>a
+inoremap <silent> <leader>x <C-O>:left<cr><END>
 
