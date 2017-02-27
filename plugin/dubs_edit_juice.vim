@@ -1,11 +1,11 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2016.12.02
+" Last Modified: 2017.02.27
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
 " -------------------------------------------------------------------
-" Copyright © 2009, 2015-2016 Landon Bouma.
+" Copyright © 2009, 2015-2017 Landon Bouma.
 " 
 " This file is part of Dubsacks.
 " 
@@ -1463,6 +1463,9 @@ nmap <silent> <leader>dr :call DiffToggle(3)<cr>
 " Re: <expr>, see:
 "  http://vimdoc.sourceforge.net/htmldoc/map.html#:map-expression
 iabbrev <expr> TTT strftime("%Y-%m-%d")
+" 2017-02-27: An alias for when I want to highlight the time,
+"  probably when writing notes drunk in the middle of the night.
+iabbrev <expr> TTTtt strftime("%Y-%m-%d %H:%M")
 
 nnoremap <silent> <leader>x :left<cr><END>a
 inoremap <silent> <leader>x <C-O>:left<cr><END>
