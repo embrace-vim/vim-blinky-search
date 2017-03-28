@@ -1477,6 +1477,153 @@ iabbrev <expr> TTT strftime("%Y-%m-%d")
 "  probably when writing notes drunk in the middle of the night.
 iabbrev <expr> TTTtt strftime("%Y-%m-%d %H:%M")
 
+" -------------------------
+" Left Justify Current Line
+" -------------------------
+
+" \x just left-justifies the current line.
 nnoremap <silent> <leader>x :left<cr><END>a
 inoremap <silent> <leader>x <C-O>:left<cr><END>
+
+" -------------------------------------------------------------------------
+" 2017-03-28: [lb] trying a new ESC shortcut, jj.
+" -------------------------------------------------------------------------
+
+" You can leave insert mode using <ESC> or Ctrl-C. Also by jj now, if you want.
+inoremap jj <ESC>
+
+" -------------------------------------------------------------------------
+" 2017-03-28: [lb] now tired of manually setting up reST header decoration.
+" -------------------------------------------------------------------------
+
+" The section delimiter hierarchy I commonly use in reST documents:
+"    ###################
+"    ===================
+"    -------------------
+"    ^^^^^^^^^^^^^^^^^^^
+"    ~~~~~~~~~~~~~~~~~~~
+"    '''''''''''''''''''
+"    :::::::::::::::::::
+
+" I.e.,: ``### === --- ^^^ ~~~ ''' :::``
+
+" Acceptable adornments (14 total):
+"   - = ~ ` : ' " ~ ^ _ * + # < >
+" Ones I don't normally use (7):
+"   ` " _ * + < >
+
+" 2017-03-28: My Vim fu is so rusty!
+"   I bet someone did this without a function...
+"   Aha! A mapping that just uses built-it commands, beautiful!
+"
+"   http://vim.wikia.com/wiki/Underline_using_dashes_automatically
+"
+" HINT: Ctrl-Q is the CTRL-V-alternative, since Ctrl-V is paste.
+"        Ctrl-Q starts a blockwise Visual selection.
+"       $ selects to the end of the line.
+"       r starts a replace,
+"        and the last character is the replacement character.
+"       Oh, and you know yyp, right?
+"        y is a yank, and yy is a yank line, and p is a put.
+"       And then yykP: k moves up a line, and P puts above.
+"
+" HINT: Replace selected: Select text, then <C-O>rX
+"   where X is the replacement character.
+"
+" Map <Leader>{char} to underline using the indicated header character.
+" Map <Leader>{CHAR} to underline and overline using said character.
+"
+" 1. ##########################################
+"
+nnoremap <Leader>3 yyp<C-Q>$r#
+nnoremap <Leader># yyp<C-Q>$r#yykP
+nnoremap <Leader><Leader># yyp<C-Q>$r#
+nnoremap <Leader>\|# yyp<C-Q>$r#yykP
+"
+" 2. ==========================================
+"
+nnoremap <Leader>= yyp<C-Q>$r=
+nnoremap <Leader>+ yyp<C-Q>$r=yykP
+nnoremap <Leader><Leader>= yyp<C-Q>$r=
+nnoremap <Leader>\|= yyp<C-Q>$r=yykP
+"
+" 3. ------------------------------------------
+"
+nnoremap <Leader>- yyp<C-Q>$r-
+nnoremap <Leader>_ yyp<C-Q>$r-yykP
+nnoremap <Leader><Leader>- yyp<C-Q>$r-
+nnoremap <Leader>\|- yyp<C-Q>$r-yykP
+"
+" 4. ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+"
+nnoremap <Leader>6 yyp<C-Q>$r^
+nnoremap <Leader>^ yyp<C-Q>$r^yykP
+nnoremap <Leader><Leader>^ yyp<C-Q>$r^
+nnoremap <Leader>\|^ yyp<C-Q>$r^yykP
+"
+" 5. ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+"
+nnoremap <Leader>` yyp<C-Q>$r~
+nnoremap <Leader>~ yyp<C-Q>$r~yykP
+nnoremap <Leader><Leader>~ yyp<C-Q>$r~
+nnoremap <Leader>\|~ yyp<C-Q>$r~yykP
+"
+" 6. ''''''''''''''''''''''''''''''''''''''''''
+"
+nnoremap <Leader>' yyp<C-Q>$r'
+nnoremap <Leader>" yyp<C-Q>$r'yykP
+nnoremap <Leader><Leader>' yyp<C-Q>$r'
+nnoremap <Leader>\|' yyp<C-Q>$r'yykP
+"
+" 7. ::::::::::::::::::::::::::::::::::::::::::
+"
+nnoremap <Leader>; yyp<C-Q>$r:
+nnoremap <Leader>: yyp<C-Q>$r:yykP
+nnoremap <Leader><Leader>: yyp<C-Q>$r:
+nnoremap <Leader>\|: yyp<C-Q>$r:yykP
+"
+" X. """"""""""""""""""""""""""""""""""""""""""
+"
+" Skipping: <Leader>" is used for under/overline with "'".
+nnoremap <Leader><Leader>" yyp<C-Q>$r"
+nnoremap <Leader>\|" yyp<C-Q>$r"yykP
+"
+" X. ``````````````````````````````````````````
+"
+" Skipping: <Leader>` is used for under/overline with "~".
+nnoremap <Leader><Leader>` yyp<C-Q>$r`
+nnoremap <Leader>\|` yyp<C-Q>$r`yykP
+"
+" X. __________________________________________
+"
+" Skipping: <Leader>_ is used for under/overline with "-".
+nnoremap <Leader><Leader>_ yyp<C-Q>$r_
+nnoremap <Leader>\|_ yyp<C-Q>$r_yykP
+"
+" X. ******************************************
+"
+nnoremap <Leader>8 yyp<C-Q>$r*
+nnoremap <Leader>* yyp<C-Q>$r*yykP
+nnoremap <Leader><Leader>* yyp<C-Q>$r*
+nnoremap <Leader>\|* yyp<C-Q>$r*yykP
+"
+" X. ++++++++++++++++++++++++++++++++++++++++++
+"
+" Skipping: <Leader>+ is used for under/overline with "=".
+nnoremap <Leader><Leader>+ yyp<C-Q>$r+
+nnoremap <Leader>\|+ yyp<C-Q>$r+yykP
+"
+" X. <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+"
+nnoremap <Leader>, yyp<C-Q>$r<
+nnoremap <Leader>< yyp<C-Q>$r<yykP
+nnoremap <Leader><Leader>< yyp<C-Q>$r<
+nnoremap <Leader>\|< yyp<C-Q>$r<yykP
+"
+" X. >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+"
+nnoremap <Leader>. yyp<C-Q>$r>
+nnoremap <Leader>> yyp<C-Q>$r>yykP
+nnoremap <Leader><Leader>> yyp<C-Q>$r>
+nnoremap <Leader>\|> yyp<C-Q>$r>yykP
 
