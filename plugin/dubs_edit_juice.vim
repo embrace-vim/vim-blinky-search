@@ -7,19 +7,19 @@
 " vim:tw=0:ts=2:sw=2:et:norl:
 " -------------------------------------------------------------------
 " Copyright © 2009, 2015-2017 Landon Bouma.
-" 
+"
 " This file is part of Dubsacks.
-" 
+"
 " Dubsacks is free software: you can redistribute it and/or
 " modify it under the terms of the GNU General Public License
 " as published by the Free Software Foundation, either version
 " 3 of the License, or (at your option) any later version.
-" 
+"
 " Dubsacks is distributed in the hope that it will be useful,
 " but WITHOUT ANY WARRANTY; without even the implied warranty
 " of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 " the GNU General Public License for more details.
-" 
+"
 " You should have received a copy of the GNU General Public License
 " along with Dubsacks. If not, see <http://www.gnu.org/licenses/>
 " or write Free Software Foundation, Inc., 51 Franklin Street,
@@ -72,110 +72,110 @@ inoremap <C-S-BS> <C-O>d<Home>
 " A Delicious Delete
 " ------------------------------------------------------
 
-" In EditPlus, Ctrl-Delete deletes characters 
-" starting at the cursor and continuing to the 
-" end of the word, or until certain punctuation. 
+" In EditPlus, Ctrl-Delete deletes characters
+" starting at the cursor and continuing to the
+" end of the word, or until certain punctuation.
 " If the cursor is on whitespace instead of a
-" non-whitespace character, Ctrl-Delete just 
-" deletes the continuous block of whitespace, 
+" non-whitespace character, Ctrl-Delete just
+" deletes the continuous block of whitespace,
 " up until the next non-whitespace character.
 "
 " In Vim, the 'dw' and 'de' commands perform
-" similarly, but they include whitespace, either 
-" after the word is deleted ('dw'), or before 
-" it ('de'). Therefore, to achieve the desired 
-" behaviour -- such that contiguous blocks of 
-" whitespace and non-whitespace are treated 
-" independently -- we need a function to tell 
-" if the character under the cursor is whitespace 
+" similarly, but they include whitespace, either
+" after the word is deleted ('dw'), or before
+" it ('de'). Therefore, to achieve the desired
+" behaviour -- such that contiguous blocks of
+" whitespace and non-whitespace are treated
+" independently -- we need a function to tell
+" if the character under the cursor is whitespace
 " or not, and to call 'dw' or 'de' as appropriate.
-" NOTE Was originally called DeleteToEndOfWord, 
+" NOTE Was originally called DeleteToEndOfWord,
 "      but really,
 "   DeleteToEndOfWhitespaceAlphanumOrPunctuation
 " --------------------------------
 "  Original Flavor
 function! s:Del2EndOfWsAz09OrPunct_ORIG()
-  " If the character under the cursor is 
-  " whitespace, do 'dw'; if it's an alphanum, do 
+  " If the character under the cursor is
+  " whitespace, do 'dw'; if it's an alphanum, do
   " 'dw'; if punctuation, delete one character
-  " at a time -- this way, each Ctrl-Del deletes 
-  " a sequence of characters or a chunk of 
-  " whitespace, but never both (and punctuation 
-  " is deleted one-by-one, seriously, this is 
+  " at a time -- this way, each Ctrl-Del deletes
+  " a sequence of characters or a chunk of
+  " whitespace, but never both (and punctuation
+  " is deleted one-by-one, seriously, this is
   " the way's I like's it).
-  let char_under_cursor = 
+  let char_under_cursor =
     \ getline(".")[col(".") - 1]
   " Can't get this to work:
   "    if char_under_cursor =~ "[^a-zA-Z0-9\\s]"
   " But this works:
   if (char_under_cursor =~ "[^a-zA-Z0-9]")
         \ && (char_under_cursor !~ "\\s")
-    " Punctuation et al.; just delete the 
+    " Punctuation et al.; just delete the
     " char or sequence of the same char.
-    " Well, I can't get sequence-delete to 
+    " Well, I can't get sequence-delete to
     " work, i.e.,
-    "      execute 'normal' . 
+    "      execute 'normal' .
     "        \ '"xd/' . char_under_cursor . '*'
-    " doesn't do squat. In fact, any time I try 
+    " doesn't do squat. In fact, any time I try
     " the 'd/' motion it completely fails...
-    " Anyway, enough boo-hooing, just delete the 
+    " Anyway, enough boo-hooing, just delete the
     " character-under-cursor:
     execute 'normal' . '"xdl'
   elseif char_under_cursor =~ '[a-zA-Z0-9]'
-    " This is an alphanum; and same spiel as 
-    " above, using 'd/' does not work, so none of 
-    " this: 
+    " This is an alphanum; and same spiel as
+    " above, using 'd/' does not work, so none of
+    " this:
     "   execute 'normal' . '"xd/[a-zA-Z0-9]*'
     " Instead try this:
     "execute 'normal' . '"xde'
     execute 'normal' . '"xdw'
   elseif char_under_cursor =~ '\s'
     " whitespace
-    " Again -- blah, blah, blah -- this does not 
+    " Again -- blah, blah, blah -- this does not
     " work: execute 'normal' . '"xd/\s*'
     execute 'normal' . '"xdw'
   " else
-  "   huh? this isn't/shouldn't be 
+  "   huh? this isn't/shouldn't be
   "         an executable code path
   endif
 endfunction
 " --------------------------------
 "  NEW FLAVOR
 function! s:Del2EndOfWsAz09OrPunct(wasInsertMode, deleteToEndOfLine)
-  " If the character under the cursor is 
-  " whitespace, do 'dw'; if it's an alphanum, do 
+  " If the character under the cursor is
+  " whitespace, do 'dw'; if it's an alphanum, do
   " 'dw'; if punctuation, delete one character
-  " at a time -- this way, each Ctrl-Del deletes 
-  " a sequence of characters or a chunk of 
-  " whitespace, but never both (and punctuation 
-  " is deleted one-by-one, seriously, this is 
+  " at a time -- this way, each Ctrl-Del deletes
+  " a sequence of characters or a chunk of
+  " whitespace, but never both (and punctuation
+  " is deleted one-by-one, seriously, this is
   " the way's I like's it).
   " 2010.01.01 First New Year's Resolution
   "            Fix Ctrl-Del when EOL (it cur-
   "            rently deletes back a char, rath-
   "            er than sucking up the next line)
-  let s:char_under_cursor = 
+  let s:char_under_cursor =
     \ getline(".")[col(".") - 1]
   "call confirm(
   "      \ 'char ' . s:char_under_cursor
   "      \ . ' / char2nr ' . char2nr(s:char_under_cursor)
   "     \ . ' / col. ' . col(".")
   "      \ . ' / col$ ' . col("$"))
-  if (       ( ((col(".") + 1) == col("$")) 
+  if (       ( ((col(".") + 1) == col("$"))
         \     && (col("$") != 2) )
-        \ || ( ((col(".") == col("$")) 
-        \     && (col("$") == 1)) 
+        \ || ( ((col(".") == col("$"))
+        \     && (col("$") == 1))
         \     && (char2nr(s:char_under_cursor) == 0) ) )
     " At end of line; delete newline after cursor
     " (what vi calls join lines)
     execute 'normal gJ'
     "execute 'j!'
-    " BUGBUG Vi returns the same col(".") for both 
-    " the last and next-to-last cursor positions, 
-    " so we're not sure whether to join lines or 
-    " to delete the last character on the line. 
-    " Fortunately, we can just go forward a 
-    " character and then delete the previous char, 
+    " BUGBUG Vi returns the same col(".") for both
+    " the last and next-to-last cursor positions,
+    " so we're not sure whether to join lines or
+    " to delete the last character on the line.
+    " Fortunately, we can just go forward a
+    " character and then delete the previous char,
     " which has the desired effect
     " Or not, I can't get this to work...
     "execute 'normal ^<Right'
@@ -187,10 +187,10 @@ function! s:Del2EndOfWsAz09OrPunct(wasInsertMode, deleteToEndOfLine)
     "
     let s:cur_col = col(".")
     let s:tot_col = col("$")
-    " This is a little hack; the d$ command below, which executes if the 
-    " cursor is not in the last position, moves the cursor one left, so the 
-    " callee moves the cursor back to the right. However, our gJ command 
-    " above doesn't move the cursor, so, since we know the callee is going 
+    " This is a little hack; the d$ command below, which executes if the
+    " cursor is not in the last position, moves the cursor one left, so the
+    " callee moves the cursor back to the right. However, our gJ command
+    " above doesn't move the cursor, so, since we know the callee is going
     " to move it, we just move it left
     if a:deleteToEndOfLine == 1
       execute 'normal h'
@@ -198,14 +198,14 @@ function! s:Del2EndOfWsAz09OrPunct(wasInsertMode, deleteToEndOfLine)
   else
     let s:cur_col = col(".")
     let s:tot_col = col("$")
-    if (a:wasInsertMode 
+    if (a:wasInsertMode
           \ && (s:cur_col != 1) )
       " <ESC> Made us back up, so move forward one,
-      " but not if we're the first column or the 
+      " but not if we're the first column or the
       " second-to-last column
         execute 'normal l'
     endif
-    "let s:char_under_cursor = 
+    "let s:char_under_cursor =
     "  \ getline(".")[col(".")]
     " Can't get this to work:
     "    if s:char_under_cursor =~ "[^a-zA-Z0-9\\s]"
@@ -215,21 +215,21 @@ function! s:Del2EndOfWsAz09OrPunct(wasInsertMode, deleteToEndOfLine)
     else
       if (s:char_under_cursor =~ "[^_a-zA-Z0-9\(\.]")
             \ && (s:char_under_cursor !~ "\\s")
-        " Punctuation et al.; just delete the 
+        " Punctuation et al.; just delete the
         " char or sequence of the same char.
-        " Well, I can't get sequence-delete to 
+        " Well, I can't get sequence-delete to
         " work, i.e.,
-        "      execute 'normal' . 
+        "      execute 'normal' .
         "        \ '"xd/' . s:char_under_cursor . '*'
-        " doesn't do squat. In fact, any time I try 
+        " doesn't do squat. In fact, any time I try
         " the 'd/' motion it completely fails...
-        " Anyway, enough boo-hooing, just delete the 
+        " Anyway, enough boo-hooing, just delete the
         " character-under-cursor:
         execute 'normal "xdl'
       elseif s:char_under_cursor =~ '[_a-zA-Z0-9\(\.]'
-        " This is an alphanum; and same spiel as 
-        " above, using 'd/' does not work, so none of 
-        " this: 
+        " This is an alphanum; and same spiel as
+        " above, using 'd/' does not work, so none of
+        " this:
         "   execute 'normal' . '"xd/[a-zA-Z0-9]*'
         " Instead try this:
         "execute 'normal' . '"xde'
@@ -237,58 +237,58 @@ function! s:Del2EndOfWsAz09OrPunct(wasInsertMode, deleteToEndOfLine)
       elseif s:char_under_cursor =~ '\s'
       "if s:char_under_cursor =~ '\s
         " whitespace
-        " Again -- blah, blah, blah -- this does not 
+        " Again -- blah, blah, blah -- this does not
         " work: execute 'normal' . '"xd/\s*'
         execute 'normal "xdw'
       " else
-      "   huh? this isn't/shouldn't be 
+      "   huh? this isn't/shouldn't be
       "         an executable code path
       endif
     endif
   endif
-  if (a:wasInsertMode 
+  if (a:wasInsertMode
         \ && ((s:cur_col + 2) == s:tot_col))
     " <ESC> Made us back up, so move forward one,
-    " but not if we're the first column or the 
+    " but not if we're the first column or the
     " second-to-last column
     "execute 'normal h'
   endif
 endfunction
-" Map the function to Ctrl-Delete in normal and 
+" Map the function to Ctrl-Delete in normal and
 " insert modes.
 noremap <C-Del> :call <SID>Del2EndOfWsAz09OrPunct(0, 0)<CR>
-" BUGBUG To call a function from Insert Mode -- or to even get 
-"        the current column number of the cursor -- we need 
-"        to either <C-O> or <Esc> out of Insert mode. If 
-"        we <C-O> and the cursor is on either the last 
-"        column or the second-to-last-column, the cursor 
-"        is moved to the last column. Likewise, if we 
-"        <Esc> and the cursor is on either the first column 
-"        or the second column, the cursor is moved to the 
+" BUGBUG To call a function from Insert Mode -- or to even get
+"        the current column number of the cursor -- we need
+"        to either <C-O> or <Esc> out of Insert mode. If
+"        we <C-O> and the cursor is on either the last
+"        column or the second-to-last-column, the cursor
+"        is moved to the last column. Likewise, if we
+"        <Esc> and the cursor is on either the first column
+"        or the second column, the cursor is moved to the
 "        first column. I cannot figure out a work-around.
-"        I choose <Esc> as the lesser of two evils. I.e., 
+"        I choose <Esc> as the lesser of two evils. I.e.,
 "        using <C-O>, if the cursor is at the second-to-
-"        last column, a join happens but the last character 
-"        remains; using <Esc>, if you <Ctrl-Del> from the 
-"        second column, both the first and second columns 
-"        are deleted. I <Ctrl-Del> from the end of a line 
-"        much more ofter than from the second column of a 
+"        last column, a join happens but the last character
+"        remains; using <Esc>, if you <Ctrl-Del> from the
+"        second column, both the first and second columns
+"        are deleted. I <Ctrl-Del> from the end of a line
+"        much more ofter than from the second column of a
 "        line.
-"inoremap <C-Del> 
+"inoremap <C-Del>
 "         \ <C-O>:call <SID>Del2EndOfWsAz09OrPunct()<CR>
-inoremap <C-Del> 
+inoremap <C-Del>
          \ <Esc>:call <SID>Del2EndOfWsAz09OrPunct(1, 0)<CR>i
 
 " Ctrl-Shift-Delete deletes to end of line
 "noremap <C-S-Del> d$
 "inoremap <C-S-Del> <C-O>d$
 noremap <C-S-Del> :call <SID>Del2EndOfWsAz09OrPunct(0, 1)<CR>
-inoremap <C-S-Del> 
+inoremap <C-S-Del>
          \ <Esc>:call <SID>Del2EndOfWsAz09OrPunct(1, 1)<CR>i<Right>
 
 " 2011.02.01 Doing same for Alt-Delete
 noremap <M-Del> :call <SID>Del2EndOfWsAz09OrPunct(0, 1)<CR>
-inoremap <M-Del> 
+inoremap <M-Del>
          \ <Esc>:call <SID>Del2EndOfWsAz09OrPunct(1, 1)<CR>i<Right>
 
 " Alt-Shift-Delete deletes entire line
@@ -303,19 +303,19 @@ inoremap <M-S-Del> <C-O>dd
 " Fix That Shift
 " ------------------------------------------------------
 
-" Vim's default Ctrl-Shift-Left/Right behavior is 
-" to select all non-whitespace characters (see 
-" :help v_aW). We want to change this to not be 
-" so liberal. Use vmap to change how Vim selects 
-" text in visual mode. By using 'e' instead of 
-" 'aW', for example, Vim selects alphanumeric 
+" Vim's default Ctrl-Shift-Left/Right behavior is
+" to select all non-whitespace characters (see
+" :help v_aW). We want to change this to not be
+" so liberal. Use vmap to change how Vim selects
+" text in visual mode. By using 'e' instead of
+" 'aW', for example, Vim selects alphanumeric
 " blocks but doesn't cross punctuation boundaries.
-" In other words, we want to select blocks of 
-" whitespace, alphanums, or punctuation, but 
+" In other words, we want to select blocks of
+" whitespace, alphanums, or punctuation, but
 " never combinations thereof.
-" TODO This still isn't quite right -- the first 
-"      selection is always too great, i.e., the 
-"      cursor jumps boundaries 'b' and 'e' 
+" TODO This still isn't quite right -- the first
+"      selection is always too great, i.e., the
+"      cursor jumps boundaries 'b' and 'e'
 "      wouldn't
 vnoremap <C-S-Left> b
 vnoremap <C-S-Right> e
@@ -389,12 +389,12 @@ onoremap <C-Down> <C-C><C-e>
 " ------------------------------------------------------
 
 " EditPlus, among other editors, maps Ctrl-PageUp
-" and Ctrl-PageDown to moving the cursor to the 
-" top and bottom of the window (equivalent to 
-" H and L in Vim (which also defines M to jump 
-" to the middle of the window, which is not 
+" and Ctrl-PageDown to moving the cursor to the
+" top and bottom of the window (equivalent to
+" H and L in Vim (which also defines M to jump
+" to the middle of the window, which is not
 " mapped here)).
-" NOTE In a lot of programs, C-PageUp/Down go to 
+" NOTE In a lot of programs, C-PageUp/Down go to
 "      next/previous tab page; not so here, see
 "      Alt-PageUp/Down for that.
 "      FIXME 2011.01.16 Alt-PageUp/Down is broken...
@@ -404,15 +404,15 @@ inoremap <C-PageUp> <C-O>:call <SID>Smart_PageUpDown(1)<CR>
 noremap <C-PageDown> :call <SID>Smart_PageUpDown(-1)<CR>
 inoremap <C-PageDown> <C-O>:call <SID>Smart_PageUpDown(-1)<CR>
 
-" On my laptop, my right hand spends a lot of time near 
-" (and using) the arrow keys, which are on the bottom 
-" of the keyboard, but the other navigation keys (home, 
-" end, page up and down and the ilk) are far, far away, 
-" at the top of the keyboard. But we can map those to 
+" On my laptop, my right hand spends a lot of time near
+" (and using) the arrow keys, which are on the bottom
+" of the keyboard, but the other navigation keys (home,
+" end, page up and down and the ilk) are far, far away,
+" at the top of the keyboard. But we can map those to
 " Alt-Arrow Key combinations to make our hands happy
 " (or is it to make our fingers frolicsome?).
 
-" Alt-Up moves cursor to the top of the window, or, if 
+" Alt-Up moves cursor to the top of the window, or, if
 " it's already there, it scrolls up one window.
 noremap <M-Up> :call <SID>Smart_PageUpDown(1)<CR>
 inoremap <M-Up> <C-O>:call <SID>Smart_PageUpDown(1)<CR>
@@ -420,7 +420,7 @@ vnoremap <M-Up> :<C-U>
   \ <CR>gvy
   \ :call <SID>Smart_PageUpDown(1)<CR>
 
-" Alt-Down moves cursor to the bottom of the window, or, if 
+" Alt-Down moves cursor to the bottom of the window, or, if
 " it's already there, it scrolls down one window.
 noremap <M-Down> :call <SID>Smart_PageUpDown(-1)<CR>
 inoremap <M-Down> <C-O>:call <SID>Smart_PageUpDown(-1)<CR>
@@ -450,7 +450,7 @@ function s:Smart_PageUpDown(direction)
       " Cursor on first visible line; scroll window one page up
       execute "normal! \<C-B>"
     endif
-    " Move cursor to first visible line; make 
+    " Move cursor to first visible line; make
     " sure it's in the first column, too
     execute 'normal H0'
   elseif a:direction == -1
@@ -459,7 +459,7 @@ function s:Smart_PageUpDown(direction)
       " Cursor on last visible line; scroll window one page down
       execute "normal! \<C-F>"
     endif
-    " Move cursor to last visible line; make 
+    " Move cursor to last visible line; make
     " sure it's in the first column, too
     execute 'normal L0'
   else
@@ -489,11 +489,11 @@ vnoremap <M-F12> :<C-U>
 " Start a(n advanced) *-search w/ simply F1
 " ------------------------------------------------------
 
-" A Vim star search (search for the stars!) searches 
-" the word under the cursor- but only the word under 
-" the cursor! It doesn't not search abbreviations. So 
-" star-searching, say, "item" wouldn't also match 
-" "item_set" or "item_get". Since the latter is sometimes 
+" A Vim star search (search for the stars!) searches
+" the word under the cursor- but only the word under
+" the cursor! It doesn't not search abbreviations. So
+" star-searching, say, "item" wouldn't also match
+" "item_set" or "item_get". Since the latter is sometimes
 " nice, and since we already have a star search mapping,
 " let's map F1 to a more liberal star search. Maybe you
 " want to a call it a b-star search, as in, B Movie star-
@@ -545,7 +545,7 @@ vnoremap <S-F1> :<C-U>
 " NOTE Using /<CR> instead of n because n repeats the last / or *
 noremap <F3> /<CR>
 inoremap <F3> <C-O>/<CR>
-" To cancel any selection, use <ESC>, but also use gV to prevent automatic 
+" To cancel any selection, use <ESC>, but also use gV to prevent automatic
 " reselection. The 'n' is our normal n.
 " FIXME If you have something selected, maybe don't 'n' but search selected
 "       text instead?
@@ -665,20 +665,20 @@ let &cpo = s:save_cpo | unlet s:save_cpo
 " Type Ctrl-H to turn 'em off.
 
 " Vim's default Ctrl-H is the same as <BS>.
-" It's also the same as h, which is the 
-" same as <Left>. WE GET IT!! Ctrl-H won't 
+" It's also the same as h, which is the
+" same as <Left>. WE GET IT!! Ctrl-H won't
 " be missed....
 " NOTE Highlighting is back next time you search.
-" NOTE Ctrl-H should toggle highlighting (not 
-"      just turn it off), but nohlsearch doesn't 
+" NOTE Ctrl-H should toggle highlighting (not
+"      just turn it off), but nohlsearch doesn't
 "      work that way
 noremap <C-h> :nohlsearch<CR>
 inoremap <C-h> <C-O>:nohlsearch<CR>
 cnoremap <C-h> <C-C>:nohlsearch<CR>
 onoremap <C-h> <C-C>:nohlsearch<CR>
 " (NEWB|NOTE: From Insert mode, Ctrl-o
-"  is used to enter one command and 
-"  execute it. If it's a :colon 
+"  is used to enter one command and
+"  execute it. If it's a :colon
 "  command, you'll need a <CR>, too.
 "  Ctrl-c is used from command and
 "  operator-pending modes.)
@@ -692,8 +692,8 @@ if !hasmapto('<Plug>DubsEditJuice_ToggleTabHighlighting')
     \ <Plug>DubsEditJuice_ToggleTabHighlighting
 endif
 " Map <Plug> to an <SID> function.
-noremap <silent> <unique> <script> 
-  \ <Plug>DubsEditJuice_ToggleTabHighlighting 
+noremap <silent> <unique> <script>
+  \ <Plug>DubsEditJuice_ToggleTabHighlighting
   \ :call <SID>ToggleTabHighlighting()<CR>
 " The function.
 function s:ToggleTabHighlighting()
@@ -736,8 +736,8 @@ endfunction
 " Count of Characters Selected
 " ------------------------------------------------------
 
-" NOTE I'm using Ctrl-# for now. It hurts my fingers to 
-"      combine such keys, but I don't use this command 
+" NOTE I'm using Ctrl-# for now. It hurts my fingers to
+"      combine such keys, but I don't use this command
 "      that often and using the pound key seems intuitive.
 " FIXME Make this work on word-under-cursor
 " NOTE Cannot get this to work on <C-3>, so using Alt instead
@@ -763,18 +763,18 @@ endfunction
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 " ------------------------------------------------------
-" Correct Ctrl-Z While Text Selected 
+" Correct Ctrl-Z While Text Selected
 " ------------------------------------------------------
 
-" Ctrl-Z is mapped to undo in Normal and Insert 
-" mode, but in Select mode it just lowercases 
+" Ctrl-Z is mapped to undo in Normal and Insert
+" mode, but in Select mode it just lowercases
 " what's selected!
-" NOTE To lowercase in Select mode, type  
-"      <Ctrl-o> to start a command, then type 
+" NOTE To lowercase in Select mode, type
+"      <Ctrl-o> to start a command, then type
 "        gu{motion},
-"      e.g., 
+"      e.g.,
 "        <C-o>gu<DOWN>
-"      (or <C-o>gu<UP>, it does the same thing). 
+"      (or <C-o>gu<UP>, it does the same thing).
 "      (And guess what? gU uppercases.)
 " HINT You can also select text, and then <C-O>U or <C-O>u
 "      to uppercase or lowercase the selected text.
@@ -783,7 +783,7 @@ vnoremap <C-Z> :<C-U>
 vnoremap <C-Y> :<C-U>
   \ :redo<CR>
 
-" NOTE For whatever reason, trying to map C-S-Z also remaps 
+" NOTE For whatever reason, trying to map C-S-Z also remaps
 "      C-Z, so I can't make Ctrl-Shift-Z into redo!
 " Doesn't work: noremap <C-S-Z> :redo<CR>
 " 2015.01.14: Experience shows that the Ctrl-[a-z] key mappings
@@ -794,11 +794,11 @@ vnoremap <C-Y> :<C-U>
 " ------------------------------------------------------
 
 " Transpose two characters when in Insert mode
-" NOTE We can't just 'Xp' and be all happy -- 
-"      rather, if we're at the first column 
-"      (start) of the line, 'Xp' does something 
-"      completely different. So use 'Xp' if the 
-"      cursor is anywhere but the first column, 
+" NOTE We can't just 'Xp' and be all happy --
+"      rather, if we're at the first column
+"      (start) of the line, 'Xp' does something
+"      completely different. So use 'Xp' if the
+"      cursor is anywhere but the first column,
 "      but use 'xp' otherwise.
 function s:TransposeCharacters()
   let cursorCol = col('.')
@@ -808,30 +808,30 @@ function s:TransposeCharacters()
     execute 'normal ' . 'Xp'
   endif
 endfunction
-inoremap <C-T> 
+inoremap <C-T>
   \ <C-o>:call <SID>TransposeCharacters()<CR>
-" NOTE Make a mapping for normal mode -- 
-"      but this obscures the original Ctrl-T 
-"      command, which inserts a tab at the 
+" NOTE Make a mapping for normal mode --
+"      but this obscures the original Ctrl-T
+"      command, which inserts a tab at the
 "      beginning of the line; see :help Ctrl-t
 
 " ------------------------------------------------------
 " Indent Selected Text
 " ------------------------------------------------------
 
-" Vim's <Tab> is used to move the cursor 
-" according to the jump list, but it's silly. 
-" I.e., in Insert mode, if you have nothing 
-" selected, <Tab> does what? Inserts a <Tab>. 
-" What happens if you have text selected? 
+" Vim's <Tab> is used to move the cursor
+" according to the jump list, but it's silly.
+" I.e., in Insert mode, if you have nothing
+" selected, <Tab> does what? Inserts a <Tab>.
+" What happens if you have text selected?
 " And I mean besides entering visual edit mode?
-" My computer rings the bell and the Vim window 
+" My computer rings the bell and the Vim window
 " does a quiet beep (so... nothing!).
 "
 " Thusly, use Tab/Shift-Tab to add/remove indents
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
-" NOTE Also remember that == smartly fixes  
+" NOTE Also remember that == smartly fixes
 "      the indent of the line-under-cursor
 
 " ------------------------------------------------------
@@ -848,14 +848,14 @@ function s:MoveParagraphUp()
   if lineno != 1
     let a_reg = @a
     " The basic command is: {"ad}{"aP
-    " i.e., move the start-of-paragraph:    { 
+    " i.e., move the start-of-paragraph:    {
     "       yank to the 'a' register:       "a
     "       delete to the end-of-paragraph: d}
     "       move up a paragraph:            {
     "       paste from the 'a' register:    "aP
     "       move down a line:               j
-    "        (becase the '{' and '}' cmds 
-    "         go the line above or below 
+    "        (becase the '{' and '}' cmds
+    "         go the line above or below
     "         the paragraph)
     normal! {"ad}{"aPj
     let @a = a_reg
@@ -896,19 +896,19 @@ onoremap <C-l> <C-C>:call <sid>MoveParagraphDown()<CR>
 " Auto-format selected rows of text
 " ------------------------------------------------------
 
-" Select the lines you want to reformat into a pretty paragraph and hit F2. 
+" Select the lines you want to reformat into a pretty paragraph and hit F2.
 " NOTE If you select whole lines, back up the cursor one character so the
-"      final line isn't selected. Otherwise, par doesn't prepend your new 
-"      lines with the common comment from each line, since the last line 
-"      appears as an empty line and its beginning doesn't match the other 
+"      final line isn't selected. Otherwise, par doesn't prepend your new
+"      lines with the common comment from each line, since the last line
+"      appears as an empty line and its beginning doesn't match the other
 "      lines' beginnings, so par doesn't do any prepending.
 " NOTE A blog I found online suggests you can use the following command:
 "        map <F2> {!}par w81
 "      But I couldn't get this to work.
-"      Also, I considered mapping from normal and insert mode, but the 
+"      Also, I considered mapping from normal and insert mode, but the
 "      selection the command makes extends back to the start of the function
-"      I'm in, rather than selecting the paragraph I'm in, so for now we'll 
-"      just do a vmap and force the user to highlight the lines s/he wants 
+"      I'm in, rather than selecting the paragraph I'm in, so for now we'll
+"      just do a vmap and force the user to highlight the lines s/he wants
 "      formatted.
 " NOTE For some reason, I sometimes get a suffix, so explictly set to 0 chars.
 " 2015.08.07: The author of par is tabist so I made my own.
@@ -967,9 +967,9 @@ vnoremap <C-S-F4> :<C-U>'<,'>!parT 74qr<CR>
 "   - Remember virtcol("$") is number of chars + 1 for first selected line.
 vnoremap <M-S-F2> :<C-U>execute "'<,'>!par " . (virtcol("$") - 1) . "qr"<CR>
 
-" NOTE Normal mode and Insert mode <F1> are mapped to toggle-last-user-buffer 
-"      (:e #) because my left hand got bored or felt left-out or something 
-"      (my right hand's got the choice of BrowRight or F12 to toggle buffers, 
+" NOTE Normal mode and Insert mode <F1> are mapped to toggle-last-user-buffer
+"      (:e #) because my left hand got bored or felt left-out or something
+"      (my right hand's got the choice of BrowRight or F12 to toggle buffers,
 "       which is apparently something I do quite frequently).
 
 " FIXME: When reformatting FIXME and NOTE comments, you can run something like
@@ -992,15 +992,15 @@ vnoremap <M-S-F2> :<C-U>execute "'<,'>!par " . (virtcol("$") - 1) . "qr"<CR>
 
 " See: http://vim.wikia.com/wiki/Change_between_backslash_and_forward_slash
 
-" Press f/ to change every backslash to a 
+" Press f/ to change every backslash to a
 "          forward slash, in the current line.
-" Press f\ to change every forward slash to a 
+" Press f\ to change every forward slash to a
 "          backslash, in the current line.
-" The mappings save and restore the search 
-" register (@/) so you can continue a previous 
-" search, if desired (i.e., the previous search 
+" The mappings save and restore the search
+" register (@/) so you can continue a previous
+" search, if desired (i.e., the previous search
 " doesn't become '/' or '\').
-:nnoremap <silent> f/ 
+:nnoremap <silent> f/
   \ :let tmp=@/<CR>:s:\\:/:ge<CR>:let @/=tmp<CR>
 :nnoremap <silent> f<Bslash>
   \ :let tmp=@/<CR>:s:/:\\:ge<CR>:let @/=tmp<CR>
@@ -1062,10 +1062,10 @@ endfunc
 
 " Alt-Shift-1 // Toggle Cliptext
 " --------------------------------
-" EditPlus has a cool ANSI chart you can bring up 
-" quickly (who isn't always referring to ANSI 
-" charts?). Our Vim substitute is an even 
-" awesomer interactive ASCII table by Christian 
+" EditPlus has a cool ANSI chart you can bring up
+" quickly (who isn't always referring to ANSI
+" charts?). Our Vim substitute is an even
+" awesomer interactive ASCII table by Christian
 " Habermann,
 "  CharTab <http://www.vim.org/scripts/script.php?script_id=898>
 " NOTE Does not work: nnoremap <M-!> <Leader>ct
@@ -1073,14 +1073,14 @@ endfunc
 nmap <M-!> <Leader>ct
 imap <M-!> <C-o><Leader>ct<ESC>
 " TODO imap does not restore i-mode when ct done
-" NOTE Modified chartab.vim to alias <ESC> and 
+" NOTE Modified chartab.vim to alias <ESC> and
 "      <M-!> to 'q'
-" NOTE chartab.vim opens in new buffer in same 
-"      window, rather than creating new vertical 
+" NOTE chartab.vim opens in new buffer in same
+"      window, rather than creating new vertical
 "      window on left of view and opening there
-"      NOTE You can work-around by opening in 
+"      NOTE You can work-around by opening in
 "           QFix window
-"           i.e., Alt-Shift-2 followed by 
+"           i.e., Alt-Shift-2 followed by
 "                 Alt-Shift-1
 
 " Alt-Shift-6 // Toggle Tag List
@@ -1181,7 +1181,7 @@ vnoremap <M-]> :<C-U>
 " cd $cp/pyserver
 " ctags -R
 " cd $cp/flashclient
-" # NOTE --exclude=build is all that works, not flashclient/build or 
+" # NOTE --exclude=build is all that works, not flashclient/build or
 " #      even /build or build/. I even tried using "./quotes".
 " #      But if you run the following command with --verbose=yes
 " #        ctags -R --exclude=build --verbose=yes
@@ -1207,11 +1207,11 @@ vnoremap <M-]> :<C-U>
  "   * You can click on the tag name using the left mouse button, while pressing the <Ctrl> key.
  "   * You can press the g key and then click on the tag name using the left mouse button.
  "   * You can use the 'stag' ex command, to open the tag in a new window. For example, the command ':stag func1' will open the func1 definition in a new window.
- "   * You can position the cursor over a tag name and then press Ctrl-W ]. This will open the tag location in a new window. 
+ "   * You can position the cursor over a tag name and then press Ctrl-W ]. This will open the tag location in a new window.
 "
-"Help: :tag, Ctrl-], v_CTRL_], <C-LeftMouse>, g<LeftMouse>, :stag, Ctrl-W_] 
+"Help: :tag, Ctrl-], v_CTRL_], <C-LeftMouse>, g<LeftMouse>, :stag, Ctrl-W_]
 
-"    * You can list all the tags matching a particular regular expression pattern by prepending the tag name with the '/' search character. For example, 
+"    * You can list all the tags matching a particular regular expression pattern by prepending the tag name with the '/' search character. For example,
 "
 ":tag /<pattern>
 ":stag /<pattern>
@@ -1254,7 +1254,7 @@ set wildmode=list:longest,full
 " Obsolete ActionScript tags code...
 " ------------------------------------------------------
 
-" From 
+" From
 " http://vim-taglist.sourceforge.net/extend.html
 " actionscript language
 let tlist_actionscript_settings = 'actionscript;c:class;f:method;p:property;v:variable'
@@ -1289,10 +1289,10 @@ let tlist_actionscript_settings = 'actionscript;c:class;f:method;p:property;v:va
 
 " Single-Key Replays with Q
 " --------------------------------
-" This is a shortcut to playback the recording in 
+" This is a shortcut to playback the recording in
 " the q register.
 "   1. Start recording with qq
-"   2. End recording with q (or with 
+"   2. End recording with q (or with
 "      Ctrl-o q if in Insert mode)
 "   3. Playback with Q
 noremap Q @q
@@ -1302,7 +1302,7 @@ noremap Q @q
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 " ------------------------------------------------------
-" Capture Ex Output So You Can 
+" Capture Ex Output So You Can
 "     Do With It As You Please
 " ------------------------------------------------------
 " http://vim.wikia.com/wiki/Capture_ex_command_output
@@ -1314,7 +1314,7 @@ noremap Q @q
 "   :redir @a
 "   :set all " or other command
 "   :redir END
-" and use "ap to put the yanked 
+" and use "ap to put the yanked
 
 " ------------------------------------------------------
 " Advanced Ex output Capture
@@ -1329,7 +1329,7 @@ function! s:TabMessage(cmd)
 	redir => message
 	silent execute a:cmd
 	redir END
-  " Create a new tab and put the 
+  " Create a new tab and put the
   " captured output
   tabnew
 	silent put=message
@@ -1337,9 +1337,9 @@ function! s:TabMessage(cmd)
   " when we close the buffer
   setlocal buftype=nowrite
 endfunction
-" Map our TabMessage function to an Ex :command 
+" Map our TabMessage function to an Ex :command
 " of the same name
-command! -nargs=+ -complete=command 
+command! -nargs=+ -complete=command
   \ TabMessage call <SID>TabMessage(<q-args>)
 " Usage, e.g.,
 "   :TabMessage highlight
@@ -1353,8 +1353,8 @@ command! -nargs=+ -complete=command
 " ------------------------------------------------------
 
 " For help with Command Line commands, see :h cmdline
-" Note that <C-R> is search in Insert mode but starts a 
-" put in Command mode. Also note that <Ctrl-R> is 
+" Note that <C-R> is search in Insert mode but starts a
+" put in Command mode. Also note that <Ctrl-R> is
 " interpreted literally and does nothing; use <C-R>.
 
 "vnoremap : :<C-U>
