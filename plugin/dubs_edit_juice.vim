@@ -1,9 +1,10 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.02.27
+" Last Modified: 2017.03.28
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
+" vim:tw=0:ts=2:sw=2:et:norl:
 " -------------------------------------------------------------------
 " Copyright © 2009, 2015-2017 Landon Bouma.
 " 
@@ -642,11 +643,18 @@ vnoremap <silent> * :<C-U>call <SID>VSetSearch('/')<CR>/<C-R>/<CR>
 vnoremap <silent> # :<C-U>call <SID>VSetSearch('?')<CR>?<C-R>/<CR>
 vmap <kMultiply> *
 
-nmap <silent> <Plug>VLToggle :let g:VeryLiteral = !g:VeryLiteral
-  \\| echo "VeryLiteral " . (g:VeryLiteral ? "On" : "Off")<CR>
-if !hasmapto("<Plug>VLToggle")
-  nmap <unique> <Leader>vl <Plug>VLToggle
+" 2017-03-28: I swapped the order of the nmap and the !hasmapto...
+"  nmap <silent> <Plug>DubsEditJuice_VLToggle :let g:VeryLiteral = !g:VeryLiteral
+"    \\| echo "VeryLiteral " . (g:VeryLiteral ? "On" : "Off")<CR>
+"  if !hasmapto("<Plug>DubsEditJuice_VLToggle")
+"    nmap <unique> <Leader>vl <Plug>DubsEditJuice_VLToggle
+"  endif
+"
+if !hasmapto("<Plug>DubsEditJuice_VLToggle")
+  nmap <unique> <Leader>vl <Plug>DubsEditJuice_VLToggle
 endif
+noremap <silent> <Plug>DubsEditJuice_VLToggle :let g:VeryLiteral = !g:VeryLiteral
+  \\| echo "VeryLiteral " . (g:VeryLiteral ? "On" : "Off")<CR>
 let &cpo = s:save_cpo | unlet s:save_cpo
 
 " ------------------------------------------------------
@@ -679,16 +687,16 @@ onoremap <C-h> <C-C>:nohlsearch<CR>
 " Map <Leader>tab to Toggling Tab Highlighting
 " ------------------------------------------------------
 
-if !hasmapto('<Plug>DS_ToggleTabHighlighting')
+if !hasmapto('<Plug>DubsEditJuice_ToggleTabHighlighting')
   map <silent> <unique> <Leader>tab
-    \ <Plug>DS_ToggleTabHighlighting
+    \ <Plug>DubsEditJuice_ToggleTabHighlighting
 endif
 " Map <Plug> to an <SID> function.
-map <silent> <unique> <script> 
-  \ <Plug>DS_ToggleTabHighlighting 
-  \ :call <SID>DS_ToggleTabHighlighting()<CR>
+noremap <silent> <unique> <script> 
+  \ <Plug>DubsEditJuice_ToggleTabHighlighting 
+  \ :call <SID>ToggleTabHighlighting()<CR>
 " The function.
-function s:DS_ToggleTabHighlighting()
+function s:ToggleTabHighlighting()
   " Visualizing tabs <http://tedlogan.com/techblog3.html>
   " "So what do you do when you open a new source file and you're trying
   "  to figure out what tab style the last author used? (And how do you make
@@ -768,6 +776,8 @@ endfunction
 "        <C-o>gu<DOWN>
 "      (or <C-o>gu<UP>, it does the same thing). 
 "      (And guess what? gU uppercases.)
+" HINT You can also select text, and then <C-O>U or <C-O>u
+"      to uppercase or lowercase the selected text.
 vnoremap <C-Z> :<C-U>
   \ :undo<CR>
 vnoremap <C-Y> :<C-U>
