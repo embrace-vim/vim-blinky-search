@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.03.28
+" Last Modified: 2017.04.02
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -1530,8 +1530,17 @@ inoremap jj <ESC>
 " HINT: Replace selected: Select text, then <C-O>rX
 "   where X is the replacement character.
 "
-" Map <Leader>{char} to underline using the indicated header character.
-" Map <Leader>{CHAR} to underline and overline using said character.
+" For the populate ornament characters, and those that occupy
+" their key along on an American English keyboard:
+"   Map <Leader>{char} to underline using the indicated header character.
+"   Map <Leader>{CHAR} to underline and overline using said character.
+" For all ornament characters, you can
+"   <leader>-<leader>-{char}
+" or
+"   <leader>-<shift-leader>-{char}
+" to select the underline or underline/overline character.
+
+" Start with the top-most conventional header ornament and work on down.
 "
 " 1. ##########################################
 "
