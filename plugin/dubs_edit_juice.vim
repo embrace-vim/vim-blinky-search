@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.04.02
+" Last Modified: 2017.04.03
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -656,32 +656,6 @@ endif
 noremap <silent> <Plug>DubsEditJuice_VLToggle :let g:VeryLiteral = !g:VeryLiteral
   \\| echo "VeryLiteral " . (g:VeryLiteral ? "On" : "Off")<CR>
 let &cpo = s:save_cpo | unlet s:save_cpo
-
-" ------------------------------------------------------
-" Ctrl-H Hides Highlighting
-" ------------------------------------------------------
-
-" Once you initiate a search, Vim highlights all matches.
-" Type Ctrl-H to turn 'em off.
-
-" Vim's default Ctrl-H is the same as <BS>.
-" It's also the same as h, which is the
-" same as <Left>. WE GET IT!! Ctrl-H won't
-" be missed....
-" NOTE Highlighting is back next time you search.
-" NOTE Ctrl-H should toggle highlighting (not
-"      just turn it off), but nohlsearch doesn't
-"      work that way
-noremap <C-h> :nohlsearch<CR>
-inoremap <C-h> <C-O>:nohlsearch<CR>
-cnoremap <C-h> <C-C>:nohlsearch<CR>
-onoremap <C-h> <C-C>:nohlsearch<CR>
-" (NEWB|NOTE: From Insert mode, Ctrl-o
-"  is used to enter one command and
-"  execute it. If it's a :colon
-"  command, you'll need a <CR>, too.
-"  Ctrl-c is used from command and
-"  operator-pending modes.)
 
 " ------------------------------------------------------
 " Map <Leader>tab to Toggling Tab Highlighting
