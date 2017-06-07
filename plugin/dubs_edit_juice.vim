@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.04.03
+" Last Modified: 2017.06.07
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -857,14 +857,33 @@ function! s:MoveParagraphDown()
   endif
 endfunction
 
-noremap <C-p> :call <sid>MoveParagraphUp()<CR>
-inoremap <C-p> <C-O>:call <sid>MoveParagraphUp()<CR>
-cnoremap <C-p> <C-C>:call <sid>MoveParagraphUp()<CR>
-onoremap <C-p> <C-C>:call <sid>MoveParagraphUp()<CR>
-noremap <C-l> :call <sid>MoveParagraphDown()<CR>
-inoremap <C-l> <C-O>:call <sid>MoveParagraphDown()<CR>
-cnoremap <C-l> <C-C>:call <sid>MoveParagraphDown()<CR>
-onoremap <C-l> <C-C>:call <sid>MoveParagraphDown()<CR>
+" Default Vim makes <Up> and <CTRL-P> map to [count] lines upward |linewise|.
+" Default Vim makes <CTRL-O> Go to [count] Older cursor posit in jump list.
+" Default Vim makes <CTRL-O> in insert mode start a replace operation...
+" 2017-06-07: I want to use Ctrl-l for what was Ctrl-k (BufSurfForward) so
+"   that Ctrl-k can be used for :digraph insertions.
+"noremap <C-p> :call <sid>MoveParagraphUp()<CR>
+"inoremap <C-p> <C-O>:call <sid>MoveParagraphUp()<CR>
+"cnoremap <C-p> <C-C>:call <sid>MoveParagraphUp()<CR>
+"onoremap <C-p> <C-C>:call <sid>MoveParagraphUp()<CR>
+"noremap <C-l> :call <sid>MoveParagraphDown()<CR>
+"inoremap <C-l> <C-O>:call <sid>MoveParagraphDown()<CR>
+"cnoremap <C-l> <C-C>:call <sid>MoveParagraphDown()<CR>
+"onoremap <C-l> <C-C>:call <sid>MoveParagraphDown()<CR>
+"
+noremap <C-u> :call <sid>MoveParagraphUp()<CR>
+inoremap <C-u> <C-O>:call <sid>MoveParagraphUp()<CR>
+cnoremap <C-u> <C-C>:call <sid>MoveParagraphUp()<CR>
+onoremap <C-u> <C-C>:call <sid>MoveParagraphUp()<CR>
+" Crud. Remapping <C-i> also remaps <TAB>, da fuh!?
+"noremap <C-i> :call <sid>MoveParagraphDown()<CR>
+"inoremap <C-i> <C-O>:call <sid>MoveParagraphDown()<CR>
+"cnoremap <C-i> <C-C>:call <sid>MoveParagraphDown()<CR>
+"onoremap <C-i> <C-C>:call <sid>MoveParagraphDown()<CR>
+noremap <C-p> :call <sid>MoveParagraphDown()<CR>
+inoremap <C-p> <C-O>:call <sid>MoveParagraphDown()<CR>
+cnoremap <C-p> <C-C>:call <sid>MoveParagraphDown()<CR>
+onoremap <C-p> <C-C>:call <sid>MoveParagraphDown()<CR>
 
 " ------------------------------------------------------
 " Auto-format selected rows of text
