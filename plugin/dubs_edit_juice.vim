@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.06.07
+" Last Modified: 2017.06.10
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -860,6 +860,8 @@ endfunction
 " Default Vim makes <Up> and <CTRL-P> map to [count] lines upward |linewise|.
 " Default Vim makes <CTRL-O> Go to [count] Older cursor posit in jump list.
 " Default Vim makes <CTRL-O> in insert mode start a replace operation...
+" Default Vim makes <CTRL-U> "Scroll window Upwards in the buffer."
+"
 " 2017-06-07: I want to use Ctrl-l for what was Ctrl-k (BufSurfForward) so
 "   that Ctrl-k can be used for :digraph insertions.
 "noremap <C-p> :call <sid>MoveParagraphUp()<CR>
@@ -871,6 +873,9 @@ endfunction
 "cnoremap <C-l> <C-C>:call <sid>MoveParagraphDown()<CR>
 "onoremap <C-l> <C-C>:call <sid>MoveParagraphDown()<CR>
 "
+" 2017-06-10: I was fiddling with the existing Ctrl-j and Ctrl-k mappings,
+" for :BufSurfBack and :BufSurfForward, and remapped these so that I could
+" use <Ctrl-l> to replace Vim's built-in <Ctrl-k> :digraph feature.
 noremap <C-u> :call <sid>MoveParagraphUp()<CR>
 inoremap <C-u> <C-O>:call <sid>MoveParagraphUp()<CR>
 cnoremap <C-u> <C-C>:call <sid>MoveParagraphUp()<CR>
