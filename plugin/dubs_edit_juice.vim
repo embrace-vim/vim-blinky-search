@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.06.10
+" Last Modified: 2017.08.02
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -1633,4 +1633,47 @@ nnoremap <Leader>. yyp<C-Q>$r>
 nnoremap <Leader>> yyp<C-Q>$r>yykP
 nnoremap <Leader><Leader>> yyp<C-Q>$r>
 nnoremap <Leader>\|> yyp<C-Q>$r>yykP
+
+" -------------------------------------------------------------------------------
+" 2017-08-02: Source a .vim file in or up path, to support continuous integration
+" -------------------------------------------------------------------------------
+" What I want to do is run a rake task when Ruby files are saved, are least first.
+
+" FIXME/2017-08-02: Document this. And maybe move to a different file/new plugin.
+
+" WHATEVER/2017-08-02: If you use the project.vim plugin and double click a
+" file, neither BufEnter nor BufRead get called on the newly opened file.
+" BufEnter instead gets called on the .vimprojects file in the left window,
+" and BufRead isn't triggered at all. If you leave the window and reenter it,
+" then BufEnter is triggered (but not BufRead).
+" (TabEnter and WinEnter seemed to be called, but not BufWinEnter or BufNew.
+"  I think.)
+" FORTUNATELY! The project.vim plugin has a feature that sources a Vim file
+" when you open a file in or under a directory. Just set in="somefile.vim".
+" That, in conjunction with the BufEnter hook, provide the complete solution.
+
+autocmd BufEnter * call SeekForSecurityHolePluginFileToLoad()
+
+" Search updards for a specially named file to be sourced at runtime,
+" whenever the buffer of a file in a directory thereunder is opened.
+function SeekForSecurityHolePluginFileToLoad()
+  " NOTE: If using the project.vim plugin, if you double click files from
+  "   there, for some reason this function (when called from BufEnter)
+  "   runs in the context of the project window. Not sure why; don't care.
+  "echomsg 'File is at: ' . expand('%')
+  "echomsg 'Winnr: ' . winnr()
+  " Specify the path, otherwise the current directory is used
+  " for new, unsaved buffers, which is creepy.
+  " Hint: Get the name of the file using [t]ail, else omit
+  "       and get full path; doesn't matter.
+  let b:project_plugin_f = ''
+  if (expand('%:t') != '')
+    " MEH: Just hardcode the file name? If so, choose a better name? =)
+    let b:project_plugin_f = findfile('.trustme.vim', '.;')
+    if (b:project_plugin_f != '')
+      "echomsg 'Loading project plugin: ' . b:project_plugin_f
+      exec "source " . b:project_plugin_f
+    endif
+  endif
+endfunction
 
