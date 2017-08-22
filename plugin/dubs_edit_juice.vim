@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.08.02
+" Last Modified: 2017.08.21
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -1652,7 +1652,9 @@ nnoremap <Leader>\|> yyp<C-Q>$r>yykP
 " when you open a file in or under a directory. Just set in="somefile.vim".
 " That, in conjunction with the BufEnter hook, provide the complete solution.
 
-autocmd BufEnter * call SeekForSecurityHolePluginFileToLoad()
+"autocmd BufEnter * call SeekForSecurityHolePluginFileToLoad()
+"autocmd BufWritePre * call SeekForSecurityHolePluginFileToLoad()
+autocmd BufWritePost * call SeekForSecurityHolePluginFileToLoad()
 
 " Search updards for a specially named file to be sourced at runtime,
 " whenever the buffer of a file in a directory thereunder is opened.
@@ -1667,12 +1669,25 @@ function SeekForSecurityHolePluginFileToLoad()
   " Hint: Get the name of the file using [t]ail, else omit
   "       and get full path; doesn't matter.
   let b:project_plugin_f = ''
+  "echomsg 'expand("%:t"): ' . expand('%:t')
+  ""echomsg 'expand("%"): ' . expand('%')
+  ""echomsg 'expand("#"): ' . expand('#')
+  ""echomsg 'expand("<afile>"): ' . expand('<afile>')
+  """echomsg 'expand("%:p"): ' . expand('%:p')
+  ""echomsg 'expand("%:p:h"): ' . expand('%:p:h')
   if (expand('%:t') != '')
+    "echomsg 'Finding files under: ' . expand('%:h')
     " MEH: Just hardcode the file name? If so, choose a better name? =)
     let b:project_plugin_f = findfile('.trustme.vim', '.;')
     if (b:project_plugin_f != '')
       "echomsg 'Loading project plugin: ' . b:project_plugin_f
-      exec "source " . b:project_plugin_f
+      "echomsg 'Project plugin basedir: ' . fnamemodify(expand(b:project_plugin_f), ':h')
+      let cwd = getcwd()
+      "echomsg 'cwd: ' . cwd
+      exec 'cd ' . fnamemodify(expand(b:project_plugin_f), ':h')
+      "exec 'source ' . b:project_plugin_f
+      exec 'source ' . fnamemodify(expand(b:project_plugin_f), ':t')
+      exec 'cd ' . cwd
     endif
   endif
 endfunction
