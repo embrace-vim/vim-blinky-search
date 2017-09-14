@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.08.21
+" Last Modified: 2017.09.14
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -1474,6 +1474,30 @@ iabbrev <expr> TTT strftime("%Y-%m-%d")
 " 2017-02-27: An alias for when I want to highlight the time,
 "  probably when writing notes drunk in the middle of the night.
 iabbrev <expr> TTTtt strftime("%Y-%m-%d %H:%M")
+" All the combinations.
+iabbrev <expr> TTTTtt strftime("%Y-%m-%dT%H:%M")
+" Except these don't work: the abbrev fires on non-alpha:
+"   iabbrev <expr> TTT!tt strftime("%Y-%m-%d!%H:%M")
+"   iabbrev <expr> TTT@tt strftime("%Y-%m-%d@%H:%M")
+"   iabbrev <expr> TTT#tt strftime("%Y-%m-%d#%H:%M")
+"   iabbrev <expr> TTT$tt strftime("%Y-%m-%d$%H:%M")
+"   iabbrev <expr> TTT%tt strftime("%Y-%m-%d%%%H:%M")
+"   iabbrev <expr> TTT^tt strftime("%Y-%m-%d^%H:%M")
+"   iabbrev <expr> TTT&tt strftime("%Y-%m-%d&%H:%M")
+"   iabbrev <expr> TTT*tt strftime("%Y-%m-%d*%H:%M")
+"   iabbrev <expr> TTT-tt strftime("%Y-%m-%d-%H:%M")
+"   iabbrev <expr> TTT_tt strftime("%Y-%m-%d_%H:%M")
+"   iabbrev <expr> TTT+tt strftime("%Y-%m-%d+%H:%M")
+"   iabbrev <expr> TTT\tt strftime("%Y-%m-%d\%H:%M")
+"   iabbrev <expr> TTT|tt strftime("%Y-%m-%d|%H:%M")
+"   iabbrev <expr> TTT;tt strftime("%Y-%m-%d;%H:%M")
+"   iabbrev <expr> TTT:tt strftime("%Y-%m-%d:%H:%M")
+"   iabbrev <expr> TTT'tt strftime("%Y-%m-%d'%H:%M")
+"   iabbrev <expr> TTT"tt strftime("%Y-%m-%d"%H:%M")
+"   iabbrev <expr> TTT/tt strftime("%Y-%m-%d/%H:%M")
+"   iabbrev <expr> TTT?tt strftime("%Y-%m-%d?%H:%M")
+" So just add a `tt` abbrev!
+iabbrev <expr> tt strftime("%H:%M")
 
 " -------------------------
 " Left Justify Current Line
