@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.09.14
+" Last Modified: 2017.09.20
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -1497,7 +1497,8 @@ iabbrev <expr> TTTTtt strftime("%Y-%m-%dT%H:%M")
 "   iabbrev <expr> TTT/tt strftime("%Y-%m-%d/%H:%M")
 "   iabbrev <expr> TTT?tt strftime("%Y-%m-%d?%H:%M")
 " So just add a `tt` abbrev!
-iabbrev <expr> tt strftime("%H:%M")
+"iabbrev <expr> tt strftime("%H:%M")
+iabbrev <expr> ttt strftime("%H:%M")
 
 " -------------------------
 " Left Justify Current Line
