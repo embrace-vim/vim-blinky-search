@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.09.20
+" Last Modified: 2017.10.17
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -885,10 +885,24 @@ onoremap <C-u> <C-C>:call <sid>MoveParagraphUp()<CR>
 "inoremap <C-i> <C-O>:call <sid>MoveParagraphDown()<CR>
 "cnoremap <C-i> <C-C>:call <sid>MoveParagraphDown()<CR>
 "onoremap <C-i> <C-C>:call <sid>MoveParagraphDown()<CR>
+" 2017-10-17: Crud again. Ctrl-p blocks the auto-complete ctrl-n/ctrl-p...
+"   :TabMessage map <c-p>
+"   o  <C-P>       * <C-C>:call <SNR>28_MoveParagraphDown()<CR>
+"   nv <C-P>       * :call <SNR>28_MoveParagraphDown()<CR>
+" Normally, it's:
+"   n  <C-P>       * :<C-U>CtrlP<CR>
 noremap <C-p> :call <sid>MoveParagraphDown()<CR>
-inoremap <C-p> <C-O>:call <sid>MoveParagraphDown()<CR>
 cnoremap <C-p> <C-C>:call <sid>MoveParagraphDown()<CR>
 onoremap <C-p> <C-C>:call <sid>MoveParagraphDown()<CR>
+"inoremap <C-p> <C-O>:call <sid>MoveParagraphDown()<CR>
+" Without the insert mode blocker, it works.
+" Not sure how to see the old mapping, though...
+"   o  <C-P>       * <C-C>:call <SNR>28_MoveParagraphDown()<CR>
+"   nv <C-P>       * :call <SNR>28_MoveParagraphDown()<CR>
+" And trying to map it myself isn't working, e.g.:
+"   inoremap <C-p> <C-O>:<C-U>CtrlP<CR>
+" though CtrlP seems like the other CtrlP, the "Full path fuzzy
+" file buffer, mru, tag, ... finder with an intuitive interface."
 
 " ------------------------------------------------------
 " Auto-format selected rows of text
