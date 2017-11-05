@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.10.17
+" Last Modified: 2017.11.04
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -691,7 +691,7 @@ function s:ToggleTabHighlighting()
     endif
   endif
   if (0 == b:cyclopath_tab_toggle_index)
-    :hi Tab gui=underline guifg=blue ctermbg=blue
+    highlight Tab gui=underline guifg=blue ctermbg=blue
     match Tab /\t/
     echo "Tab highlighing enabled"
   elseif (1 == b:cyclopath_tab_toggle_index)
