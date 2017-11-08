@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.11.04
+" Last Modified: 2017.11.08
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -1241,7 +1241,10 @@ vnoremap <M-]> :<C-U>
 let g:easytags_suppress_report = 1
 
 " Use project-specific tags files and not the global ~/.vimtags.
-set tags=./tags
+" 2017-11-08: Ug. This is the culprit. Out, damn spot!
+"   (Let project-specific tags= work on boot, e.g., via .trustme.vim.)
+"set tags=./tags
+
 "let g:easytags_dynamic_files = 1
 let g:easytags_dynamic_files = 2
 
