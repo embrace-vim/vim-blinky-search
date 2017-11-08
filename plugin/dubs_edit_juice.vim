@@ -1679,7 +1679,8 @@ nnoremap <Leader>\|> yyp<C-Q>$r>yykP
 " -------------------------------------------------------------------------------
 " 2017-08-02: Source a .vim file in or up path, to support continuous integration
 " -------------------------------------------------------------------------------
-" What I want to do is run a rake task when Ruby files are saved, are least first.
+" E.g., run a rake task when Ruby files are saved.
+" E.g., set tags= when a file is opened.
 
 " FIXME/2017-08-02: Document this. And maybe move to a different file/new plugin.
 
@@ -1693,44 +1694,48 @@ nnoremap <Leader>\|> yyp<C-Q>$r>yykP
 " FORTUNATELY! The project.vim plugin has a feature that sources a Vim file
 " when you open a file in or under a directory. Just set in="somefile.vim".
 " That, in conjunction with the BufEnter hook, provide the complete solution.
+" 2017-11-08: Actually, no. The path is still wrong from project.vim...
+"   it's still project.vim's path...
 
-"autocmd BufEnter * call SeekForSecurityHolePluginFileToLoad()
-"autocmd BufWritePre * call SeekForSecurityHolePluginFileToLoad()
-autocmd BufWritePost * call SeekForSecurityHolePluginFileToLoad()
+autocmd BufEnter * call SeekForSecurityHolePluginFileToLoad(0, 'BufEnter')
+autocmd BufWritePost * call SeekForSecurityHolePluginFileToLoad(1, 'BufWritePost')
 
 " Search updards for a specially named file to be sourced at runtime,
 " whenever the buffer of a file in a directory thereunder is opened.
-function SeekForSecurityHolePluginFileToLoad()
+function SeekForSecurityHolePluginFileToLoad(on_save, because)
+  "echomsg "You ARE Vimmed! at " . expand('%') . " / because: " . a:because
   " NOTE: If using the project.vim plugin, if you double click files from
   "   there, for some reason this function (when called from BufEnter)
-  "   runs in the context of the project window. Not sure why; don't care.
+  "   runs in the context of the project window. I.e., the path is to
+  "   .vimprojects. I'm not sure why; and I spent too much time trying to
+  "   make it work that I finally don't care anymore.
   "echomsg 'File is at: ' . expand('%')
-  "echomsg 'Winnr: ' . winnr()
   " Specify the path, otherwise the current directory is used
   " for new, unsaved buffers, which is creepy.
   " Hint: Get the name of the file using [t]ail, else omit
   "       and get full path; doesn't matter.
-  let b:project_plugin_f = ''
-  "echomsg 'expand("%:t"): ' . expand('%:t')
-  ""echomsg 'expand("%"): ' . expand('%')
-  ""echomsg 'expand("#"): ' . expand('#')
-  ""echomsg 'expand("<afile>"): ' . expand('<afile>')
-  """echomsg 'expand("%:p"): ' . expand('%:p')
-  ""echomsg 'expand("%:p:h"): ' . expand('%:p:h')
   if (expand('%:t') != '')
     "echomsg 'Finding files under: ' . expand('%:h')
     " MEH: Just hardcode the file name? If so, choose a better name? =)
-    let b:project_plugin_f = findfile('.trustme.vim', '.;')
-    if (b:project_plugin_f != '')
-      "echomsg 'Loading project plugin: ' . b:project_plugin_f
-      "echomsg 'Project plugin basedir: ' . fnamemodify(expand(b:project_plugin_f), ':h')
-      let cwd = getcwd()
-      "echomsg 'cwd: ' . cwd
-      exec 'cd ' . fnamemodify(expand(b:project_plugin_f), ':h')
-      "exec 'source ' . b:project_plugin_f
-      exec 'source ' . fnamemodify(expand(b:project_plugin_f), ':t')
-      exec 'cd ' . cwd
+    let l:project_plugin_f = findfile('.trustme.vim', '.;')
+    "echomsg "l:project_plugin_f: " . l:project_plugin_f
+    if (l:project_plugin_f != '')
+      let l:plugin_path = fnamemodify(expand(l:project_plugin_f), ':p')
+      if (filereadable(l:plugin_path))
+        let cwd = getcwd()
+        "echomsg 'cwd: ' . cwd
+        exec 'cd ' . fnamemodify(expand(l:project_plugin_f), ':h')
+        let g:DUBS_TRUST_ME_ON_FILE = expand('%:t')
+        let g:DUBS_TRUST_ME_ON_SAVE = a:on_save
+        exec 'source ' . l:plugin_path
+        exec 'cd ' . cwd
+      else
+        echomsg 'WARNING: .trustme.vim: No file at: ' . l:plugin_path
+      endif
     endif
+  elseif (expand('%') != '')
+    echomsg 'WARNING?: .trustme.vim: No tail at: ' . expand('%')
+  " else, a buffer with no path; not associated with a file.
   endif
 endfunction
 
