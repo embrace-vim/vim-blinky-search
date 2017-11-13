@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.11.08
+" Last Modified: 2017.11.12
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -540,6 +540,38 @@ vnoremap <S-F1> :<C-U>
   \ gV
   \ /<C-R>"<CR>
   \ ?<CR>
+
+" 2017-11-12: A similar approach to the same feature.
+" http://vim.wikia.com/wiki/Highlight_all_search_pattern_matches
+nnoremap <F8> :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
+" And for visually selected text, add `a` flag to guioptions so that visually
+" selecting text automatically places the text in the clipboard (register *).
+if 1
+  set guioptions+=a
+  function! MakePattern(text)
+    let pat = escape(a:text, '\')
+    let pat = substitute(pat, '\_s\+$', '\\s\\*', '')
+    let pat = substitute(pat, '^\_s\+', '\\s\\*', '')
+    let pat = substitute(pat, '\_s\+',  '\\_s\\+', 'g')
+    return '\\V' . escape(pat, '\"')
+  endfunction
+  vnoremap <silent> <F8> :<C-U>let @/="<C-R>=MakePattern(@*)<CR>"<CR>:set hls<CR>
+endif
+" 'pressing Enter toggles highlighting for the current word on and off'
+" This breaks quickfix enter-to-open...
+if 0
+  let g:highlighting = 0
+  function! Highlighting()
+    if g:highlighting == 1 && @/ =~ '^\\<'.expand('<cword>').'\\>$'
+      let g:highlighting = 0
+      return ":silent nohlsearch\<CR>"
+    endif
+    let @/ = '\<'.expand('<cword>').'\>'
+    let g:highlighting = 1
+    return ":silent set hlsearch\<CR>"
+  endfunction
+  nnoremap <silent> <expr> <CR> Highlighting()
+endif
 
 " Repeat previous search fwd or back w/ F3 and Shift-F3
 " NOTE Using /<CR> instead of n because n repeats the last / or *
