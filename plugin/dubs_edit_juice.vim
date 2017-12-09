@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.11.12
+" Last Modified: 2017.12.08
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -60,13 +60,17 @@ inoremap <c-w> <c-g>u<c-w>
 " A Better Backspace
 " ------------------------------------------------------
 
-" Ctrl-Backspace deletes to start of word
-noremap <C-BS> db
-inoremap <C-BS> <C-O>db
+function! s:wire_key_backspace()
+  " Ctrl-Backspace deletes to start of word
+  noremap <C-BS> db
+  inoremap <C-BS> <C-O>db
 
-" Ctrl-Shift-Backspace deletes to start of line
-noremap <C-S-BS> d<Home>
-inoremap <C-S-BS> <C-O>d<Home>
+  " Ctrl-Shift-Backspace deletes to start of line
+  noremap <C-S-BS> d<Home>
+  inoremap <C-S-BS> <C-O>d<Home>
+endfunction
+
+call <SID>wire_key_backspace()
 
 " ------------------------------------------------------
 " A Delicious Delete
@@ -254,46 +258,51 @@ function! s:Del2EndOfWsAz09OrPunct(wasInsertMode, deleteToEndOfLine)
     "execute 'normal h'
   endif
 endfunction
-" Map the function to Ctrl-Delete in normal and
-" insert modes.
-noremap <C-Del> :call <SID>Del2EndOfWsAz09OrPunct(0, 0)<CR>
-" BUGBUG To call a function from Insert Mode -- or to even get
-"        the current column number of the cursor -- we need
-"        to either <C-O> or <Esc> out of Insert mode. If
-"        we <C-O> and the cursor is on either the last
-"        column or the second-to-last-column, the cursor
-"        is moved to the last column. Likewise, if we
-"        <Esc> and the cursor is on either the first column
-"        or the second column, the cursor is moved to the
-"        first column. I cannot figure out a work-around.
-"        I choose <Esc> as the lesser of two evils. I.e.,
-"        using <C-O>, if the cursor is at the second-to-
-"        last column, a join happens but the last character
-"        remains; using <Esc>, if you <Ctrl-Del> from the
-"        second column, both the first and second columns
-"        are deleted. I <Ctrl-Del> from the end of a line
-"        much more ofter than from the second column of a
-"        line.
-"inoremap <C-Del>
-"         \ <C-O>:call <SID>Del2EndOfWsAz09OrPunct()<CR>
-inoremap <C-Del>
-         \ <Esc>:call <SID>Del2EndOfWsAz09OrPunct(1, 0)<CR>i
 
-" Ctrl-Shift-Delete deletes to end of line
-"noremap <C-S-Del> d$
-"inoremap <C-S-Del> <C-O>d$
-noremap <C-S-Del> :call <SID>Del2EndOfWsAz09OrPunct(0, 1)<CR>
-inoremap <C-S-Del>
-         \ <Esc>:call <SID>Del2EndOfWsAz09OrPunct(1, 1)<CR>i<Right>
+function! s:wire_key_delete()
+  " Map the function to Ctrl-Delete in normal and
+  " insert modes.
+  noremap <C-Del> :call <SID>Del2EndOfWsAz09OrPunct(0, 0)<CR>
+  " BUGBUG To call a function from Insert Mode -- or to even get
+  "        the current column number of the cursor -- we need
+  "        to either <C-O> or <Esc> out of Insert mode. If
+  "        we <C-O> and the cursor is on either the last
+  "        column or the second-to-last-column, the cursor
+  "        is moved to the last column. Likewise, if we
+  "        <Esc> and the cursor is on either the first column
+  "        or the second column, the cursor is moved to the
+  "        first column. I cannot figure out a work-around.
+  "        I choose <Esc> as the lesser of two evils. I.e.,
+  "        using <C-O>, if the cursor is at the second-to-
+  "        last column, a join happens but the last character
+  "        remains; using <Esc>, if you <Ctrl-Del> from the
+  "        second column, both the first and second columns
+  "        are deleted. I <Ctrl-Del> from the end of a line
+  "        much more ofter than from the second column of a
+  "        line.
+  "inoremap <C-Del>
+  "         \ <C-O>:call <SID>Del2EndOfWsAz09OrPunct()<CR>
+  inoremap <C-Del>
+           \ <Esc>:call <SID>Del2EndOfWsAz09OrPunct(1, 0)<CR>i
 
-" 2011.02.01 Doing same for Alt-Delete
-noremap <M-Del> :call <SID>Del2EndOfWsAz09OrPunct(0, 1)<CR>
-inoremap <M-Del>
-         \ <Esc>:call <SID>Del2EndOfWsAz09OrPunct(1, 1)<CR>i<Right>
+  " Ctrl-Shift-Delete deletes to end of line
+  "noremap <C-S-Del> d$
+  "inoremap <C-S-Del> <C-O>d$
+  noremap <C-S-Del> :call <SID>Del2EndOfWsAz09OrPunct(0, 1)<CR>
+  inoremap <C-S-Del>
+           \ <Esc>:call <SID>Del2EndOfWsAz09OrPunct(1, 1)<CR>i<Right>
 
-" Alt-Shift-Delete deletes entire line
-noremap <M-S-Del> dd
-inoremap <M-S-Del> <C-O>dd
+  " 2011.02.01 Doing same for Alt-Delete
+  noremap <M-Del> :call <SID>Del2EndOfWsAz09OrPunct(0, 1)<CR>
+  inoremap <M-Del>
+           \ <Esc>:call <SID>Del2EndOfWsAz09OrPunct(1, 1)<CR>i<Right>
+
+  " Alt-Shift-Delete deletes entire line
+  noremap <M-S-Del> dd
+  inoremap <M-S-Del> <C-O>dd
+endfunction
+
+call <SID>wire_key_delete()
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Editing Features -- Selecting Text
@@ -310,57 +319,65 @@ inoremap <M-S-Del> <C-O>dd
 " text in visual mode. By using 'e' instead of
 " 'aW', for example, Vim selects alphanumeric
 " blocks but doesn't cross punctuation boundaries.
-" In other words, we want to select blocks of
-" whitespace, alphanums, or punctuation, but
-" never combinations thereof.
-" TODO This still isn't quite right -- the first
-"      selection is always too great, i.e., the
-"      cursor jumps boundaries 'b' and 'e'
-"      wouldn't
-vnoremap <C-S-Left> b
-vnoremap <C-S-Right> e
+function! s:wire_keys_left_and_right_arrows()
+  " In other words, we want to select blocks of
+  " whitespace, alphanums, or punctuation, but
+  " never combinations thereof.
+  " TODO This still isn't quite right -- the first
+  "      selection is always too great, i.e., the
+  "      cursor jumps boundaries 'b' and 'e'
+  "      wouldn't
+  vnoremap <C-S-Left> b
+  vnoremap <C-S-Right> e
 
-" Alt-Shift-Left selects from cursor to start of line
-" (same as Shift-Home)
-noremap <M-S-Left> v0
-inoremap <M-S-Left> <C-O>v0
-vnoremap <M-S-Left> 0
+  " Alt-Shift-Left selects from cursor to start of line
+  " (same as Shift-Home)
+  noremap <M-S-Left> v0
+  inoremap <M-S-Left> <C-O>v0
+  vnoremap <M-S-Left> 0
 
-" Alt-Shift-Right selects from cursor to end of line
-" (same as Shift-End)
-noremap <M-S-Right> v$
-inoremap <M-S-Right> <C-O>v$
-vnoremap <M-S-Right> $
+  " Alt-Shift-Right selects from cursor to end of line
+  " (same as Shift-End)
+  noremap <M-S-Right> v$
+  inoremap <M-S-Right> <C-O>v$
+  vnoremap <M-S-Right> $
+endfunction
+
+call <SID>wire_keys_left_and_right_arrows()
 
 " ------------------------------------------------------
 " A Smarter Select
 " ------------------------------------------------------
 
-" Ctrl-Shift-PageUp selects from cursor to first line of window
-noremap <C-S-PageUp> vH
-inoremap <C-S-PageUp> <C-O>vH
-cnoremap <C-S-PageUp> <C-C>vH
-onoremap <C-S-PageUp> <C-C>vH
-vnoremap <C-S-PageUp> H
-" (And so does Alt-Shift-Up)
-noremap <M-S-Up> vH
-inoremap <M-S-Up> <C-O>vH
-cnoremap <M-S-Up> <C-C>vH
-onoremap <M-S-Up> <C-C>vH
-vnoremap <M-S-Up> H
+function! s:wire_keys_ups_and_downs()
+  " Ctrl-Shift-PageUp selects from cursor to first line of window
+  noremap <C-S-PageUp> vH
+  inoremap <C-S-PageUp> <C-O>vH
+  cnoremap <C-S-PageUp> <C-C>vH
+  onoremap <C-S-PageUp> <C-C>vH
+  vnoremap <C-S-PageUp> H
+  " (And so does Alt-Shift-Up)
+  noremap <M-S-Up> vH
+  inoremap <M-S-Up> <C-O>vH
+  cnoremap <M-S-Up> <C-C>vH
+  onoremap <M-S-Up> <C-C>vH
+  vnoremap <M-S-Up> H
 
-" Ctrl-Shift-PageDown selects from cursor to last line of window
-noremap <C-S-PageDown> vL
-inoremap <C-S-PageDown> <C-O>vL
-cnoremap <C-S-PageDown> <C-C>vL
-onoremap <C-S-PageDown> <C-C>vL
-vnoremap <C-S-PageDown> L
-" (And so does Alt-Shift-Down)
-noremap <M-S-Down> vL
-inoremap <M-S-Down> <C-O>vL
-cnoremap <M-S-Down> <C-C>vL
-onoremap <M-S-Down> <C-C>vL
-vnoremap <M-S-Down> L
+  " Ctrl-Shift-PageDown selects from cursor to last line of window
+  noremap <C-S-PageDown> vL
+  inoremap <C-S-PageDown> <C-O>vL
+  cnoremap <C-S-PageDown> <C-C>vL
+  onoremap <C-S-PageDown> <C-C>vL
+  vnoremap <C-S-PageDown> L
+  " (And so does Alt-Shift-Down)
+  noremap <M-S-Down> vL
+  inoremap <M-S-Down> <C-O>vL
+  cnoremap <M-S-Down> <C-C>vL
+  onoremap <M-S-Down> <C-C>vL
+  vnoremap <M-S-Down> L
+endfunction
+
+call <SID>wire_keys_ups_and_downs()
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Document Navigation -- Moving the Cursor
@@ -375,14 +392,18 @@ vnoremap <M-S-Down> L
 " states. Really, it just moves the scrollbar,
 " i.e., scrolls your view without moving your
 " cursor.
-noremap <C-Up> <C-y>
-inoremap <C-Up> <C-O><C-y>
-cnoremap <C-Up> <C-C><C-y>
-onoremap <C-Up> <C-C><C-y>
-noremap <C-Down> <C-e>
-inoremap <C-Down> <C-O><C-e>
-cnoremap <C-Down> <C-C><C-e>
-onoremap <C-Down> <C-C><C-e>
+function! s:wire_keys_up_and_down_arrows()
+  noremap <C-Up> <C-y>
+  inoremap <C-Up> <C-O><C-y>
+  cnoremap <C-Up> <C-C><C-y>
+  onoremap <C-Up> <C-C><C-y>
+  noremap <C-Down> <C-e>
+  inoremap <C-Down> <C-O><C-e>
+  cnoremap <C-Down> <C-C><C-e>
+  onoremap <C-Down> <C-C><C-e>
+endfunction
+
+call <SID>wire_keys_up_and_down_arrows()
 
 " ------------------------------------------------------
 " Quick Cursor Jumping
@@ -442,7 +463,7 @@ vnoremap <M-Right> :<C-U>
   \ <CR>gvy
   \ :execute "normal! $"<CR>
 
-function s:Smart_PageUpDown(direction)
+function! s:Smart_PageUpDown(direction)
   let cursor_cur_line = line(".")
   if a:direction == 1
     let window_first_line = line("w0")
@@ -700,9 +721,9 @@ endif
 " Map <Plug> to an <SID> function.
 noremap <silent> <unique> <script>
   \ <Plug>DubsEditJuice_ToggleTabHighlighting
-  \ :call <SID>ToggleTabHighlighting()<CR>
+  \ call <SID>ToggleTabHighlighting()<CR>
 " The function.
-function s:ToggleTabHighlighting()
+function! s:ToggleTabHighlighting()
   " Visualizing tabs <http://tedlogan.com/techblog3.html>
   " "So what do you do when you open a new source file and you're trying
   "  to figure out what tab style the last author used? (And how do you make
@@ -806,7 +827,7 @@ vnoremap <C-Y> :<C-U>
 "      completely different. So use 'Xp' if the
 "      cursor is anywhere but the first column,
 "      but use 'xp' otherwise.
-function s:TransposeCharacters()
+function! s:TransposeCharacters()
   let cursorCol = col('.')
   if 1 == cursorCol
     execute 'normal ' . 'xp'
@@ -848,7 +869,7 @@ vnoremap <S-Tab> <gv
 "             one popular app lets you move notes around.
 
 " Move the paragraph under the cursor up a paragraph.
-function s:MoveParagraphUp()
+function! s:MoveParagraphUp()
   " The '.' is the current cursor position.
   let lineno = line('.')
   if lineno != 1
@@ -1734,7 +1755,7 @@ autocmd BufWritePost * call SeekForSecurityHolePluginFileToLoad(1, 'BufWritePost
 
 " Search updards for a specially named file to be sourced at runtime,
 " whenever the buffer of a file in a directory thereunder is opened.
-function SeekForSecurityHolePluginFileToLoad(on_save, because)
+function! SeekForSecurityHolePluginFileToLoad(on_save, because)
   "echomsg "You ARE Vimmed! at " . expand('%') . " / because: " . a:because
   " NOTE: If using the project.vim plugin, if you double click files from
   "   there, for some reason this function (when called from BufEnter)
