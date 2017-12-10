@@ -26,7 +26,6 @@
 "                     Fifth Floor, Boston, MA 02110-1301, USA.
 " ===================================================================
 
-unlet g:plugin_die_blinkenmatchen
 if exists("g:plugin_die_blinkenmatchen") || &cp
   finish
 endif
@@ -89,11 +88,23 @@ if has('timers')
     endif
     " Cancel timers
     if s:blink_timer_id > 0
-      call timer_stop(s:blink_timer_id)
+      " 2017-12-10: If you search in quickfix and then, while a
+      " blink is happening, you <S-M-Up> outta there, you'll see:
+      "   E803: Id not found: nn
+      " so try-catch, and get on with life.
+      try
+        call timer_stop(s:blink_timer_id)
+      catch
+        " pass
+      endtry
       let s:blink_timer_id = 0
     endif
     if s:blink_stop_id > 0
-      call timer_stop(s:blink_stop_id)
+      try
+        call timer_stop(s:blink_stop_id)
+      catch
+        " pass
+      endtry
       let s:blink_stop_id = 0
     endif
     " And clear blink highlight
