@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.12.08
+" Last Modified: 2017.12.09
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -1647,4 +1647,15 @@ function! SeekForSecurityHolePluginFileToLoad(on_save, because)
   " else, a buffer with no path; not associated with a file.
   endif
 endfunction
+
+" -------------------------------------------------------------------------
+" 2017-12-01: Show the :highlight of the word under the cursor.
+" -------------------------------------------------------------------------
+
+" 2017-12-01: This is awesome! "vim identify highlight of word under cursor"
+"   http://vim.wikia.com/wiki/Identify_the_syntax_highlighting_group_used_at_the_cursor
+" See also :help synstack()
+map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
+  \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
+  \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
 
