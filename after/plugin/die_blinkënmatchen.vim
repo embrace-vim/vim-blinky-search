@@ -1,6 +1,6 @@
 " File: dubs_appearance.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.12.09
+" Last Modified: 2017.12.10
 " Project Page: https://github.com/landonb/dubs_appearance
 " Summary: Basic Vim configuration (no functions; just settings and mappings)
 " License: GPLv3
@@ -26,33 +26,34 @@
 "                     Fifth Floor, Boston, MA 02110-1301, USA.
 " ===================================================================
 
+unlet g:plugin_die_blinkenmatchen
 if exists("g:plugin_die_blinkenmatchen") || &cp
   finish
 endif
 let g:plugin_die_blinkenmatchen = 1
 
-" Modified version of Rich's modified version of Damian Conway's search highlight blinker.
+" Modified version
+"   of Rich's modified version
+"   of Damian Conway's search highlight blinker,
+"     Die Blinkënmatchen.
 
 " https://vi.stackexchange.com/questions/8851/interrupting-blink-highlighting-function-if-mapping-is-invoked-again/13551#13551
 
-" Modified version of Damian Conway's Die Blinkënmatchen: highlight matches
-"
-" This is how long you want the blinking to last in milliseconds. If you're
-" using an earlier Vim without the `+timers` feature, you need a much shorter
-" blink time because Vim blocks while it waits for the blink to complete.
+" The length of each blink in milliseconds. If you want an interruptible
+" non-blinking highlight, set this to match s:blink_length.
+let s:blink_freq = 125
+
+" How long to blink the match text, in milliseconds. On Vim <8, without
+" +timers, you need a much shorter blink time because Vim blocks while
+" it waits for the blink to complete.
 "let s:blink_length = has('timers') ? 500 : 100
-let s:blink_length = has('timers') ? 1500 : 100
+"let s:blink_length = has('timers') ? 1500 : 100
+let s:blink_length = has('timers') ? float2nr(s:blink_freq * 1.5) : 100
 
 "let s:use_highlight = 'ErrorMsg'
 let s:use_highlight = 'DiffChange'
 
 if has('timers')
-  " This is the length of each blink in milliseconds. If you just want an
-  " interruptible non-blinking highlight, set this to match s:blink_length
-  " by uncommenting the line below
-  "let s:blink_freq = 50
-  let s:blink_freq = 125
-  "let s:blink_freq = s:blink_length
   let s:blink_match_id = 0
   let s:blink_timer_id = 0
   let s:blink_stop_id = 0
