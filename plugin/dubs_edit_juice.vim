@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.12.09
+" Last Modified: 2017.12.10
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -1658,4 +1658,24 @@ endfunction
 map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans<'
   \ . synIDattr(synID(line("."),col("."),0),"name") . "> lo<"
   \ . synIDattr(synIDtrans(synID(line("."),col("."),1)),"name") . ">"<CR>
+
+" 2017-12-10 01:07: Would a highlight-word-under-cursor help me find search results?
+" http://vim.wikia.com/wiki/Highlight_current_word_to_find_cursor
+"nnoremap <C-i> :call HighlightNearCursor()<CR>
+"inoremap <C-i> <C-o>:call HighlightNearCursor()<CR>
+" 2017-12-10 14:09: I really don't know if I'll use this, and burning
+"   a limited-edition Command-key sequence makes me uneasy; but I can
+"   always steal this back later.
+" FIXME/MAYBE: If you scroll, the highlight moves to other words...
+"   this function really is very crude.
+inoremap <C-r> <C-o>:call HighlightNearCursor()<CR>
+function HighlightNearCursor()
+  if !exists("s:highlightcursor")
+    match Todo /\k*\%#\k*/
+    let s:highlightcursor=1
+  else
+    match None
+    unlet s:highlightcursor
+  endif
+endfunction
 
