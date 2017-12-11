@@ -1,6 +1,6 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.12.10
+" Last Modified: 2017.12.11
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
@@ -1668,7 +1668,9 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans
 "   always steal this back later.
 " FIXME/MAYBE: If you scroll, the highlight moves to other words...
 "   this function really is very crude.
-inoremap <C-r> <C-o>:call HighlightNearCursor()<CR>
+" This screws <TAB>:
+"   inoremap <C-I> <C-O>:call HighlightNearCursor()<CR>
+inoremap <C-B> <C-O>:call HighlightNearCursor()<CR>
 function HighlightNearCursor()
   if !exists("s:highlightcursor")
     match Todo /\k*\%#\k*/
