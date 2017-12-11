@@ -159,24 +159,24 @@ execute printf(
 if exists("g:plugin_edit_juice_vim") && g:plugin_edit_juice_vim == 1
   " Remap dubs_edit_juice <F3> variants.
   execute printf(
-    \ 'noremap <F3> /<CR>:call HLNext(%d, %d, 0)<CR>',
+    \ 'noremap <silent> <F3> /<CR>:call HLNext(%d, %d, 0)<CR>',
     \ s:blink_length, has('timers') ? s:blink_freq : s:blink_length)
   execute printf(
-    \ 'inoremap <F3> <C-O>/<CR><C-O>:call HLNext(%d, %d, 2)<CR>',
+    \ 'inoremap <silent> <F3> <C-O>/<CR><C-O>:call HLNext(%d, %d, 2)<CR>',
     \ s:blink_length, has('timers') ? s:blink_freq : s:blink_length)
   execute printf(
-    \ 'vnoremap <F3> :<C-U><CR>gvygV/<C-R>"<CR>:call HLNext(%d, %d, 0)<CR>',
+    \ 'vnoremap <silent> <F3> :<C-U><CR>gvygV/<C-R>"<CR>:call HLNext(%d, %d, 0)<CR>',
     \ s:blink_length, has('timers') ? s:blink_freq : s:blink_length)
 
   " Remap dubs_edit_juice <S-F3> variants.
   execute printf(
-    \ 'noremap <S-F3> ?<CR>:call HLNext(%d, %d, 0)<CR>',
+    \ 'noremap <silent> <S-F3> ?<CR>:call HLNext(%d, %d, 0)<CR>',
     \ s:blink_length, has('timers') ? s:blink_freq : s:blink_length)
   execute printf(
-    \ 'inoremap <S-F3> <C-O>?<CR><C-O>:call HLNext(%d, %d, 2)<CR>',
+    \ 'inoremap <silent> <S-F3> <C-O>?<CR><C-O>:call HLNext(%d, %d, 2)<CR>',
     \ s:blink_length, has('timers') ? s:blink_freq : s:blink_length)
   execute printf(
-    \ 'vnoremap <S-F3> :<C-U><CR>gvygV?<C-R>"<CR>?<CR>:call HLNext(%d, %d, 0)<CR>',
+    \ 'vnoremap <silent> <S-F3> :<C-U><CR>gvygV?<C-R>"<CR>?<CR>:call HLNext(%d, %d, 0)<CR>',
     \ s:blink_length, has('timers') ? s:blink_freq : s:blink_length)
 endif
 
