@@ -1,12 +1,11 @@
 " File: dubs_appearance.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.12.10
 " Project Page: https://github.com/landonb/dubs_appearance
 " Summary: Basic Vim configuration (no functions; just settings and mappings)
 " License: GPLv3
 " vim:tw=0:ts=2:sw=2:et:norl:ft=vim
 " ----------------------------------------------------------------------------
-" Copyright © 2009, 2015-2017 Landon Bouma.
+" Copyright © 2017 Landon Bouma.
 "
 " This file is part of Dubsacks.
 "
@@ -57,8 +56,8 @@ if has('timers')
   let s:blink_timer_id = 0
   let s:blink_stop_id = 0
 
-  " Toggle the blink highlight. This is called many times repeatedly in order
-  " to create the blinking effect.
+  " Toggle the blink highlight. This is called many times
+  " repeatedly in order to create the blinking effect.
   function! BlinkToggle(timer_id)
     if s:blink_match_id > 0
       " Clear highlight
@@ -70,7 +69,7 @@ if has('timers')
     endif
   endfunction
 
-  " Remove the blink highlight
+  " Remove the blink highlight.
   function! BlinkClear()
     call matchdelete(s:blink_match_id)
     let s:blink_match_id = 0
@@ -107,7 +106,7 @@ if has('timers')
       endtry
       let s:blink_stop_id = 0
     endif
-    " And clear blink highlight
+    " And clear blink highlight.
     if s:blink_match_id > 0
       call BlinkClear()
     endif
@@ -124,23 +123,23 @@ function! HLNext(blink_length, blink_freq, skip_first)
   let s:target_pat = '\c\%#'.@/
   let s:skip_first = a:skip_first
   if has("timers")
-    " Reset any existing blinks
+    " Reset any existing blinks.
     call BlinkStop(0)
-    " Start blinking. It is necessary to call this now so that the match is
-    " highlighted initially (in case of large values of a:blink_freq)
+    " Start blinking. It is necessary to call this now so that the match
+    " is highlighted initially (in case of large values of a:blink_freq).
     call BlinkToggle(0)
     " Set up blink timers.
     let s:blink_timer_id = timer_start(a:blink_freq, 'BlinkToggle', {'repeat': -1})
     let s:blink_stop_id = timer_start(a:blink_length, 'BlinkStop')
   else
-    " Vim doesn't have the +timers feature. Just use Conway's original
-    " code.
-    " Highlight the match
+    " Vim doesn't have the +timers feature.
+    " Use Conway's original code.
+    " Highlight the match.
     let ring = matchadd(s:use_highlight, s:target_pat, 101)
     redraw
-    " Wait
+    " Wait.
     exec 'sleep ' . a:blink_length . 'm'
-    " Remove the highlight
+    " Remove the highlight.
     call matchdelete(ring)
     redraw
   endif
