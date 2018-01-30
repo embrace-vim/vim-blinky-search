@@ -130,8 +130,8 @@ function! HLNext(blink_length, blink_freq, skip_first)
     " highlighted initially (in case of large values of a:blink_freq)
     call BlinkToggle(0)
     " Set up blink timers.
-    let s:blink_timer_id = call timer_start(a:blink_freq, 'BlinkToggle', {'repeat': -1})
-    let s:blink_stop_id = call timer_start(a:blink_length, 'BlinkStop')
+    let s:blink_timer_id = timer_start(a:blink_freq, 'BlinkToggle', {'repeat': -1})
+    let s:blink_stop_id = timer_start(a:blink_length, 'BlinkStop')
   else
     " Vim doesn't have the +timers feature. Just use Conway's original
     " code.
