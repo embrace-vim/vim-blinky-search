@@ -1681,3 +1681,15 @@ function HighlightNearCursor()
   endif
 endfunction
 
+
+" -------------------------------------------------------------------------
+" 2018-02-20: Remove word under cursor. Sorta like Bash's Alt-d.
+" -------------------------------------------------------------------------
+
+" https://stackoverflow.com/questions/833838/delete-word-after-or-around-cursor-in-vim
+" See:
+"  :help diw
+imap <C-d> <C-o>diw
+imap <M-d> <C-o>diw
+nmap <M-d> diw
+
