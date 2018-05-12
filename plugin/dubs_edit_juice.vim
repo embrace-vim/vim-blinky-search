@@ -1363,7 +1363,7 @@ let tlist_actionscript_settings = 'actionscript;c:class;f:method;p:property;v:va
 "   2. End recording with q (or with
 "      Ctrl-o q if in Insert mode)
 "   3. Playback with Q
-noremap Q @q
+nnoremap Q @q
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Developer Specials
