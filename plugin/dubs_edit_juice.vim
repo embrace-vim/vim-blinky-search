@@ -64,6 +64,10 @@ function! s:wire_key_backspace()
   " Ctrl-Backspace deletes to start of word
   noremap <C-BS> db
   inoremap <C-BS> <C-O>db
+  " (lb): You'll find this as Alt-Backspace in Bash, and because
+  " we don't have Alt-Backspace mapped, might as well?
+  noremap <M-BS> db
+  inoremap <M-BS> <C-O>db
 
   " Ctrl-Shift-Backspace deletes to start of line
   noremap <C-S-BS> d<Home>
