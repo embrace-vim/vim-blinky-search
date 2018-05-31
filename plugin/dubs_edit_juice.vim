@@ -1574,6 +1574,11 @@ iabbrev <expr> TTTTtt strftime("%Y-%m-%dT%H:%M")
 "iabbrev <expr> tt strftime("%H:%M")
 iabbrev <expr> ttt strftime("%H:%M")
 
+" (lb): 2018-05-31: A typical Woodlot section header.
+" MAYBE: This is business logic specific to my personal development workflow;
+"   I should probably move this to a personal Vim plugin...
+iabbrev <expr> TTT# "################<CR>" . strftime("%Y-%m-%d %H:%M") . "<CR>################<CR><CR>"
+
 " -------------------------
 " Left Justify Current Line
 " -------------------------
