@@ -37,6 +37,18 @@ let g:plugin_die_blinkenmatchen = 1
 
 " https://vi.stackexchange.com/questions/8851/interrupting-blink-highlighting-function-if-mapping-is-invoked-again/13551#13551
 
+" 2018-06-11: See also another plugin that highlights search results
+" as you jump to them, and also clears the highlight when you move the
+" cursor. Except it conflicts with this code (I'm assuming; it conflicts
+" with something in Dubsacks; or it's just broken), and the code is longer
+" and more complicated looking than I want to spend time stealing from.
+"   https://github.com/pgdouyon/vim-evanesco
+" However, I still like the idea of clearing the highlight automatically
+" if you cursor away from a match... seems like something tidy I might
+" enjoy (though it's hard to know for sure without enabling such a
+" feature any playing around with it; for now, without that feature,
+" just Ctrl-H to clear highlights, as appropriate).
+
 " The length of each blink in milliseconds. If you want an interruptible
 " non-blinking highlight, set this to match s:blink_length.
 let s:blink_freq = 125
