@@ -1110,38 +1110,6 @@ noremap <Leader>s "sy:ZZWrap .,$s/<C-r>s//gc<Left><Left><Left>
 " which defines <Leader>S (\S) which find-replaces in all files
 " listed in the quickfix window.
 
-" -------------------------------------------------------------------------
-" 2018-06-11: I am so behind the Vim-times! Automatically center curson on search!
-" -------------------------------------------------------------------------
-
-" How did I not Google this before? Such an obvious feature!
-" NOTE: You could :set scrolloff=999 to keep the cursor centered, but then
-"       it applies not just to every command, but to the whole interaction.
-"       I.e., the cursor will always be centered! You won't be able to arrow-
-"       up, arrow-down, Ctrl-PgUp, etc. to move the cursor outside the middle.
-"       So that's not an option.
-" Use `zz` after search commands to center the cursor, so your eye doesn't
-" have to scan to see where where the cursor is. Also, if you have more than
-" one search result highlighted in view, and if your syntax colors sometimes
-" make it difficult to see upon which highlight is the cursor is situated,
-" centering the cursor makes it obvious.
-
-nnoremap n nzz
-nnoremap N Nzz
-nnoremap * *zz
-nnoremap # #zz
-" (lb): Ha. I don't use the g-commands. g* is like '*' but without \<word\>
-" boundaries. And g# is like '#" (reverse-'*'), but without word boundaries.
-nnoremap g* g*zz
-nnoremap g# g#zz
-
-" Meh. If you find other instances where you want to enable the centering
-" behavior, you could add a toggle command. But I think I've got all the
-" bases covered that I care about. (And I'm not a sports fan, so not sure
-" why the baseball reference.)
-"
-"  :nnoremap <Leader>zz :let &scrolloff=999-&scrolloff<CR>
-
 " ------------------------------------------------------
 " Truncate and Pad Line to Specific Width
 " ------------------------------------------------------
