@@ -1599,7 +1599,11 @@ inoremap <silent> <leader>x <C-O>:left<cr><END>
 " -------------------------------------------------------------------------
 
 " You can leave insert mode using <ESC> or Ctrl-C. Also by jj now, if you want.
-inoremap jj <ESC>
+" 2018-06-14: Hrm. I don't like how it interrupts typing `j`, as Vim waits to
+" see if you're gonna type `jj`. Too strange. Never used it! Bye!!
+"   inoremap jj <ESC>
+" 2018-06-14: What about Alt-J, Alt-J, two of my favorite bands?
+inoremap <M-j><M-j> <ESC>
 
 " -------------------------------------------------------------------------------
 " 2017-08-02: Source a .vim file in or up path, to support continuous integration
