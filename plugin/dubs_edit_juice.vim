@@ -38,6 +38,8 @@
 " edit text, move the cursor around the buffer, and
 " perform single-key text searches within the buffer.
 
+" MEH: 2018-06-27: (lb): This file is not to be made reentrant (<F9>)
+" very easily. We'd have to call hasmapto() a lot....
 if exists("g:plugin_edit_juice_vim") || &cp
   finish
 endif
@@ -541,6 +543,45 @@ vnoremap <F1> :<C-U>
   \ /<C-R>"<CR>
 
 " ------------------------------------------------------
+" Cased Transforms! [DRY: This code was copy-pasted! because (lb) Lazy!]
+" ------------------------------------------------------
+
+" ***
+
+" STOLEN! From vim-abolish. Shameless!!
+" FIXME/2018-06-27/DRY: Make a util plugin for this!
+"   These are duplicated in: vim-aboilsh; dubs_grep_steady; dubs_edit_juice
+
+function! s:camelcase(word)
+  let word = substitute(a:word, '-', '_', 'g')
+  if word !~# '_' && word =~# '\l'
+    return substitute(word,'^.','\l&','')
+  else
+    return substitute(word,'\C\(_\)\=\(.\)','\=submatch(1)==""?tolower(submatch(2)) : toupper(submatch(2))','g')
+  endif
+endfunction
+
+function! s:snakecase(word)
+  let word = substitute(a:word,'::','/','g')
+  let word = substitute(word,'\(\u\+\)\(\u\l\)','\1_\2','g')
+  let word = substitute(word,'\(\l\|\d\)\(\u\)','\1_\2','g')
+  let word = substitute(word,'[.-]','_','g')
+  let word = tolower(word)
+  return word
+endfunction
+
+" A/k/a kebab-case | spinal-case | Train-Case | Lisp-case | dash-case
+function! s:traincase(word)
+  return substitute(s:snakecase(a:word),'_','-','g')
+endfunction
+
+function! s:uppercase(word)
+  return toupper(s:snakecase(a:word))
+endfunction
+
+" ***
+
+" ------------------------------------------------------
 " Start a whole-word *-search w/ Shift-F1
 " ------------------------------------------------------
 
@@ -571,32 +612,100 @@ vnoremap <S-F1> :<C-U>
 nnoremap <F8> :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
 " And for visually selected text, add `a` flag to guioptions so that visually
 " selecting text automatically places the text in the clipboard (register *).
-if 1
+function! InstallStartSearchHighlightButLeaveCursor()
+
+  " MEH? 2018-06-27: <F8> is almost the same as [ENTER],
+  " which is mapped after this function.
+
   set guioptions+=a
   function! MakePattern(text)
-    let pat = escape(a:text, '\')
-    let pat = substitute(pat, '\_s\+$', '\\s\\*', '')
-    let pat = substitute(pat, '^\_s\+', '\\s\\*', '')
-    let pat = substitute(pat, '\_s\+',  '\\_s\\+', 'g')
-    return '\\V' . escape(pat, '\"')
+    " 2018-06-27: Heh? Why am I doing here? Escaping `\` in search queries?
+    let l:pat = escape(a:text, '\')
+    let l:pat = substitute(pat, '\_s\+$', '\\s\\*', '')
+    let l:pat = substitute(pat, '^\_s\+', '\\s\\*', '')
+    let l:pat = substitute(pat, '\_s\+',  '\\_s\\+', 'g')
+
+    call histadd("/", l:pat)
+    call histadd("input", l:pat)
+
+    let l:pat = '\\V' . escape(l:pat, '\"')
+    return l:pat
   endfunction
+  " Assign the pattern to the search register (@/), and to set 'hlsearch'/'hls.
   vnoremap <silent> <F8> :<C-U>let @/="<C-R>=MakePattern(@*)<CR>"<CR>:set hls<CR>
-endif
-" 'pressing Enter toggles highlighting for the current word on and off'
-" This breaks quickfix enter-to-open...
-if 0
+"  nnoremap <silent> <F8> :<C-U>let @/="<C-R>=MakePattern(@*)<CR>"<CR>:set hls<CR>
+" NEW:
+  inoremap <silent> <F8> <C-O>:<C-U>let @/="<C-R>=MakePattern(@*)<CR>"<CR>:set hls<CR>
+endfunction
+call InstallStartSearchHighlightButLeaveCursor()
+
+" Make [Enter] toggle highlighting for the current word on and off.
+" Also from:
+"   http://vim.wikia.com/wiki/Highlight_all_search_pattern_matches
+" This breaks quickfix enter-to-open... [2018-06-27: I wrote this recently,
+" 2017-11-13, but why didn't I think to check if quickfix window? Duh.]
+function! InstallHighlightOnEnter()
+  " 2018-06-27 10:27: This is not so bad. Pressing ENTER toggle highlight
+  " of word-under-cursor (making that word the search term).
   let g:highlighting = 0
   function! Highlighting()
-    if g:highlighting == 1 && @/ =~ '^\\<'.expand('<cword>').'\\>$'
+    " 2018-06-27: This function is back, baby!
+    if &ft == 'qf'
+      return 0
+    endif
+
+    let l:the_term = expand('<cword>')
+
+    " 2018-06-27: Whoa, how did I not know about histadd??!
+    "  Add the word-under-cursor to the search history.
+    call histadd("/", l:the_term)
+    let l:term_search_buffer = '\<'.l:the_term.'\>'
+    call histadd("/", l:term_search_buffer)
+    " Also add to the input history, so it's available from
+    " the `\g` grep search feature input history. E.g., user
+    " might initiate search in buffer and then decide to grep
+    " all files; having the term in the input history means
+    " they don't have to F4 on top of the work or to enter it
+    " manually.
+    call histadd("input", l:the_term)
+    " Add the word-restricted form last.
+    call histadd("input", '\b'.l:the_term.'\b')
+
+    " 2018-06-27 11:10: Is this overkill? Search all the case varietals.
+    " DRY: See also g:DubsGrepSteady_GrepAllTheCases and GrepPrompt_Simple().
+    " Search on 3 casings: Camel, Snake, and Train.
+    " NOTE: Converting to snakecase downcases it.
+    let l:cased_search = ''
+      \ . tolower(s:camelcase(l:the_term)) . "\\|"
+      \ . tolower(s:snakecase(l:the_term)) . "\\|"
+      \ . tolower(s:traincase(l:the_term))
+    let l:cased_search_buffer = '\<\('.l:cased_search.'\)\>'
+    let l:cased_search_grepprg = '\b('.l:cased_search.')\b'
+    call histadd("/", l:cased_search_buffer)
+    call histadd("input", l:cased_search_grepprg)
+    " Test it! Try these: testMe test_me test-me test-me-not testMeNot test_me_NOT testme
+    "   For \g testing (one test term per line):
+    "     testMe
+    "     test_me
+    "     test-me
+    "     test-me-not
+    "     testMeNot
+    "     test_me_NOT
+    "     testme
+
+    "if g:highlighting == 1 && @/ =~ '^\\<'.l:the_term.'\\>$'
+    if g:highlighting == 1 && @/ =~ '^\\<\\('.l:cased_search.'\\)\\>$'
       let g:highlighting = 0
       return ":silent nohlsearch\<CR>"
     endif
-    let @/ = '\<'.expand('<cword>').'\>'
+    "let @/ = l:term_search_buffer
+    let @/ = l:cased_search_buffer
     let g:highlighting = 1
     return ":silent set hlsearch\<CR>"
   endfunction
   nnoremap <silent> <expr> <CR> Highlighting()
-endif
+endfunction
+call InstallHighlightOnEnter()
 
 " Repeat previous search fwd or back w/ F3 and Shift-F3
 " NOTE Using /<CR> instead of n because n repeats the last / or *
@@ -1697,7 +1806,7 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans
 " This screws <TAB>:
 "   inoremap <C-I> <C-O>:call HighlightNearCursor()<CR>
 inoremap <C-B> <C-O>:call HighlightNearCursor()<CR>
-function HighlightNearCursor()
+function! HighlightNearCursor()
   if !exists("s:highlightcursor")
     match Todo /\k*\%#\k*/
     let s:highlightcursor=1
