@@ -620,10 +620,11 @@ function! InstallStartSearchHighlightButLeaveCursor()
   set guioptions+=a
   function! MakePattern(text)
     " 2018-06-27: Heh? Why am I doing here? Escaping `\` in search queries?
+    " DRY: This is shared with dubs_grep_steady/dubs_edit_juice.
     let l:pat = escape(a:text, '\')
-    let l:pat = substitute(pat, '\_s\+$', '\\s\\*', '')
-    let l:pat = substitute(pat, '^\_s\+', '\\s\\*', '')
-    let l:pat = substitute(pat, '\_s\+',  '\\_s\\+', 'g')
+    let l:pat = substitute(l:pat, '\_s\+$', '\\s\\*', '')
+    let l:pat = substitute(l:pat, '^\_s\+', '\\s\\*', '')
+    let l:pat = substitute(l:pat, '\_s\+',  '\\_s\\+', 'g')
 
     call histadd("/", l:pat)
     call histadd("input", l:pat)
