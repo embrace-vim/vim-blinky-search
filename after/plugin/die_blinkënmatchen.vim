@@ -158,11 +158,12 @@ function! HLNext(blink_length, blink_freq, skip_first)
 endfunction
 
 " Set up maps for n and N that blink the match
+" 2018-07-09: (lb): Giving 'zz' a shot.
 execute printf(
-  \ 'nnoremap <silent> n n:call HLNext(%d, %d, 0)<cr>',
+  \ 'nnoremap <silent> n nzz:call HLNext(%d, %d, 0)<cr>',
   \ s:blink_length, has('timers') ? s:blink_freq : s:blink_length)
 execute printf(
-  \ 'nnoremap <silent> N N:call HLNext(%d, %d, 0)<cr>',
+  \ 'nnoremap <silent> N Nzz:call HLNext(%d, %d, 0)<cr>',
   \ s:blink_length, has('timers') ? s:blink_freq : s:blink_length)
 
 " <F3> overrides of github.com/landonb/dubs_edit_juice
