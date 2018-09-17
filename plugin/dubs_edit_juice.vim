@@ -399,6 +399,9 @@ call <SID>wire_keys_ups_and_downs()
 " i.e., scrolls your view without moving your
 " cursor.
 function! s:wire_keys_up_and_down_arrows()
+  " 2018-09-17/EXPLAIN: What's the magic that maps <C-y> to
+  " scroll window upward, as opposed to Redo (which Dubs maps
+  " to <C-y> at some point)? Is it down to load order?
   noremap <C-Up> <C-y>
   inoremap <C-Up> <C-O><C-y>
   cnoremap <C-Up> <C-C><C-y>
@@ -919,6 +922,8 @@ endfunction
 "      (And guess what? gU uppercases.)
 " HINT You can also select text, and then <C-O>U or <C-O>u
 "      to uppercase or lowercase the selected text.
+" HELP: To get help on <C-u>, in command mode (following the colon), try:
+"          h c_CTRL-u
 vnoremap <C-Z> :<C-U>
   \ :undo<CR>
 vnoremap <C-Y> :<C-U>
