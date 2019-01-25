@@ -7,20 +7,20 @@
 " ----------------------------------------------------------------------------
 " Copyright © 2017 Landon Bouma.
 "
-" This file is part of Dubsacks.
+" This file is part of Dubs Vim.
 "
-" Dubsacks is free software: you can redistribute it and/or
+" Dubs Vim is free software: you can redistribute it and/or
 " modify it under the terms of the GNU General Public License
 " as published by the Free Software Foundation, either version
 " 3 of the License, or (at your option) any later version.
 "
-" Dubsacks is distributed in the hope that it will be useful,
+" Dubs Vim is distributed in the hope that it will be useful,
 " but WITHOUT ANY WARRANTY; without even the implied warranty
 " of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 " the GNU General Public License for more details.
 "
 " You should have received a copy of the GNU General Public License
-" along with Dubsacks. If not, see <http://www.gnu.org/licenses/>
+" along with Dubs Vim. If not, see <http://www.gnu.org/licenses/>
 " or write Free Software Foundation, Inc., 51 Franklin Street,
 "                     Fifth Floor, Boston, MA 02110-1301, USA.
 " ===================================================================
@@ -40,7 +40,7 @@ let g:plugin_die_blinkenmatchen = 1
 " 2018-06-11: See also another plugin that highlights search results
 " as you jump to them, and also clears the highlight when you move the
 " cursor. Except it conflicts with this code (I'm assuming; it conflicts
-" with something in Dubsacks; or it's just broken), and the code is longer
+" with something in Dubs Vim; or it's just broken), and the code is longer
 " and more complicated looking than I want to spend time stealing from.
 "   https://github.com/pgdouyon/vim-evanesco
 " However, I still like the idea of clearing the highlight automatically
