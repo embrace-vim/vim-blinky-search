@@ -8,20 +8,20 @@
 " -------------------------------------------------------------------
 " Copyright © 2009, 2015-2017 Landon Bouma.
 "
-" This file is part of Dubsacks.
+" This file is part of Dubs Vim.
 "
-" Dubsacks is free software: you can redistribute it and/or
+" Dubs Vim is free software: you can redistribute it and/or
 " modify it under the terms of the GNU General Public License
 " as published by the Free Software Foundation, either version
 " 3 of the License, or (at your option) any later version.
 "
-" Dubsacks is distributed in the hope that it will be useful,
+" Dubs Vim is distributed in the hope that it will be useful,
 " but WITHOUT ANY WARRANTY; without even the implied warranty
 " of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
 " the GNU General Public License for more details.
 "
 " You should have received a copy of the GNU General Public License
-" along with Dubsacks. If not, see <http://www.gnu.org/licenses/>
+" along with Dubs Vim. If not, see <http://www.gnu.org/licenses/>
 " or write Free Software Foundation, Inc., 51 Franklin Street,
 "                     Fifth Floor, Boston, MA 02110-1301, USA.
 " ===================================================================
@@ -1260,7 +1260,7 @@ endfunc
 " Habermann,
 "  CharTab <http://www.vim.org/scripts/script.php?script_id=898>
 " NOTE Does not work: nnoremap <M-!> <Leader>ct
-" SYNC_ME: Dubsacks' <M-????> mappings are spread across plugins. [M-S-1]
+" SYNC_ME: Dubs Vim's <M-????> mappings are spread across plugins. [M-S-1]
 nmap <M-!> <Leader>ct
 imap <M-!> <C-o><Leader>ct<ESC>
 " TODO imap does not restore i-mode when ct done
@@ -1277,7 +1277,7 @@ imap <M-!> <C-o><Leader>ct<ESC>
 " Alt-Shift-6 // Toggle Tag List
 " --------------------------------
 " Show the ctags list.
-" SYNC_ME: Dubsacks' <M-????> mappings are spread across plugins. [M-S-6]
+" SYNC_ME: Dubs Vim's <M-????> mappings are spread across plugins. [M-S-6]
 nmap <M-^> :TlistToggle<CR>
 imap <M-^> <C-O>:TlistToggle<CR>
 "cmap <M-^> <C-C>TlistToggle<ESC>
@@ -1318,13 +1318,13 @@ else
       silent execute '!/bin/ln -s ' . s:d_tags . ' ' . s:ln_tags
     endif
   else
-    echomsg 'Warning: Dubsacks could not find dubs_tagpaths.vim.template'
+    echomsg 'Warning: Dubs Vim could not find dubs_tagpaths.vim.template'
   endif
 endif
 if s:d_tags != ''
   execute 'source ' . s:d_tags
 else
-  echomsg 'Warning: Dubsacks could not find dubs_tagpaths.vim'
+  echomsg 'Warning: Dubs Vim could not find dubs_tagpaths.vim'
 endif
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
