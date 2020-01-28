@@ -1108,14 +1108,15 @@ vnoremap <F2> :<C-U>'<,'>!parT 79qr<CR>
 " For commit files, I like narrower columns, 60 chars in width.
 "vnoremap <S-F2> :<C-U>'<,'>!par 59gqr<CR>
 "vnoremap <S-F2> :<C-U>'<,'>!par 59qr<CR>
-vnoremap <S-F2> :<C-U>'<,'>!parT 59qr<CR>
+vnoremap <S-F2> :<C-U>'<,'>!parT 67qr<CR>
 " 2014.11.25: Can we also throw in seventy-wides?
 "vnoremap <C-S-F2> :<C-U>'<,'>!par 69gqr<CR>
 "vnoremap <C-S-F2> :<C-U>'<,'>!par 69qr<CR>
-vnoremap <C-S-F2> :<C-U>'<,'>!parT 69qr<CR>
+" 2020-01-28: Dob development (89 chars).
+vnoremap <C-S-F2> :<C-U>'<,'>!parT 89qr<CR>
 " 2015.11.25: 64? Hrmm
-vnoremap <C-S-F3> :<C-U>'<,'>!parT 64qr<CR>
-vnoremap <C-S-F4> :<C-U>'<,'>!parT 74qr<CR>
+vnoremap <C-S-F3> :<C-U>'<,'>!parT 55qr<CR>
+vnoremap <C-S-F4> :<C-U>'<,'>!parT 44qr<CR>
 
 " Example of fetching input for command on vnoremap:
 "    https://stackoverflow.com/questions/12805922/vim-vmap-send-selected-text-as-parameter-to-function
