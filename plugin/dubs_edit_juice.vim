@@ -1835,3 +1835,20 @@ endfunction
 imap <M-d> <C-o>diw
 nmap <M-d> diw
 
+" -------------------------------------------------------------------------
+" 2020-02-05: Change cursor shape in different modes.
+" -------------------------------------------------------------------------
+
+" Thank you!!
+" https://vim.fandom.com/wiki/Change_cursor_shape_in_different_modes
+
+" ¿Set IBeam shape in insert mode, underline shape in replace mode
+"  and block shape in normal mode.¿
+"  https://vim.fandom.com/wiki/Change_cursor_shape_in_different_modes
+" From 'VTE-compatible terminals' ('includes mate-terminal 1.18.1').
+" 2020-02-05: (lb): I'm running 'MATE Terminal 1.20.0'.
+" - Works almost ¿, except on escape to vim insert mode, cursor
+let &t_SI = "\<Esc>[6 q"
+let &t_SR = "\<Esc>[4 q"
+let &t_EI = "\<Esc>[2 q"
+
