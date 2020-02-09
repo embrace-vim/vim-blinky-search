@@ -536,6 +536,27 @@ endfunction
 
 call <SID>wire_keys_select_text_to_word_previous_and_next()
 
+" -------
+
+function! s:wire_keys_move_to_word_previous_and_next()
+
+  nnoremap <C-Left> b
+  inoremap <C-Left> <C-O>b
+  " Don't vmap C-Left, or after C-S-Left it'll keep selecting without
+  " Shift pressed anymore:
+  "   vnoremap <C-Left> b
+
+  " Note the <right> (or `l`), otherwise cursor ends up between last two chars.
+  nnoremap <C-Right> el
+  inoremap <C-Right> <C-O>e<Right>
+  " Don't vmap C-Right, or after C-S-Right it'll keep selecting without
+  " Shift pressed anymore:
+  "   vnoremap <C-Right> e
+
+endfunction
+
+call <SID>wire_keys_move_to_word_previous_and_next()
+
 " -------------------------------------------------------------------
 " Wire Alt-Shift-Left/-Right to Selecting from Cursor to Edge of Line
 " -------------------------------------------------------------------
