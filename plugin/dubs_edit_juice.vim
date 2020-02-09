@@ -343,26 +343,120 @@ call <SID>wire_key_delete()
 "       the cursor one character past the end of the word, so that
 "       our selection behaves more expectedly.
 function! s:select_text_previous_word()
-  let ve_save = &virtualedit
-  let sel_cmd = 'vb'
+
   " Check if on last column of line.
-  " Caveat: On empty line, both return 1, so use >=, not ==.
-  if col(".") >= col("$") - 1
-    " Note that the `e` motion is exclusive, which means it misses the
-    " last character of the last word when selecting from the last column
-    " of a line. Raither than try, say, set selection=inclusive, we can
-    " use the 'onemore' virtualedit feature to adjust the cursor prior to
-    " selecting.
-    " - tl;dr This makes select-left work from last column.
-    " SAME AS:
-    "   let &virtualedit = "onemore"
-    set virtualedit=onemore
-    " I.e., move one character right (to the virtual column),
-    " enter visual mode, then select back-word.
-    let sel_cmd = 'lvb'
+  " Caveat: On empty line, both return 1, so use >=, not ==; or use <.
+  if col(".") < col("$") - 1
+    " Not last line. Simply start visual mode, and select back-word.
+    normal! vb
+    return
   endif
-  execute 'normal! ' . sel_cmd
-  let &virtualedit = ve_save
+
+  " Handle selecting left from the last column of a line.
+
+  " - Old approach:
+  "   - I originally tried using virtual editing.
+  "     - Note that the `b` motion is exclusive, which means it misses
+  "       the last character of the last word when selecting from the
+  "       last column of a line, so `vb` from the final columns would
+  "       leave the last character of the word out of the selection.
+  "     - Rather than try, say, set selection=inclusive, we can use
+  "       the 'onemore' virtualedit feature to adjust the cursor prior
+  "       to selecting -- move the cursor one right before selecting,
+  "       and then the whole word will be selected.
+  "     - tl;dr This makes select-left work from last column.
+  "   - The code looked like this:
+  "       " - Here we move the cursor one character to the right (to the
+  "       "   virtual column); enter visual mode; then select back-word.
+  "       let ve_save = &virtualedit
+  "       " - Start by setting virtual mode.
+  "       "   Call `set virtualedit=onemore`, or equivalently:
+  "       let &virtualedit = 'onemore'
+  "       " - Move cursor right, enter visual mode, and select backward.
+  "       normal! lvb
+  "       " - Restore the virtual editing mode.
+  "       let &virtualedit = ve_save
+  "
+  " - The Old approach worked okay when a word ended the line, but if the
+  "   line ended with non-alphanumeric characters (like a period, '.',
+  "   for instance), the select would grab just that character.
+  "   - So let's make selecting from the last column a special case and
+  "     search backwards from the last column to the start of the closet
+  "     word -- meaning, we *do not* honor iskeyword from the final column.
+
+  " Interesting: If you had a line ending with a space and not characters,
+  "              e.g.,
+  "
+  "                     foo, bar ==.
+  "
+  "              then Ctrl-Shift-Left from the last column looking for a
+  "              word boundary, e.g.,
+  "
+  "                     let @/ = "\\<\\w"
+  "              or
+  "                     let @/ = "\\<\\S"
+  "
+  "              would jump back to the word, e.g., it'd select,
+  "              e.g.,:
+  "
+  "                     foo, bar ==.
+  "                          _______
+  "
+  "              (You can demo similarly using `?\<\w` to search backwards.)
+  "
+  "              If we add a case for the space,
+  "              e.g.,
+  "
+  "                     let @/ = "\\(\\<\\w\\| \\)"
+
+  "              then it jumps more normal,
+  "              e.g.,
+  "
+  "                     foo, bar ==.
+  "                             ____
+  "
+  "              which isn't 100% ideal, because the space should not be included.
+  "
+  "              But if we use a Positive lookbehind, `\(...\)\@<=`, we can check
+  "              for the space, but not include it. And that gets us what we want,
+  "              e.g.,
+  "
+  "                     foo, bar ==.
+  "                              ___
+  "
+  "              - I tried checking on any whitespace, to avoid selecting across
+  "                a newline, but I didn't figure it out, e.g., I tried:
+  "                  let @/ = "\\(\\s\\)\\@<="
+  "                but if you Ctrl-Shift-Left from the end of a line and there's
+  "                only one word on the line, the selection wraps around to the
+  "                previous line (to the start of the previous word).
+  "
+  " - That all said, here's the big takeaway:
+  "
+  "   - Ctrl-Shift-Left does not respect `iskeyword`
+  "     when run from the final column of a line.
+  "
+  "   - This is a trade-off to make making selections from the end of the line
+  "     easier when there's punctuation involved, which is often the case (for
+  "     me) when editing text files (which is probably the more common use case
+  "     for me when selecting text backwards from the end of a line).
+  "
+  "     - 2020-02-09: This behavior is new. Let it roll, and check back later,
+  "                   lemme know how you like it.
+
+  " Save the current pattern, so we can restore it, otherwise if the user hits
+  " F3 or re-searches, the search used would be the one we set in this function.
+  let last_pttrn = @/
+
+  " Look for the first character following a space (but don't include the space).
+  let @/ = "\\( \\)\\@<="
+
+  " - Enter visual mode (`v`).
+  " - Search backward for the last used search pattern (`gN`).
+  execute 'normal! vgN'
+
+  let @/ = last_pttrn
+
 endfunction
 
 " I have two issues with Vim's Ctrl-Left/-Right and Ctrl-Shift-Left/-Right
