@@ -99,11 +99,17 @@ call <SID>wire_key_backspace()
 " independently -- we need a function to tell
 " if the character under the cursor is whitespace
 " or not, and to call 'dw' or 'de' as appropriate.
-" NOTE Was originally called DeleteToEndOfWord,
-"      but really,
-"   DeleteToEndOfWhitespaceAlphanumOrPunctuation
+"
+" NOTE Was originally called
+"        DeleteToEndOfWord
+"      and then at some point renamed to
+"        DeleteToEndOfWhitespaceAlphanumOrPunctuation
+"      but after that rename-abbreviated to
+"        Del2EndOfWsAz09OrPunct
+"      where Ws: whitespace, Az: a-z, 09: 0-9, and Punct: uation.
+"
 " --------------------------------
-"  Original Flavor
+"  [DEPRECATED] Original Function
 function! s:Del2EndOfWsAz09OrPunct_ORIG()
   " If the character under the cursor is
   " whitespace, do 'dw'; if it's an alphanum, do
@@ -149,8 +155,9 @@ function! s:Del2EndOfWsAz09OrPunct_ORIG()
   "         an executable code path
   endif
 endfunction
+
 " --------------------------------
-"  NEW FLAVOR
+"  [CURRENT] Better Function
 function! s:Del2EndOfWsAz09OrPunct(wasInsertMode, deleteToEndOfLine)
   " If the character under the cursor is
   " whitespace, do 'dw'; if it's an alphanum, do
@@ -314,28 +321,226 @@ call <SID>wire_key_delete()
 " Editing Features -- Selecting Text
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-" ------------------------------------------------------
-" Fix That Shift
-" ------------------------------------------------------
+" -------------------------------------------------------------------
+" Fix `:behave 'mswin'`'s Ctrl-Shift-Left/-Right Text Select Bahviour
+" -------------------------------------------------------------------
 
-" Vim's default Ctrl-Shift-Left/Right behavior is
-" to select all non-whitespace characters (see
-" :help v_aW). We want to change this to not be
-" so liberal. Use vmap to change how Vim selects
-" text in visual mode. By using 'e' instead of
-" 'aW', for example, Vim selects alphanumeric
-" blocks but doesn't cross punctuation boundaries.
-function! s:wire_keys_left_and_right_arrows()
-  " In other words, we want to select blocks of
-  " whitespace, alphanums, or punctuation, but
-  " never combinations thereof.
-  " TODO This still isn't quite right -- the first
-  "      selection is always too great, i.e., the
-  "      cursor jumps boundaries 'b' and 'e'
-  "      wouldn't
+" (lb): My initial implementation was a simple mapping, e.g., either:
+"         nnoremap <C-S-Left> vb<C-g>
+"       which enters Visual mode, selects a word backwards,
+"       and then changes to Select mode (so that typed text
+"       replaces the selected text, rather than being read
+"       as command input); or as
+"         nnoremap <C-S-Left> gh<C-O>b
+"       which is an equivalent command, but enters select
+"       mode first and uses Ctrl-O to send a one-off normal
+"       mode command to select 'backword'.
+"       - But there's a problem if the cursor is on the final
+"       word of a line -- Vim defaults to 'exclusive' selection,
+"       which, for whatever reason, leaves the last character of
+"       the word out of the selection! So here we use a function
+"       to temporarily switch to virtualedit-lite, so we can move
+"       the cursor one character past the end of the word, so that
+"       our selection behaves more expectedly.
+function! s:select_text_previous_word()
+  let ve_save = &virtualedit
+  let sel_cmd = 'vb'
+  " Check if on last column of line.
+  " Caveat: On empty line, both return 1, so use >=, not ==.
+  if col(".") >= col("$") - 1
+    " Note that the `e` motion is exclusive, which means it misses the
+    " last character of the last word when selecting from the last column
+    " of a line. Raither than try, say, set selection=inclusive, we can
+    " use the 'onemore' virtualedit feature to adjust the cursor prior to
+    " selecting.
+    " - tl;dr This makes select-left work from last column.
+    " SAME AS:
+    "   let &virtualedit = "onemore"
+    set virtualedit=onemore
+    " I.e., move one character right (to the virtual column),
+    " enter visual mode, then select back-word.
+    let sel_cmd = 'lvb'
+  endif
+  execute 'normal! ' . sel_cmd
+  let &virtualedit = ve_save
+endfunction
+
+" I have two issues with Vim's Ctrl-Left/-Right and Ctrl-Shift-Left/-Right
+" behaviors:
+"
+" - 1 issue is just personal preference in how it treats the last word
+"   on the line.
+"
+" - The other issue seems to be a (design) bug (in that Ctrl-arrow and
+"   Ctrl-Shift-arrow do not identify WORDs in the same way).
+"
+" - The first issue is personal preference: I'd like selecting the last
+"   word of a line to stop at the end of the line, and not to wrap around
+"   (and gobble up the newline and adjoining whitespace).
+"
+"   - Vim's Ctrl-Shift-Right 'mswin' behavior jumps from the current
+"     word to the start of the next word -- just like the `w` command
+"     (see :help v_aW and :help word-motions).
+"
+"   - Consequently, if the cursor is at the start of the last word of a line,
+"     a Ctrl-Shift-Right selects past the word and includes the newline and
+"     all whitespace leading up to the next word character.
+"
+"     - But I'd rather the selection stop at the end of the line, after the
+"      last word, before the newline. More like how the `e` builtin works.
+"
+"     - Consider this example, where the cursor is represented by `|`:
+"
+"           this is my final w|ord
+"              - and this a new line.
+"
+"        If you were to press `e` (in normal mode), the cursor jumps to
+"        the end of the line, past the last word, e.g.,:
+"
+"           this is my final word|
+"              - and this a new line.
+"
+"        But if you press `w` (how Vim implements Ctrl-[Shift-]Right), the
+"        cursor jumps to the next non-blank character, e.g.,::
+"
+"           this is my final word
+"              |- and this a new line.
+"
+"     - Because Ctrl-Shift-Right selects word-by-word up until the final
+"       word, it feels unnatural to me that it selects past the final word
+"       of a line. I realize that, as implemented, the design is correct,
+"       because the behavior is the same when selecting the first word of
+"       a line versus the final word -- the selection includes the word
+"       and the whitespace following it -- it's just that the experience
+"       feels weird for the final word of a line, because that selection
+"       includes not just whitespace spaces, but also newlines. (So, often
+"       I'm find myself just wanting to select to the end of the line, and
+"       so I use Ctrl-Shift-Right to start the selection, but then I have
+"       to Shift-Left one or more times to trim it.)
+"
+"   - CAVEAT: Note that now a quick Ctrl-Shift-Right/-Left followed by
+"             Backspace migth leave you with an extra whitespace character
+"             than you're used to! Because the remapped commands do not
+"             gobble whitespace after the word like they did before, you
+"             may need to adjust your backspace game a tag.
+"             - There's always a catch!
+"
+" - The second issue I have with the builtin behavior seems to be a design
+"   bug, because Ctrl-Right and Ctrl-Shift-Rigth see WORDS differently.
+"
+"   - Specifically, Ctrl-Right honors iskeyword, but Ctrl-Shift-Right
+"     does not.
+"
+"     - For example, again considering that | is the cursor, given the line:
+"
+"           i would like a |happy-place meal
+"
+"       Press Ctrl-Right from insert mode and the cursor moves to the dash, e.g.,:
+"
+"           i would like a happy|-place meal
+"
+"       But press Ctrl-Shift-Right and the cursor blows past the dash, e.g.,
+"
+"           i would like a happy-place |meal
+"                          ____________
+"
+"       where `_` indicates the text the was selected.
+"
+"     - We make it so Ctrl-Shift-Left/-Right honors iskeyword.
+"
+"       - Given the last example, this means Ctrl-Shift-Right selects instead:
+"
+"           i would like a happy|-place meal
+"                          _____
+"
+"   - Hopefully, by this example, you can see why I consider this a design flaw.
+"
+"     - Nonetheless, there's a way around it, and I still love me some Vim!
+"
+" - Note, too, that we finish each mapping with CTRL-G, to change from Visual
+"   mode to Select mode -- the latter means that typed text replaces a text
+"   selection, rather the Vim processing typed text as a normal mode command.
+"   (The `:behave mswin` command enables select mode when text is selected.)
+"
+"   - See: help v_CTRL-G
+"
+"   - See: `help select-mode` for differences between Visual and Select mode.
+"
+" - For more on our Ctrl-Shift-Left implementation, see notes atop its function:
+"
+"     select_text_previous_word
+"
+" - For more on Ctrl-Shift-Right, which we can implement without a function,
+"   consider the following breakdown of the command:
+"
+"   - First, either enter Visual mode (`v`), or Select mode (`gh`).
+"
+"     - We'll go straight to select mode, otherwise we need to enter
+"       it later after making the selection. (So we eliminate a call
+"       to `<C-g>` if we use `gh` instead of `v`.)
+"
+"     - To send a command from select mode, send the `<C-O>` prefix.
+"
+"     - Select to the end of the word following the cursor using `e`.
+"
+"     - If we had switched to Visual mode earlier (we didn't), we'd
+"       choose *Select* mode (`<C-g>`) now; but we're already in
+"       Select mode, because Vim returns us there after the `<C-O>`
+"       one-off command (`e`).
+"
+"     - For contrast, here's the normal mode wrapping written both ways:
+"
+"           nnoremap <C-S-Right> ve<C-g>    " Both of these
+"           nnoremap <C-S-Right> gh<C-O>e   " do same thing.
+"
+"       Neither approache seems more intuitive/correct, though
+"       perhaps the `gh` command signals the intent to leave the
+"       user in Select mode, not Visual mode, making `gh` the
+"       perferred approach.
+"
+" - Why do we switch to Select mode, and not just use Visual mode?
+"
+"   - Note that because Dubs Vim sets `:behave mswin` (elsewhere),
+"     a user expects that when typing a character and there is text
+"     selected, that the selected text is replaced by that character.
+"
+"     - But in visual mode, Vim interprets input as a command.
+"       For example, selecting text and pressing 'C' clears the line,
+"       rather than replacing the select text with the letter 'C'.
+"
+"     - Normally when you select text under `mswin` behavior, it's
+"       replaced when you type. But when you select text under the
+"       other behavior, `xterm`, Vim is still interpreting input as
+"       commands. And because we enterted Visual mode by using `v`
+"       (at least for Ctrl-Shift-Left), we can easily switch to
+"       Select mode by using `<C-g>`, and then the user will have
+"       their perfect experience.
+"
+" 100+ comment lines later, here we are!
+function! s:wire_keys_select_text_to_word_previous_and_next()
+  " Change the Ctrl-Shift-left/right behavior (for the better).
+
+  " The Ctrl-Shift-Left behavior is more complicated than Ctrl-Shift-Right
+  " because of a special case when the cursor is in the final column, so we
+  " pass off to a callback.
+  nnoremap <C-S-Left> :<C-U>call <SID>select_text_previous_word()<CR><C-g>
+  inoremap <C-S-Left> <C-O>:<C-U>call <SID>select_text_previous_word()<CR><C-g>
   vnoremap <C-S-Left> b
+
+  " See comments above for a breakdown of these mappings.
+  nnoremap <C-S-Right> gh<C-O>e
+  inoremap <C-S-Right> <C-O>gh<C-O>e
   vnoremap <C-S-Right> e
 
+endfunction
+
+call <SID>wire_keys_select_text_to_word_previous_and_next()
+
+" -------------------------------------------------------------------
+" Wire Alt-Shift-Left/-Right to Selecting from Cursor to Edge of Line
+" -------------------------------------------------------------------
+
+function! s:wire_keys_select_text_to_line_beg_and_end()
   " Alt-Shift-Left selects from cursor to start of line
   " (same as Shift-Home)
   noremap <M-S-Left> v0
@@ -349,25 +554,24 @@ function! s:wire_keys_left_and_right_arrows()
   vnoremap <M-S-Right> $
 endfunction
 
-call <SID>wire_keys_left_and_right_arrows()
+call <SID>wire_keys_select_text_to_line_beg_and_end()
 
-" ------------------------------------------------------
-" A Smarter Select
-" ------------------------------------------------------
+" ---------------------------------------------------------------------------
+" Wire Ctrl-Shift-PageUp/-PageDown to Selecting from Cursor to Edge of Window
+" ---------------------------------------------------------------------------
 
-function! s:wire_keys_ups_and_downs()
+function! s:wire_keys_select_lines_to_window_first_and_last()
+  " Much like Ctrl-PageUp and Ctrl-PageDown move the cursor to the top of
+  " the window or to the bottom of the window, respectively, without changing
+  " the view, Ctrl-Shift-PageUp and Ctrl-Shift-PageDown select text from the
+  " cursor to the top or bottom of the window without shifting the view.
+
   " Ctrl-Shift-PageUp selects from cursor to first line of window
   noremap <C-S-PageUp> vH
   inoremap <C-S-PageUp> <C-O>vH
   cnoremap <C-S-PageUp> <C-C>vH
   onoremap <C-S-PageUp> <C-C>vH
   vnoremap <C-S-PageUp> H
-  " (And so does Alt-Shift-Up)
-  noremap <M-S-Up> vH
-  inoremap <M-S-Up> <C-O>vH
-  cnoremap <M-S-Up> <C-C>vH
-  onoremap <M-S-Up> <C-C>vH
-  vnoremap <M-S-Up> H
 
   " Ctrl-Shift-PageDown selects from cursor to last line of window
   noremap <C-S-PageDown> vL
@@ -375,15 +579,9 @@ function! s:wire_keys_ups_and_downs()
   cnoremap <C-S-PageDown> <C-C>vL
   onoremap <C-S-PageDown> <C-C>vL
   vnoremap <C-S-PageDown> L
-  " (And so does Alt-Shift-Down)
-  noremap <M-S-Down> vL
-  inoremap <M-S-Down> <C-O>vL
-  cnoremap <M-S-Down> <C-C>vL
-  onoremap <M-S-Down> <C-C>vL
-  vnoremap <M-S-Down> L
 endfunction
 
-call <SID>wire_keys_ups_and_downs()
+call <SID>wire_keys_select_lines_to_window_first_and_last()
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Document Navigation -- Moving the Cursor
@@ -398,7 +596,7 @@ call <SID>wire_keys_ups_and_downs()
 " states. Really, it just moves the scrollbar,
 " i.e., scrolls your view without moving your
 " cursor.
-function! s:wire_keys_up_and_down_arrows()
+function! s:wire_keys_scroll_window_sticky_cursor()
   " 2018-09-17/EXPLAIN: What's the magic that maps <C-y> to
   " scroll window upward, as opposed to Redo (which Dubs maps
   " to <C-y> at some point)? Is it down to load order?
@@ -412,65 +610,11 @@ function! s:wire_keys_up_and_down_arrows()
   onoremap <C-Down> <C-C><C-e>
 endfunction
 
-call <SID>wire_keys_up_and_down_arrows()
+call <SID>wire_keys_scroll_window_sticky_cursor()
 
 " ------------------------------------------------------
 " Quick Cursor Jumping
 " ------------------------------------------------------
-
-" EditPlus, among other editors, maps Ctrl-PageUp
-" and Ctrl-PageDown to moving the cursor to the
-" top and bottom of the window (equivalent to
-" H and L in Vim (which also defines M to jump
-" to the middle of the window, which is not
-" mapped here)).
-" NOTE In a lot of programs, C-PageUp/Down go to
-"      next/previous tab page; not so here, see
-"      Alt-PageUp/Down for that.
-"      FIXME 2011.01.16 Alt-PageUp/Down is broken...
-"            (well, that, and I never use it)
-noremap <C-PageUp> :call <SID>Smart_PageUpDown(1)<CR>
-inoremap <C-PageUp> <C-O>:call <SID>Smart_PageUpDown(1)<CR>
-noremap <C-PageDown> :call <SID>Smart_PageUpDown(-1)<CR>
-inoremap <C-PageDown> <C-O>:call <SID>Smart_PageUpDown(-1)<CR>
-
-" On my laptop, my right hand spends a lot of time near
-" (and using) the arrow keys, which are on the bottom
-" of the keyboard, but the other navigation keys (home,
-" end, page up and down and the ilk) are far, far away,
-" at the top of the keyboard. But we can map those to
-" Alt-Arrow Key combinations to make our hands happy
-" (or is it to make our fingers frolicsome?).
-
-" Alt-Up moves cursor to the top of the window, or, if
-" it's already there, it scrolls up one window.
-noremap <M-Up> :call <SID>Smart_PageUpDown(1)<CR>
-inoremap <M-Up> <C-O>:call <SID>Smart_PageUpDown(1)<CR>
-vnoremap <M-Up> :<C-U>
-  \ <CR>gvy
-  \ :call <SID>Smart_PageUpDown(1)<CR>
-
-" Alt-Down moves cursor to the bottom of the window, or, if
-" it's already there, it scrolls down one window.
-noremap <M-Down> :call <SID>Smart_PageUpDown(-1)<CR>
-inoremap <M-Down> <C-O>:call <SID>Smart_PageUpDown(-1)<CR>
-vnoremap <M-Down> :<C-U>
-  \ <CR>gvy
-  \ :call <SID>Smart_PageUpDown(-1)<CR>
-
-" Alt-Left moves the cursor to the beginning of the line.
-noremap <M-Left> <Home>
-inoremap <M-Left> <C-O><Home>
-vnoremap <M-Left> :<C-U>
-  \ <CR>gvy
-  \ :execute "normal! 0"<CR>
-
-" Alt-Right moves the cursor to the end of the line.
-noremap <M-Right> <End>
-inoremap <M-Right> <C-O><End>
-vnoremap <M-Right> :<C-U>
-  \ <CR>gvy
-  \ :execute "normal! $"<CR>
 
 function! s:Smart_PageUpDown(direction)
   let cursor_cur_line = line(".")
@@ -497,19 +641,81 @@ function! s:Smart_PageUpDown(direction)
   endif
 endfunction
 
+" -------
+
+" - EditPlus, among other editors, maps Ctrl-PageUp and Ctrl-PageDown to moving the
+"   cursor to the top and bottom of the window (equivalent to H and L in Vim (which
+"   also defines M to jump to the middle of the window, which is not mapped here)).
+" - Note, too, that in some programs, C-PageUp/Down switches to the next/previous
+"   tab/pane/window. In Dubs Vim, you can prev/next windows with Ctrl-Shift-Up/Down,
+"   and you can prev/next tabs with Alt-Shift-Up/Down.
+function! s:wire_keys_cursor_to_line_first_and_last()
+  " Ctrl-PageUp moves cursor to the top of the window, or, if
+  " it's already there, it scrolls up one viewable-window-full.
+  noremap <C-PageUp> :call <SID>Smart_PageUpDown(1)<CR>
+  inoremap <C-PageUp> <C-O>:call <SID>Smart_PageUpDown(1)<CR>
+  " Ctrl-PageDown moves cursor to the bottom of the window, or, if
+  " it's already there, it scrolls down one viewable-window-full.
+  noremap <C-PageDown> :call <SID>Smart_PageUpDown(-1)<CR>
+  inoremap <C-PageDown> <C-O>:call <SID>Smart_PageUpDown(-1)<CR>
+endfunction
+
+call <SID>wire_keys_cursor_to_line_first_and_last()
+
+" -------
+
+" On my laptop, my right hand spends a lot of time near
+" (and using) the arrow keys, which are on the bottom
+" of the keyboard, but the other navigation keys (home,
+" end, page up and down and the ilk) are far, far away,
+" at the top of the keyboard. But we can map those to
+" Alt-Arrow Key combinations to make our hands happy
+" (or is it to make our fingers frolicsome?).
+
+function! s:wire_keys_cursor_to_line_beg_and_end()
+  " Alt-Left moves the cursor to the beginning of the line.
+  noremap <M-Left> <Home>
+  inoremap <M-Left> <C-O><Home>
+  vnoremap <M-Left> :<C-U>
+    \ <CR>gvy
+    \ :execute "normal! 0"<CR>
+  " Alt-Right moves the cursor to the end of the line.
+  noremap <M-Right> <End>
+  inoremap <M-Right> <C-O><End>
+  vnoremap <M-Right> :<C-U>
+    \ <CR>gvy
+    \ :execute "normal! $"<CR>
+endfunction
+
+call <SID>wire_keys_cursor_to_line_beg_and_end()
+
+" -------
+
 " 2011.01.16 Will I find this useful?
-" Alt-End moves the cursor to the middle of the window.
-" And starts editing.
-"noremap <M-End> M0i
-"inoremap <M-End> <C-O>M<C-O>0
-"vnoremap <M-End> :<C-U>
-"  \ <CR>gvy
-"  \ :execute "normal! M0"<CR>
-noremap <M-F12> M0i
-inoremap <M-F12> <C-O>M<C-O>0
-vnoremap <M-F12> :<C-U>
-  \ <CR>gvy
-  \ :execute "normal! M0"<CR>
+" 2020-02-08: Hahahaha, if I'd even remember to use it!
+"             - I like it! Like pressing 'M' and then 'i'.
+"
+" Alt-F12 moves the cursor to the middle of the window,
+" and starts editing.
+"
+" - This was mapped to Alt-End, but that did not feel right,
+"   e.g.,
+"
+"     noremap <M-End> M0i
+"     inoremap <M-End> <C-O>M<C-O>0
+"     vnoremap <M-End> :<C-U>
+"       \ <CR>gvy
+"       \ :execute "normal! M0"<CR>
+"
+function! s:wire_key_insert_mode_middle_line()
+  noremap <M-F12> M0i
+  inoremap <M-F12> <C-O>M<C-O>0
+  vnoremap <M-F12> :<C-U>
+    \ <CR>gvy
+    \ :execute "normal! M0"<CR>
+endfunction
+
+call <SID>wire_key_insert_mode_middle_line()
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Document Navigation -- Searching Within a Buffer
