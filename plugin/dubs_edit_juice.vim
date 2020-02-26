@@ -1606,50 +1606,6 @@ imap <M-^> <C-O>:TlistToggle<CR>
 "omap <M-^> <C-C>TlistToggle<ESC>
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-" Developer Features -- Tags
-" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-" FIXME: We really need a better way to do this, like, on a per-project
-"        basis... auto-unload and -reload of tags when you start working
-"        on a file in a different project?? There's gotta be a plugin for
-"        this already...
-
-" FIXME: Make DRY. This fcn. was copied from elsewhere.
-
-" See if the user made a project search listing and use that.
-let s:d_tags = findfile('dubs_tagpaths.vim',
-                       \ pathogen#split(&rtp)[0] . "/**")
-if s:d_tags != ''
-  " Turn into a full path. See :h filename-modifiers
-  let s:d_tags = fnamemodify(s:d_tags, ":p")
-else
-  " No file, but there should be a template we can copy.
-  let s:tmplate = findfile('dubs_tagpaths.vim.template',
-                         \ pathogen#split(&rtp)[0] . "/**")
-  if s:tmplate != ''
-    let s:tmplate = fnamemodify(s:tmplate, ":p")
-    " See if dubs_all is there.
-    let s:dubcor = fnamemodify(
-      \ finddir('dubs_all', pathogen#split(&rtp)[0] . "/**"), ":p")
-    " Get the filename root, i.e., drop the ".template".
-    let s:d_tags = fnamemodify(s:tmplate, ":r")
-    " Make a copy of the template.
-    silent execute '!/bin/cp ' . s:tmplate . ' ' . s:d_tags
-    if isdirectory(s:dubcor)
-      let s:ln_tags = s:dubcor . '/' . fnamemodify(s:tmplate, ":t:r")
-      silent execute '!/bin/ln -s ' . s:d_tags . ' ' . s:ln_tags
-    endif
-  else
-    echomsg 'Warning: Dubs Vim could not find dubs_tagpaths.vim.template'
-  endif
-endif
-if s:d_tags != ''
-  execute 'source ' . s:d_tags
-else
-  echomsg 'Warning: Dubs Vim could not find dubs_tagpaths.vim'
-endif
-
-" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Setup ctags
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
