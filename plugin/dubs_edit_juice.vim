@@ -1471,7 +1471,7 @@ vnoremap <C-S-F4> :<C-U>'<,'>!parT 44qr<CR>
 "   - Omit the 'fit' option, which tries to make all lines about the same
 "     length, which has the side-effect of possibly making all lines narrower.
 "   - Remember virtcol("$") is number of chars + 1 for first selected line.
-vnoremap <M-S-F2> :<C-U>execute "'<,'>!par " . (virtcol("$") - 1) . "qr"<CR>
+vnoremap <M-S-F2> :<C-U>execute "'<,'>!parT " . (virtcol("$") - 1) . "qr"<CR>
 
 " NOTE Normal mode and Insert mode <F1> are mapped to toggle-last-user-buffer
 "      (:e #) because my left hand got bored or felt left-out or something
