@@ -1454,7 +1454,7 @@ vnoremap <C-S-F4> :<C-U>'<,'>!parT 44qr<CR>
 
 " 2015.01.14: For pesky, very-wide reST tables, do a fluid re-widen,
 "             and use the length of the first selected line rather
-"             than a hard-coded with.
+"             than a hard-coded width.
 "             But first, some comments about visual mode maps:
 " [lb] thought <C-R> dumped selected text, but this cmd indicates otherwise:
 "     vnoremap <M-S-F2> :<C-U>echo '<,'><C-R>
