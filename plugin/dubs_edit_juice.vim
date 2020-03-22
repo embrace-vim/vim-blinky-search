@@ -1047,7 +1047,7 @@ endfunction
 " Default Vim makes <CTRL-O> in insert mode start a replace operation...
 " Default Vim makes <CTRL-U> "Scroll window Upwards in the buffer."
 "
-" 2017-06-07: I want to use Ctrl-l for what was Ctrl-k (BufSurfForward) so
+" 2017-06-07: I want to use Ctrl-l for what was Ctrl-k (BufferRingForward) so
 "   that Ctrl-k can be used for :digraph insertions.
 "noremap <C-p> :call <sid>MoveParagraphUp()<CR>
 "inoremap <C-p> <C-O>:call <sid>MoveParagraphUp()<CR>
@@ -1059,8 +1059,8 @@ endfunction
 "onoremap <C-l> <C-C>:call <sid>MoveParagraphDown()<CR>
 "
 " 2017-06-10: I was fiddling with the existing Ctrl-j and Ctrl-k mappings,
-" for :BufSurfBack and :BufSurfForward, and remapped these so that I could
-" use <Ctrl-l> to replace Vim's built-in <Ctrl-k> :digraph feature.
+" for :BufferRingReverse and :BufferRingForward, and remapped these so that
+" I could use <Ctrl-l> to replace Vim's built-in <Ctrl-k> :digraph feature.
 noremap <C-u> :call <sid>MoveParagraphUp()<CR>
 inoremap <C-u> <C-O>:call <sid>MoveParagraphUp()<CR>
 cnoremap <C-u> <C-C>:call <sid>MoveParagraphUp()<CR>
