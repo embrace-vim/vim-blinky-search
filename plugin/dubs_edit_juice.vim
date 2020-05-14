@@ -102,22 +102,22 @@ function! s:Del2EndOfWsAz09OrPunct_ORIG()
   let char_under_cursor =
     \ getline(".")[col(".") - 1]
   " Can't get this to work:
-  "    if char_under_cursor =~ "[^a-zA-Z0-9\\s]"
+  "    if l:char_under_cursor =~ "[^a-zA-Z0-9\\s]"
   " But this works:
-  if (char_under_cursor =~ "[^a-zA-Z0-9]")
-        \ && (char_under_cursor !~ "\\s")
+  if (l:char_under_cursor =~ "[^a-zA-Z0-9]")
+        \ && (l:char_under_cursor !~ "\\s")
     " Punctuation et al.; just delete the
     " char or sequence of the same char.
     " Well, I can't get sequence-delete to
     " work, i.e.,
     "      execute 'normal' .
-    "        \ '"xd/' . char_under_cursor . '*'
+    "        \ '"xd/' . l:char_under_cursor . '*'
     " doesn't do squat. In fact, any time I try
     " the 'd/' motion it completely fails...
     " Anyway, enough boo-hooing, just delete the
     " character-under-cursor:
     execute 'normal' . '"xdl'
-  elseif char_under_cursor =~ '[a-zA-Z0-9]'
+  elseif l:char_under_cursor =~ '[a-zA-Z0-9]'
     " This is an alphanum; and same spiel as
     " above, using 'd/' does not work, so none of
     " this:
@@ -125,7 +125,7 @@ function! s:Del2EndOfWsAz09OrPunct_ORIG()
     " Instead try this:
     "execute 'normal' . '"xde'
     execute 'normal' . '"xdw'
-  elseif char_under_cursor =~ '\s'
+  elseif l:char_under_cursor =~ '\s'
     " whitespace
     " Again -- blah, blah, blah -- this does not
     " work: execute 'normal' . '"xd/\s*'
@@ -151,21 +151,22 @@ function! s:Del2EndOfWsAz09OrPunct(wasInsertMode, deleteToEndOfLine)
   "            Fix Ctrl-Del when EOL (it cur-
   "            rently deletes back a char, rath-
   "            er than sucking up the next line)
-  let s:char_under_cursor =
-    \ getline(".")[col(".") - 1]
-  "call confirm(
-  "      \ 'char ' . s:char_under_cursor
-  "      \ . ' / char2nr ' . char2nr(s:char_under_cursor)
-  "     \ . ' / col. ' . col(".")
-  "      \ . ' / col$ ' . col("$"))
+  " MAYBE/2020-05-14: I might want to consider the @/ I use elsewhere:
+  "            let @/ = "\\(\\(\\_^\\|\\<\\|\\s\\+\\)\\zs\\|\\>\\)"
+  let l:char_under_cursor = getline(".")[col(".") - 1]
+  " echom('char ' . l:char_under_cursor
+  "       \ . ' / char2nr ' . char2nr(l:char_under_cursor)
+  "       \ . ' / col. ' . col(".")
+  "       \ . ' / col$ ' . col("$"))
+  " 2020-05-14: This condition seems overly complicated...
   if (       ( ((col(".") + 1) == col("$"))
         \     && (col("$") != 2) )
         \ || ( ((col(".") == col("$"))
         \     && (col("$") == 1))
-        \     && (char2nr(s:char_under_cursor) == 0) ) )
+        \     && (char2nr(l:char_under_cursor) == 0) ) )
     " At end of line; delete newline after cursor
     " (what vi calls join lines)
-    execute 'normal gJ'
+    normal! gJ
     "execute 'j!'
     " BUGBUG Vi returns the same col(".") for both
     " the last and next-to-last cursor positions,
@@ -182,61 +183,60 @@ function! s:Del2EndOfWsAz09OrPunct(wasInsertMode, deleteToEndOfLine)
     "let prev_col = col(".")
     "call confirm('this ' . this_col . ' prev ' . prev_col)
     "
-    let s:cur_col = col(".")
-    let s:tot_col = col("$")
+    let l:cur_col = col(".")
+    let l:tot_col = col("$")
     " This is a little hack; the d$ command below, which executes if the
     " cursor is not in the last position, moves the cursor one left, so the
     " callee moves the cursor back to the right. However, our gJ command
     " above doesn't move the cursor, so, since we know the callee is going
     " to move it, we just move it left
     if a:deleteToEndOfLine == 1
-      execute 'normal h'
+      normal! h
     endif
   else
-    let s:cur_col = col(".")
-    let s:tot_col = col("$")
-    if (a:wasInsertMode
-          \ && (s:cur_col != 1) )
+    let l:cur_col = col(".")
+    let l:tot_col = col("$")
+    if a:wasInsertMode && (l:cur_col != 1)
       " <ESC> Made us back up, so move forward one,
       " but not if we're the first column or the
       " second-to-last column
-        execute 'normal l'
+        normal! l
     endif
-    "let s:char_under_cursor =
+    "let l:char_under_cursor =
     "  \ getline(".")[col(".")]
     " Can't get this to work:
-    "    if s:char_under_cursor =~ "[^a-zA-Z0-9\\s]"
+    "    if l:char_under_cursor =~ "[^a-zA-Z0-9\\s]"
     " But this works:
     if a:deleteToEndOfLine == 1
-      execute 'normal d$'
+      normal! d$
     else
-      if (s:char_under_cursor =~ "[^_a-zA-Z0-9\(\.]")
-            \ && (s:char_under_cursor !~ "\\s")
+      if (l:char_under_cursor =~ "[^_a-zA-Z0-9\(\.]")
+            \ && (l:char_under_cursor !~ "\\s")
         " Punctuation et al.; just delete the
         " char or sequence of the same char.
         " Well, I can't get sequence-delete to
         " work, i.e.,
         "      execute 'normal' .
-        "        \ '"xd/' . s:char_under_cursor . '*'
+        "        \ '"xd/' . l:char_under_cursor . '*'
         " doesn't do squat. In fact, any time I try
         " the 'd/' motion it completely fails...
         " Anyway, enough boo-hooing, just delete the
         " character-under-cursor:
-        execute 'normal "xdl'
-      elseif s:char_under_cursor =~ '[_a-zA-Z0-9\(\.]'
+        normal! "xdl
+      elseif l:char_under_cursor =~ '[_a-zA-Z0-9\(\.]'
         " This is an alphanum; and same spiel as
         " above, using 'd/' does not work, so none of
         " this:
         "   execute 'normal' . '"xd/[a-zA-Z0-9]*'
         " Instead try this:
         "execute 'normal' . '"xde'
-        execute 'normal "xdw'
-      elseif s:char_under_cursor =~ '\s'
-      "if s:char_under_cursor =~ '\s
+        normal! "xdw
+      elseif l:char_under_cursor =~ '\s'
+      "if l:char_under_cursor =~ '\s
         " whitespace
         " Again -- blah, blah, blah -- this does not
         " work: execute 'normal' . '"xd/\s*'
-        execute 'normal "xdw'
+        normal! "xdw
       " else
       "   huh? this isn't/shouldn't be
       "         an executable code path
@@ -244,7 +244,7 @@ function! s:Del2EndOfWsAz09OrPunct(wasInsertMode, deleteToEndOfLine)
     endif
   endif
   if (a:wasInsertMode
-        \ && ((s:cur_col + 2) == s:tot_col))
+        \ && ((l:cur_col + 2) == l:tot_col))
     " <ESC> Made us back up, so move forward one,
     " but not if we're the first column or the
     " second-to-last column
