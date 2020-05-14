@@ -199,12 +199,6 @@ function! s:Del2EndOfWsAz09OrPunct(wasInsertMode, deleteToEndOfLine)
   else
     let l:cur_col = col(".")
     let l:tot_col = col("$")
-    if a:wasInsertMode && (l:cur_col != 1)
-      " <ESC> Made us back up, so move forward one,
-      " but not if we're the first column or the
-      " second-to-last column
-        normal! l
-    endif
     "let l:char_under_cursor =
     "  \ getline(".")[col(".")]
     " Can't get this to work:
@@ -212,42 +206,24 @@ function! s:Del2EndOfWsAz09OrPunct(wasInsertMode, deleteToEndOfLine)
     " But this works:
     if a:deleteToEndOfLine == 1
       normal! d$
-    else
-      if (l:char_under_cursor =~ "[^_a-zA-Z0-9\(\.]")
-            \ && (l:char_under_cursor !~ "\\s")
-        " Punctuation et al.; just delete the
-        " char or sequence of the same char.
-        " Well, I can't get sequence-delete to
-        " work, i.e.,
-        "      execute 'normal' .
-        "        \ '"xd/' . l:char_under_cursor . '*'
-        " doesn't do squat. In fact, any time I try
-        " the 'd/' motion it completely fails...
-        " Anyway, enough boo-hooing, just delete the
-        " character-under-cursor:
-        normal! "xdl
-      elseif l:char_under_cursor =~ '[_a-zA-Z0-9\(\.]'
-        " This is an alphanum; and same spiel as
-        " above, using 'd/' does not work, so none of
-        " this:
-        "   execute 'normal' . '"xd/[a-zA-Z0-9]*'
-        " Instead try this:
-        "execute 'normal' . '"xde'
-        normal! "xdw
-      elseif l:char_under_cursor =~ '\s'
-      "if l:char_under_cursor =~ '\s
-        " whitespace
-        " Again -- blah, blah, blah -- this does not
-        " work: execute 'normal' . '"xd/\s*'
-        normal! "xdw
-      " else
-      "   huh? this isn't/shouldn't be
-      "         an executable code path
+      if a:wasInsertMode
+        " Ensure when changing back to insert mode the Vim does
+        " not move cursor back one, to penultimate position.
+        normal! $
       endif
+    else
+      let last_pttrn = @/
+      " NOTE: (lb): I use this pattern in vim-select-mode-stopped-down plugin:
+      "         let @/ = "\\(\\(\\_^\\|\\<\\|\\s\\+\\)\\zs\\|\\>\\)"
+      "       but the final \> causes edge case when trying to delete final
+      "       word in a line: it leaves the last character behind.
+      let @/ = "\\(\\(\\_^\\|\\<\\|\\s\\+\\)\\zs\\)"
+      " FIXME/2020-05-14 02:13: C-Del deletes '78' but not '9': 7ddd89
+      normal! dn
+      let @/ = l:last_pttrn
     endif
   endif
-  if (a:wasInsertMode
-        \ && ((l:cur_col + 2) == l:tot_col))
+  if a:wasInsertMode && ((l:cur_col + 2) == l:tot_col)
     " <ESC> Made us back up, so move forward one,
     " but not if we're the first column or the
     " second-to-last column
@@ -278,20 +254,16 @@ function! s:wire_key_delete()
   "        line.
   "inoremap <C-Del>
   "         \ <C-O>:call <SID>Del2EndOfWsAz09OrPunct()<CR>
-  inoremap <C-Del>
-           \ <Esc>:call <SID>Del2EndOfWsAz09OrPunct(1, 0)<CR>i
+  inoremap <C-Del> <C-O>:call <SID>Del2EndOfWsAz09OrPunct(1, 0)<CR>
 
   " Ctrl-Shift-Delete deletes to end of line
   "noremap <C-S-Del> d$
   "inoremap <C-S-Del> <C-O>d$
   noremap <C-S-Del> :call <SID>Del2EndOfWsAz09OrPunct(0, 1)<CR>
-  inoremap <C-S-Del>
-           \ <Esc>:call <SID>Del2EndOfWsAz09OrPunct(1, 1)<CR>i<Right>
-
+  inoremap <C-S-Del> <C-O>:call <SID>Del2EndOfWsAz09OrPunct(1, 1)<CR>
   " 2011.02.01 Doing same for Alt-Delete
   noremap <M-Del> :call <SID>Del2EndOfWsAz09OrPunct(0, 1)<CR>
-  inoremap <M-Del>
-           \ <Esc>:call <SID>Del2EndOfWsAz09OrPunct(1, 1)<CR>i<Right>
+  inoremap <M-Del> <C-O>:call <SID>Del2EndOfWsAz09OrPunct(1, 1)<CR>
 
   " Alt-Shift-Delete deletes entire line
   noremap <M-S-Del> dd
