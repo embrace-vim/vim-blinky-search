@@ -168,8 +168,10 @@ function! s:Del2EndOfWsAz09OrPunct(wasInsertMode, deleteToEndOfLine)
     " (what vi calls join lines)
     normal! gJ
     "execute 'j!'
+    " [2020-05-14: Wicked old comment. Could probably solve with getcurpos()
+    "  and the 'curswant' value.]
     " BUGBUG Vi returns the same col(".") for both
-    " the last and next-to-last cursor positions,
+    " the last and next-to-last cursor positions (in insert mode),
     " so we're not sure whether to join lines or
     " to delete the last character on the line.
     " Fortunately, we can just go forward a
@@ -190,7 +192,8 @@ function! s:Del2EndOfWsAz09OrPunct(wasInsertMode, deleteToEndOfLine)
     " callee moves the cursor back to the right. However, our gJ command
     " above doesn't move the cursor, so, since we know the callee is going
     " to move it, we just move it left
-    if a:deleteToEndOfLine == 1
+    " Fix cursor position, but avoid screen blinking if cannot move cursor.
+    if a:deleteToEndOfLine == 1 && l:cur_col > 1
       normal! h
     endif
   else
