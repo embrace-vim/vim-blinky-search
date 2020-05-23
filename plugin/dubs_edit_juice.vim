@@ -86,14 +86,18 @@ call <SID>wire_keys_move_to_word_previous_and_next()
 function! s:wire_keys_select_text_to_line_beg_and_end()
   " Alt-Shift-Left selects from cursor to start of line
   " (same as Shift-Home)
-  noremap <M-S-Left> v0
-  inoremap <M-S-Left> <C-O>v0
+  noremap <M-S-Left> v0<C-G>
+  inoremap <M-S-Left> <C-O>v0<C-G>
+  " 2020-05-23: I added <CTRL-G> to switch from Visual mode to Select mode,
+  " otherwise if the user Ctrl-C copies, the selection is deselected, which
+  " is abnormal behavior.
+  " - Because this is a visual mode mapping, is it still needed?
   vnoremap <M-S-Left> 0
 
   " Alt-Shift-Right selects from cursor to end of line
   " (same as Shift-End)
-  noremap <M-S-Right> v$
-  inoremap <M-S-Right> <C-O>v$
+  noremap <M-S-Right> v$<C-G>
+  inoremap <M-S-Right> <C-O>v$<C-G>
   vnoremap <M-S-Right> $
 endfunction
 
