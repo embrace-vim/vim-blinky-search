@@ -215,19 +215,21 @@ call <SID>wire_keys_cursor_to_line_first_and_last()
 " Alt-Arrow Key combinations to make our hands happy
 " (or is it to make our fingers frolicsome?).
 
+" 2020-05-23: See long comment in wire_keys_jump_to_window_directionally:
+" the fifteen seconds I tried to move Alt-Left/-Right to other keys, so
+" that I could wire all Alt-Arrow keys to tmux-esque window pane switching.
+" It was a disaster. These two motions, Alt-Left and Alt-Right, are hardwired
+" in my brain. I use 'em all the time.
+
 function! s:wire_keys_cursor_to_line_beg_and_end()
   " Alt-Left moves the cursor to the beginning of the line.
   noremap <M-Left> <Home>
   inoremap <M-Left> <C-O><Home>
-  vnoremap <M-Left> :<C-U>
-    \ <CR>gvy
-    \ :execute "normal! 0"<CR>
+  vnoremap <M-Left> :<C-U> <CR>gvy :execute "normal! 0"<CR>
   " Alt-Right moves the cursor to the end of the line.
   noremap <M-Right> <End>
   inoremap <M-Right> <C-O><End>
-  vnoremap <M-Right> :<C-U>
-    \ <CR>gvy
-    \ :execute "normal! $"<CR>
+  vnoremap <M-Right> :<C-U> <CR>gvy :execute "normal! $"<CR>
 endfunction
 
 call <SID>wire_keys_cursor_to_line_beg_and_end()
