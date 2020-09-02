@@ -381,7 +381,6 @@ function! InstallStartSearchHighlightButLeaveCursor()
   " MEH? 2018-06-27: <F8> is almost the same as [ENTER],
   " which is mapped after this function.
 
-  set guioptions+=a
   function! MakePattern(text)
     " 2018-06-27: Heh? Why am I doing here? Escaping `\` in search queries?
     " DRY: This is shared with dubs_grep_steady/dubs_edit_juice.
@@ -402,6 +401,21 @@ function! InstallStartSearchHighlightButLeaveCursor()
 
 endfunction
 call InstallStartSearchHighlightButLeaveCursor()
+
+" NOTE: Adding the 'a' guioptions option was suggested by previous function's inspiration
+"         http://vim.wikia.com/wiki/Highlight_all_search_pattern_matches
+"       but I'm not sure I don't think it's necessary for previous function.
+"       Makes me wonder why it's in the Vim tip, maybe just a nice complement.
+function! YankSelectedTextAutomatically_ExceptOnmacOS()
+  " Automatically copy text when (visually) selected w/ guioptions `a` flag.
+  " - When text is selected, it is yanked into register *.
+  " - Note that on macOS, this copies into the system clipboard,
+  "   unlike on Linux, so we don't enable this on Mac.
+  if !has('macunix')
+    set guioptions+=a
+  endif
+endfunction
+call YankSelectedTextAutomatically_ExceptOnmacOS()
 
 " Make [Enter] toggle highlighting for the current word on and off.
 " Also from:
