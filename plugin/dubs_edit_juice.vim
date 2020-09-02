@@ -375,6 +375,9 @@ function! InstallStartSearchHighlightButLeaveCursor()
   "   nnoremap <F8> :let curwd='\\\<<C-R>=expand("<cword>")<CR>\\\>'<CR>
   "     \ :let @/=curwd<CR>:call histadd("search", curwd)<CR>:set hls<CR>
 
+  " (lb): I added this simple insert mode complement to the normal mode implementation.
+  inoremap <F8> <C-O>:let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR><C-O>:set hls<CR>
+
   " MEH? 2018-06-27: <F8> is almost the same as [ENTER],
   " which is mapped after this function.
 
@@ -393,11 +396,10 @@ function! InstallStartSearchHighlightButLeaveCursor()
     let l:pat = '\\V' . escape(l:pat, '\"')
     return l:pat
   endfunction
+
   " Assign the pattern to the search register (@/), and to set 'hlsearch'/'hls.
   vnoremap <silent> <F8> :<C-U>let @/="<C-R>=MakePattern(@*)<CR>"<CR>:set hls<CR>
-"  nnoremap <silent> <F8> :<C-U>let @/="<C-R>=MakePattern(@*)<CR>"<CR>:set hls<CR>
-" NEW:
-  inoremap <silent> <F8> <C-O>:<C-U>let @/="<C-R>=MakePattern(@*)<CR>"<CR>:set hls<CR>
+
 endfunction
 call InstallStartSearchHighlightButLeaveCursor()
 
