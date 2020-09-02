@@ -366,11 +366,14 @@ vnoremap <S-F1> :<C-U>
   \ ?<CR>
 
 " 2017-11-12: A similar approach to the same feature.
-" http://vim.wikia.com/wiki/Highlight_all_search_pattern_matches
-nnoremap <F8> :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
-" And for visually selected text, add `a` flag to guioptions so that visually
-" selecting text automatically places the text in the clipboard (register *).
+"   http://vim.wikia.com/wiki/Highlight_all_search_pattern_matches
 function! InstallStartSearchHighlightButLeaveCursor()
+
+  " (lb): This is from original Vim tip, but doesn't work for me:
+  nnoremap <F8> :let @/='\<<C-R>=expand("<cword>")<CR>\>'<CR>:set hls<CR>
+  " This is from comments at bottom of article, but did not work for me:
+  "   nnoremap <F8> :let curwd='\\\<<C-R>=expand("<cword>")<CR>\\\>'<CR>
+  "     \ :let @/=curwd<CR>:call histadd("search", curwd)<CR>:set hls<CR>
 
   " MEH? 2018-06-27: <F8> is almost the same as [ENTER],
   " which is mapped after this function.
