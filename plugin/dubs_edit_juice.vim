@@ -1430,7 +1430,17 @@ iabbrev <expr> ttt strftime("%H:%M")
 " (lb): 2018-05-31: A typical Woodlot section header.
 " MAYBE: This is business logic specific to my personal development workflow;
 "   I should probably move this to a personal Vim plugin...
-iabbrev <expr> TTT# "################<CR>" . strftime("%Y-%m-%d %H:%M") . "<CR>################<CR><CR>"
+" 2020-09-21: I never use this -- though I should, I just forgot about it --
+" but more importantly, it's broken, `TTT#` causes, e.g., `2020-09-21#`.
+"  iabbrev <expr> TTT# "################<CR>"
+"          \ . strftime("%Y-%m-%d %H:%M")
+"              \ . "<CR>################<CR><CR>"
+" Let's try a triple pound press instead. And sequence will really be more
+" like `###<CR>` so adjust newline count, too.
+iabbrev <expr> ### "################<CR>" . strftime("%Y-%m-%d %H:%M") . "<CR>################<CR>"
+
+" (lb): 2020-09-21: I keep typing `:::`, might as well wire it.
+iabbrev <expr> ::: strftime("%Y-%m-%d %H:%M:")
 
 " -------------------------
 " Left Justify Current Line
