@@ -1439,6 +1439,9 @@ iabbrev <expr> ttt strftime("%H:%M")
 " like `###<CR>` so adjust newline count, too.
 iabbrev <expr> ### "################<CR>" . strftime("%Y-%m-%d %H:%M") . "<CR>################<CR>"
 
+" Works as ``##|<space>``, not ``##|<cr>``.
+iabbrev <expr> ##\| "####################<CR>¿ " . strftime("%Y-%m-%d %H:%M") . ":<CR>####################<CR><up><up><end>"
+
 " (lb): 2020-09-21: I keep typing `:::`, might as well wire it.
 iabbrev <expr> ::: strftime("%Y-%m-%d %H:%M:")
 
