@@ -6,7 +6,7 @@
 " License: GPLv3
 " vim:tw=0:ts=2:sw=2:et:norl:
 " -------------------------------------------------------------------
-" Copyright © 2009, 2015-2017 Landon Bouma.
+" Copyright Â© 2009, 2015-2017 Landon Bouma.
 "
 " This file is part of Dubs Vim.
 "
@@ -1290,7 +1290,7 @@ vnoremap :: :<C-U>
 " ------------------------------------------------------
 " Lorem Ipsum Dump
 " ------------------------------------------------------
-" By Harold Giménez
+" By Harold GimÃ©nez
 "   http://awesomeful.net/posts/57-small-collection-of-useful-vim-tricks
 "   http://github.com/hgimenez/vimfiles/blob/c07ac584cbc477a0619c435df26a590a88c3e5a2/vimrc#L72-122
 
@@ -1440,7 +1440,7 @@ iabbrev <expr> ttt strftime("%H:%M")
 iabbrev <expr> ### "################<CR>" . strftime("%Y-%m-%d %H:%M") . "<CR>################<CR>"
 
 " Works as ``##|<space>``, not ``##|<cr>``.
-iabbrev <expr> ##\| "####################<CR>¿ " . strftime("%Y-%m-%d %H:%M") . ":<CR>####################<CR><up><up><end>"
+iabbrev <expr> ##\| '####################<CR>â”ƒ ' . strftime("%Y-%m-%d %H:%M") . ":<CR>####################<CR><up><up><end>"
 
 " (lb): 2020-09-21: I keep typing `:::`, might as well wire it.
 iabbrev <expr> ::: strftime("%Y-%m-%d %H:%M:")
