@@ -1398,6 +1398,8 @@ nmap <silent> <leader>dr :call DiffToggle(3)<cr>
 " Re: <expr>, see:
 "  http://vimdoc.sourceforge.net/htmldoc/map.html#:map-expression
 iabbrev <expr> TTT strftime("%Y-%m-%d")
+" 2021-01-03: How has TTT_ been in Homefries Bash but not Dubs Vim.
+iabbrev <expr> TTT_ strftime("%Y_%m_%d")
 " 2017-02-27: An alias for when I want to highlight the time,
 "  probably when writing notes drunk in the middle of the night.
 iabbrev <expr> TTTtt strftime("%Y-%m-%d %H:%M")
