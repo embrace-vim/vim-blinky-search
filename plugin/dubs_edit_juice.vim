@@ -481,6 +481,12 @@ function! InstallHighlightOnEnter()
     let g:highlighting = 1
     return ":silent set hlsearch\<CR>"
   endfunction
+  " NOTE: This overrides Vim's built-in <CR> and <Ctrl-m>/<C-m>
+  "       ([count] lines downward).
+  " NOTE: Even though we don't touch Ctrl-m here, it follows <CR>.
+  "       That is, Ctrl-m will not move the cursor [count] lines downward,
+  "       but will instead toggle highlighting of the word under the cursor,
+  "       just like <CR>.
   nnoremap <silent> <expr> <CR> Highlighting()
 endfunction
 call InstallHighlightOnEnter()
