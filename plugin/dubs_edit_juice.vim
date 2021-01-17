@@ -1072,6 +1072,35 @@ imap <M-^> <C-O>:TlistToggle<CR>
 " Jump to tag under cursor
 " ------------------------------------------------------
 
+" Note that Vim maps Ctrl-] differently in Insert and Normal modes:
+" - In Normal mode, Ctrl-] jumps to the tag under the cursor
+" - In Insert mode, Ctrl-] completes the abbreviation being typed,
+"   without inserting a character (normally an abbreviation is not
+"   completed until a non-abbrev character is typed, and then both
+"   the abbreviation and the non-abbrev character are inserted).
+"   Or as Vim puts it:
+"     *Trigger abbreviation, without inserting a character.*
+"
+" 2021-01-16: For the past, I dunno, decade, I guess, I've mapped
+" Ctrl-] to jump to declaration from either Insert or Normal mode.
+" - Then recently I was reminded of the other Ctrl-] behavior, and
+"   I realized I sometimes complete an abbreviation and then delete
+"   the extra character (usually the `TTT` abbreviation).
+" - So let's resurrect the silent abbreviation completer,
+"   but at a new key combination.
+" - I don't use this command *too* often, so I didn't think too hard
+"   about the mapping -- I just went with something close, something
+"   with a Levenshtein distance of just 2:
+"
+"     Change `Ctrl-]` → `Meta-[`.
+"
+"   (Note that, AFAICT i_Meta-[ unused, and free for the taking.)
+" - Ref: i_Ctrl-], i_Ctrl-], but not i_Meta-[ (no help).
+"
+"     #better-Vim-defaults
+"
+inoremap <silent> <M-[> <C-]>
+
 " Ctrl-] jumps to the tag under the cursor, but only in normal mode. Let's
 " make it work in Insert mode, too.
 "noremap <silent> <C-]> :call <SID>GrepPrompt_Auto_Prev_Location("<C-R><C-W>")<CR>
