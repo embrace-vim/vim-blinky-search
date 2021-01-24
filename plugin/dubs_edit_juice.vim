@@ -1042,8 +1042,15 @@ endfunc
 "  CharTab <http://www.vim.org/scripts/script.php?script_id=898>
 " NOTE Does not work: nnoremap <M-!> <Leader>ct
 " SYNC_ME: Dubs Vim's <M-????> mappings are spread across plugins. [M-S-1]
-nmap <M-!> <Leader>ct
-imap <M-!> <C-o><Leader>ct<ESC>
+"
+" MAYBE/2021-01-23: Remove this? I use the Cmd-u Unicode list from Waffle Batter.
+
+nmap <M-!> <Plug>CT_CharTable
+imap <M-!> <C-o><Plug>CT_CharTable<ESC>
+" Another common mapping:
+"  nmap <Leader>ct <Plug>CT_CharTable
+"  imap <Leader>ct <C-o><Plug>CT_CharTable<ESC>
+
 " TODO imap does not restore i-mode when ct done
 " NOTE Modified chartab.vim to alias <ESC> and
 "      <M-!> to 'q'
@@ -1634,4 +1641,7 @@ nmap <M-d> diw
 let &t_SI = "\<Esc>[6 q"
 let &t_SR = "\<Esc>[4 q"
 let &t_EI = "\<Esc>[2 q"
+
+" -------------------------------------------------------------------------
+" -------------------------------------------------------------------------
 
