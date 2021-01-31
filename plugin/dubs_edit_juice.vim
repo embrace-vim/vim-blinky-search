@@ -1350,6 +1350,8 @@ command! -nargs=0 Lorem :normal iLorem ipsum dolor sit amet, consectetur
 " <Leader>-O opens hyperlink under cursor or selected.
 " ------------------------------------------------------
 
+" FIXME/2021-01-31: REMOVE THIS: See instead dubs_web_hatch aka vim-sensible-open.
+
 " Link to Web page under cursor.
 " :!firefox cycloplan.cyclopath.org &> /dev/null
 noremap <silent> <Leader>o :!firefox <C-R><C-A> &> /dev/null<CR><CR>
