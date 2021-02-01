@@ -1507,6 +1507,8 @@ iabbrev <expr> ttt strftime("%H:%M")
 "   if you press and hold `Z`, you'll see, e.g., `ZZZZZZZZZZZZZZ`, and no
 "   substitution is performed.
 "
+"   - This is because `#` is a non-keyword character, which triggers end of abbrev.
+"
 "   So just because we're using a special character here, let's remove the <CR>,
 "   so then holding `#` will generate *one* header, and then the extra presses
 "   just append the bottom header border, e.g.,
@@ -1518,7 +1520,20 @@ iabbrev <expr> ttt strftime("%H:%M")
 "   so at least if you want to generate a line of octothorpes, now you can,
 "   albeit you'll still want to delete the two lines inserted before it.
 "
-iabbrev <expr> ### "################<CR>" . strftime("%Y-%m-%d %H:%M") . "<CR>################"
+"     iabbrev <expr> ### "################<CR>" . strftime("%Y-%m-%d %H:%M") . "<CR>################"
+"
+"   - Or, instead (as I rethink this), let's decide that ending the abbreviation
+"     with a non-keyword character is not helping, so let's choose a better
+"     abbreviation that allows us to include that final <CR> and also to
+"     avoid issues on repeat.
+"
+"     - I tried `333`, which isn't too bad, but I think `#T` is a better mnemonic.
+"
+iabbrev <expr> #T "################<CR>" . strftime("%Y-%m-%d %H:%M") . "<CR>################<CR>"
+"
+"     - Maybe also a `3t`, easier to type, and unlikely to be in the way.
+"
+iabbrev <expr> 3t "################<CR>" . strftime("%Y-%m-%d %H:%M") . "<CR>################<CR>"
 
 " Works as ``##|<space>``, not ``##|<cr>``.
 iabbrev <expr> ##\| '####################<CR>┃ ' . strftime("%Y-%m-%d %H:%M") . ":<CR>####################<CR><up><up><end>"
