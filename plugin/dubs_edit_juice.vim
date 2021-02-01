@@ -1473,17 +1473,52 @@ iabbrev <expr> TTTTtt strftime("%Y-%m-%dT%H:%M")
 "iabbrev <expr> tt strftime("%H:%M")
 iabbrev <expr> ttt strftime("%H:%M")
 
-" (lb): 2018-05-31: A typical Woodlot section header.
-" MAYBE: This is business logic specific to my personal development workflow;
-"   I should probably move this to a personal Vim plugin...
-" 2020-09-21: I never use this -- though I should, I just forgot about it --
-" but more importantly, it's broken, `TTT#` causes, e.g., `2020-09-21#`.
-"  iabbrev <expr> TTT# "################<CR>"
-"          \ . strftime("%Y-%m-%d %H:%M")
-"              \ . "<CR>################<CR><CR>"
-" Let's try a triple pound press instead. And sequence will really be more
-" like `###<CR>` so adjust newline count, too.
-iabbrev <expr> ### "################<CR>" . strftime("%Y-%m-%d %H:%M") . "<CR>################<CR>"
+" (lb): 2018-05-31: Use `###` to generate a basic datetime section header,
+" e.g.,
+"
+"     ################
+"     2021-01-31 21:33
+"     ################
+"
+" (FIXME/2021-01-31: Move this, the `TTT` abbrevs, etc., to new reSTfold plugin.)
+"
+" Use a triple pound press to generate a simple date-and-timed reSTfold header.
+"
+" - 2021-01-31: Note that having a final <CR> in the {rhs} is nice, e.g.,
+"
+"     iabbrev <expr> ### "################<CR>" . strftime("%Y-%m-%d %H:%M") . "<CR>################<CR>"
+"
+"   because then typing `###<CR>` puts the cursor one blank line after the header,
+"   e.g.,
+"
+"     ################
+"     2021-01-31 21:33
+"     ################
+"
+"     | ← cursor starts at the start of this line
+"
+"   But it also causes the abbreviation to be re-inserted if you hold down
+"   the key, e.g., press and hold `#` and you'll keep generating headers.
+"
+"   Note that this does not happen with an alpha abbreviation, e.g., given
+"
+"     iabbrev <expr> ZZZ "################<CR>" . strftime("%Y-%m-%d %H:%M") . "<CR>################<CR>"
+"
+"   if you press and hold `Z`, you'll see, e.g., `ZZZZZZZZZZZZZZ`, and no
+"   substitution is performed.
+"
+"   So just because we're using a special character here, let's remove the <CR>,
+"   so then holding `#` will generate *one* header, and then the extra presses
+"   just append the bottom header border, e.g.,
+"
+"     ################
+"     2021-01-31 21:33
+"     ###############################
+"
+"   so at least if you want to generate a line of octothorpes, now you can,
+"   albeit you'll still want to delete the two lines inserted before it.
+"
+iabbrev <expr> ### "################<CR>" . strftime("%Y-%m-%d %H:%M") . "<CR>################"
 
 " Works as ``##|<space>``, not ``##|<cr>``.
 iabbrev <expr> ##\| '####################<CR>┃ ' . strftime("%Y-%m-%d %H:%M") . ":<CR>####################<CR><up><up><end>"
