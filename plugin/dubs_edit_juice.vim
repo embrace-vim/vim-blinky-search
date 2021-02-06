@@ -1347,25 +1347,6 @@ command! -nargs=0 Lorem :normal iLorem ipsum dolor sit amet, consectetur
       \ laborum.
 
 " ------------------------------------------------------
-" <Leader>-O opens hyperlink under cursor or selected.
-" ------------------------------------------------------
-
-" FIXME/2021-01-31: REMOVE THIS: See instead dubs_web_hatch aka vim-sensible-open.
-
-" Link to Web page under cursor.
-" :!firefox cycloplan.cyclopath.org &> /dev/null
-noremap <silent> <Leader>o :!firefox <C-R><C-A> &> /dev/null<CR><CR>
-inoremap <silent> <Leader>o <C-O>:!firefox <C-R><C-A> &> /dev/null<CR><CR>
-" Interesting: C-U clears the command line, which contains cruft, e.g., '<,'>
-" gv selects the previous Visual area.
-" y yanks the selected text into the default register.
-" <Ctrl-R>" puts the yanked text into the command line.
-vnoremap <silent> <Leader>o :<C-U>
-  \ <CR>gvy
-  \ :!firefox <C-R>" &> /dev/null<CR><CR>
-" Test the three modes using: https://github.com/p6a
-
-" ------------------------------------------------------
 " From /usr/share/vim/vim74/vimrc_example.vim
 "      /usr/share/vim/vim74/gvimrc_example.vim
 " ------------------------------------------------------
