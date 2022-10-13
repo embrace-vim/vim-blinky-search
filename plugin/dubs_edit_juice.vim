@@ -1043,7 +1043,7 @@ endfunc
 " NOTE Does not work: nnoremap <M-!> <Leader>ct
 " SYNC_ME: Dubs Vim's <M-????> mappings are spread across plugins. [M-S-1]
 "
-" MAYBE/2021-01-23: Remove this? I use the Cmd-u Unicode list from Waffle Batter.
+" MAYBE/2021-01-23: Remove this? I use the Cmd-u Unicode list from DepoXy Ambers.
 
 nmap <M-!> <Plug>CT_CharTable
 imap <M-!> <C-o><Plug>CT_CharTable<ESC>
