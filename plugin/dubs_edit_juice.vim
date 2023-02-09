@@ -1662,8 +1662,8 @@ nmap <M-d> diw
 " Thank you!!
 " https://vim.fandom.com/wiki/Change_cursor_shape_in_different_modes
 
-" "Set IBeam shape in insert mode, underline shape in replace mode
-"  and block shape in normal mode."
+" 'Set IBeam shape in insert mode, underline shape in replace mode
+"  and block shape in normal mode.'
 "  https://vim.fandom.com/wiki/Change_cursor_shape_in_different_modes
 " From 'VTE-compatible terminals' ('includes mate-terminal 1.18.1').
 " 2020-02-05: (lb): I'm running 'MATE Terminal 1.20.0'.
