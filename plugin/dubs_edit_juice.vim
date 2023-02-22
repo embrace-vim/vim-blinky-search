@@ -53,7 +53,15 @@ let g:plugin_edit_juice_vim = 1
 " Recover from accidental Ctrl-U
 " ------------------------------------------------------
 
-" See: http://vim.wikia.com/wiki/Recover_from_accidental_Ctrl-U
+" CXREF: http://vim.wikia.com/wiki/Recover_from_accidental_Ctrl-U
+"
+" SAVVY: <c-g>u starts a new Undo set, so the C-u and C-w commands can be undone.
+"
+" REFER:
+"   :help i_CTRL-U Insert mode: <c-u> deletes text entered in the current line.
+"   :help i_CTRL-W Insert mode: <c-w> deletes word before cursor.
+"   :help i_CTRL-G_u Insert mode: <c-g> u starts a new change.
+"   :help ins-special-special Insert mode: Commands which start a new change.
 
 inoremap <c-u> <c-g>u<c-u>
 inoremap <c-w> <c-g>u<c-w>
