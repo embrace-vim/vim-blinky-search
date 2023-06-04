@@ -1461,6 +1461,19 @@ iabbrev <expr> TTTTtt strftime("%Y-%m-%dT%H:%M")
 "iabbrev <expr> tt strftime("%H:%M")
 iabbrev <expr> ttt strftime("%H:%M")
 
+" TRYME/2023-06-03: For use after a FIVER -->
+"     Type `FIVER\t` and you get `FIVER/TTT: `
+"     Type `FIVER<F5>` and you get `FIVER/TTTtt: `
+"
+" - The author types, e.g., 'FIXME/TTT: ', 'FIXME/TTTtt: ', etc., often, so
+"   wondering if this'll be a speed increase.
+" - I tried using the abbreviation, '::', but the '/' after the FIVER is
+"   not a keyword character, and neither is ':', so doesn't work well.
+" - Trying instead <F5>, which saves 8 keypresses '/TTTtt: '
+"
+inoremap <silent> <unique> <Leader>t <C-R>=strftime("/%Y-%m-%d: ")<CR>
+inoremap <F12> <C-R>=strftime("/%Y-%m-%d %H:%M: ")<CR>
+
 " (lb): 2018-05-31: Use `###` to generate a basic datetime section header,
 " e.g.,
 "
