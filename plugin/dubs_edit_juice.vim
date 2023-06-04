@@ -1,12 +1,11 @@
 " File: dubs_edit_juice.vim
 " Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Last Modified: 2017.12.11
 " Project Page: https://github.com/landonb/dubs_edit_juice
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
 " vim:tw=0:ts=2:sw=2:et:norl:
 " -------------------------------------------------------------------
-" Copyright © 2009, 2015-2017 Landon Bouma.
+" Copyright © 2009, 2015-2023 Landon Bouma.
 "
 " This file is part of Dubs Vim.
 "
