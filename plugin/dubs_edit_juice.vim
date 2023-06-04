@@ -1423,8 +1423,8 @@ nmap <silent> <leader>dr :call DiffToggle(3)<cr>
 "
 " http://vim.wikia.com/wiki/Insert_current_date_or_time
 "
-" "The uppercase P at the end inserts before the current character,
-" which allows datestamps inserted at the beginning of an existing line."
+" “The uppercase P at the end inserts before the current character,
+"  which allows datestamps inserted at the beginning of an existing line.”
 ":nnoremap <F5> "=strftime("%Y-%m-%d")<CR>P
 ":inoremap <F5> <C-R>=strftime("%Y-%m-%d")<CR>
 "
