@@ -1582,6 +1582,10 @@ inoremap <M-j><M-j> <ESC>
 " 2017-11-08: Actually, no. The path is still wrong from project.vim...
 "   it's still project.vim's path...
 
+if ! exists("g:DUBS_TRUST_ME_PLUGIN_FILE")
+  let g:DUBS_TRUST_ME_PLUGIN_FILE = ".trustme.vim"
+endif
+
 autocmd BufEnter * call SeekForSecurityHolePluginFileToLoad(0, 'BufEnter')
 autocmd BufWritePost * call SeekForSecurityHolePluginFileToLoad(1, 'BufWritePost')
 
@@ -1607,8 +1611,7 @@ function! SeekForSecurityHolePluginFileToLoad(on_save, because)
   "       and get full path; doesn't matter.
   if (expand('%:t') != '')
     "echomsg 'Finding files under: ' . expand('%:h')
-    " MEH: Just hardcode the file name? If so, choose a better name? =)
-    let l:project_plugin_f = findfile('.trustme.vim', '.;')
+    let l:project_plugin_f = findfile(g:DUBS_TRUST_ME_PLUGIN_FILE, '.;')
     "echomsg "l:project_plugin_f: " . l:project_plugin_f
     if (l:project_plugin_f != '')
       let l:plugin_path = fnamemodify(expand(l:project_plugin_f), ':p')
