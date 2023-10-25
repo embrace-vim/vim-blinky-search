@@ -1616,13 +1616,13 @@ function! SeekForSecurityHolePluginFileToLoad(on_save, because)
     if (l:project_plugin_f != '')
       let l:plugin_path = fnamemodify(expand(l:project_plugin_f), ':p')
       if (filereadable(l:plugin_path))
-        let cwd = getcwd()
-        "echomsg 'cwd: ' . cwd
+        let l:cwd = getcwd()
+        "echomsg 'cwd: ' . l:cwd
         exec 'cd ' . fnamemodify(expand(l:project_plugin_f), ':h')
         let g:DUBS_TRUST_ME_ON_FILE = expand('%:t')
         let g:DUBS_TRUST_ME_ON_SAVE = a:on_save
         exec 'source ' . l:plugin_path
-        exec 'cd ' . cwd
+        exec 'cd ' . l:cwd
       else
         echomsg 'WARNING: .trustme.vim: No file at: ' . l:plugin_path
       endif
