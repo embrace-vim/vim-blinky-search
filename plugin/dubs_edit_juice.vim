@@ -1598,13 +1598,13 @@ function! SeekForSecurityHolePluginFileToLoad(on_save, because)
     return
   endif
 
-  "echomsg "You ARE Vimmed! at " . expand('%') . " / because: " . a:because
+  "echomsg "You ARE Vimmed! at " .. expand('%') .. " / because: " .. a:because
   " NOTE: If using the project.vim plugin, if you double click files from
   "   there, for some reason this function (when called from BufEnter)
   "   runs in the context of the project window. I.e., the path is to
   "   .vimprojects. I'm not sure why; and I spent too much time trying to
   "   make it work that I finally don't care anymore.
-  "echomsg 'File is at: ' . expand('%')
+  "echomsg 'File is at: ' .. expand('%')
   " Specify the path, otherwise the current directory is used
   " for new, unsaved buffers, which is creepy.
   " Hint: Get the name of the file using [t]ail, else omit
@@ -1617,7 +1617,7 @@ function! SeekForSecurityHolePluginFileToLoad(on_save, because)
       let l:plugin_path = fnamemodify(expand(l:project_plugin_f), ':p')
       if (filereadable(l:plugin_path))
         let l:cwd = getcwd()
-        "echomsg 'cwd: ' . l:cwd
+        "echomsg 'cwd: ' .. l:cwd
         exec 'cd ' . fnamemodify(expand(l:project_plugin_f), ':h')
         let g:DUBS_TRUST_ME_ON_FILE = expand('%:t')
         let g:DUBS_TRUST_ME_ON_SAVE = a:on_save
