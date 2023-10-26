@@ -1586,12 +1586,12 @@ if ! exists("g:DUBS_TRUST_ME_PLUGIN_FILE")
   let g:DUBS_TRUST_ME_PLUGIN_FILE = ".trustme.vim"
 endif
 
-autocmd BufEnter * call SeekForSecurityHolePluginFileToLoad(0, 'BufEnter')
-autocmd BufWritePost * call SeekForSecurityHolePluginFileToLoad(1, 'BufWritePost')
+autocmd BufEnter * call s:SeekForSecurityHolePluginFileToLoad(0, 'BufEnter')
+autocmd BufWritePost * call s:SeekForSecurityHolePluginFileToLoad(1, 'BufWritePost')
 
 " Search updards for a specially named file to be sourced at runtime,
 " whenever the buffer of a file in a directory thereunder is opened.
-function! SeekForSecurityHolePluginFileToLoad(on_save, because)
+function! s:SeekForSecurityHolePluginFileToLoad(on_save, because)
   " Check for special paths, e.g., vim-fugitive paths look like:
   "   fugitive:///repo/path/.git//SHA1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/some/file
   if (expand('%:p') == '') || !empty(matchstr(expand('%:p'), '^fugitive://.*'))
