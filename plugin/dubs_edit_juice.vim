@@ -1592,13 +1592,24 @@ autocmd BufWritePost * call s:SeekForSecurityHolePluginFileToLoad(1, 'BufWritePo
 " Search updards for a specially named file to be sourced at runtime,
 " whenever the buffer of a file in a directory thereunder is opened.
 function! s:SeekForSecurityHolePluginFileToLoad(on_save, because)
-  " Check for special paths, e.g., vim-fugitive paths look like:
+  " Avoid looking for trustme.vim plugin for unsaved (new) buffers,
+  " e.g., those without a path; and for other special buffer types.
+  " - E.g., vim-fugitive paths look like:
   "   fugitive:///repo/path/.git//SHA1XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX/some/file
   if (expand('%:p') == '') || !empty(matchstr(expand('%:p'), '^fugitive://.*'))
     return
   endif
 
-  "echomsg "You ARE Vimmed! at " .. expand('%') .. " / because: " .. a:because
+  " Likewise skip unlisted buffers, Quickfix buffer, and preview window buffer. 
+
+  let l:bufnr = bufnr("%")
+
+  if !buflisted(l:bufnr) || &ft == 'qf' || &previewwindow
+    return
+  endif
+
+  " ***
+
   " NOTE: If using the project.vim plugin, if you double click files from
   "   there, for some reason this function (when called from BufEnter)
   "   runs in the context of the project window. I.e., the path is to
