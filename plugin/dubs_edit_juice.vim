@@ -1586,6 +1586,10 @@ if ! exists("g:DUBS_TRUST_ME_PLUGIN_FILE")
   let g:DUBS_TRUST_ME_PLUGIN_FILE = ".trustme.vim"
 endif
 
+if ! exists("g:DUBS_TRUST_ME_PLUGIN_DIR")
+  let g:DUBS_TRUST_ME_PLUGIN_DIR = ".trustme"
+endif
+
 autocmd BufEnter * call s:SeekForSecurityHolePluginFileToLoad(0, 'BufEnter')
 autocmd BufWritePost * call s:SeekForSecurityHolePluginFileToLoad(1, 'BufWritePost')
 
@@ -1615,34 +1619,65 @@ function! s:SeekForSecurityHolePluginFileToLoad(on_save, because)
   "   runs in the context of the project window. I.e., the path is to
   "   .vimprojects. I'm not sure why; and I spent too much time trying to
   "   make it work that I finally don't care anymore.
-  "echomsg 'File is at: ' .. expand('%')
-  " Specify the path, otherwise the current directory is used
-  " for new, unsaved buffers, which is creepy.
-  " Hint: Get the name of the file using [t]ail, else omit
-  "       and get full path; doesn't matter.
-  if (expand('%:t') != '')
-    "echomsg 'Finding files under: ' . expand('%:h')
-    let l:project_plugin_f = findfile(g:DUBS_TRUST_ME_PLUGIN_FILE, '.;')
-    "echomsg "l:project_plugin_f: " . l:project_plugin_f
-    if (l:project_plugin_f != '')
-      let l:plugin_path = fnamemodify(expand(l:project_plugin_f), ':p')
-      if (filereadable(l:plugin_path))
-        let l:cwd = getcwd()
-        "echomsg 'cwd: ' .. l:cwd
-        exec 'cd ' . fnamemodify(expand(l:project_plugin_f), ':h')
-        let g:DUBS_TRUST_ME_ON_FILE = expand('%:t')
-        let g:DUBS_TRUST_ME_ON_SAVE = a:on_save
-        exec 'source ' . l:plugin_path
-        exec 'cd ' . l:cwd
-      else
-        echomsg 'WARNING: .trustme.vim: No file at: ' . l:plugin_path
-      endif
+
+  " echomsg 'Trust-Me running on ' .. expand('%') .. ' / because: ' .. a:because
+
+  " ***
+
+  " Prefer a .trustme/ directory on path.
+  let l:start_dir = s:SeekForSecurityHolePlugin_SeekupForTrustmeDotDir()
+
+  " If no .trustme/ directory found, start from current directory.
+  if (l:start_dir == '')
+    let l:start_dir = '.'
+  endif
+
+  " Look up for the .trustme.vim plugin to load.
+  let l:project_plugin_f = s:SeekForSecurityHolePlugin_SeekUpForTrustmeDotVim(l:start_dir)
+
+  if (l:project_plugin_f != '')
+    let l:plugin_path = fnamemodify(expand(l:project_plugin_f), ':p')
+
+    if (filereadable(l:plugin_path))
+      let l:cwd = getcwd()
+
+      " echomsg 'cwd: ' .. l:cwd
+
+      exec 'cd ' .. fnamemodify(expand(l:project_plugin_f), ':h')
+      let g:DUBS_TRUST_ME_ON_FILE = expand('%:t')
+      let g:DUBS_TRUST_ME_ON_SAVE = a:on_save
+      exec 'source ' .. l:plugin_path
+      exec 'cd ' .. l:cwd
+    else
+      " Unexpected branch.
+      echomsg 'ERROR: Unexpected: .trustme.vim not readable: ' .. l:plugin_path
     endif
-  elseif (expand('%') != '')
-    echomsg 'WARNING?: .trustme.vim: No tail at: ' . expand('%')
-  " else, a buffer with no path; not associated with a file.
   endif
 endfunction
+
+" Look for a '.trustme/' dir., walking from the current directory (same
+" as expand('%:h')) to the root directory. Note the path syntax: a sole
+" '.' searches just the current dir., or child (downward) directories if
+" you add ** globs; but if the path ends with ';', findfile will 'search
+" upward till the root directory' (per :h file-searching). So '.;' searches
+" up from the current directory. Note, too, the semi-colon can be followed
+" by a list of stop-directories, which behave as one might expect.
+function! s:SeekForSecurityHolePlugin_SeekupForTrustmeDotDir()
+  let l:trustme_dir = finddir(g:DUBS_TRUST_ME_PLUGIN_DIR, '.;')
+
+  " echomsg 'Find-up for dir ‘' .. g:DUBS_TRUST_ME_PLUGIN_DIR .. '’ / found: ' .. l:trustme_dir
+
+  return l:trustme_dir
+endfunction
+
+function! s:SeekForSecurityHolePlugin_SeekUpForTrustmeDotVim(start_dir)
+  let l:trustme_vim = findfile(g:DUBS_TRUST_ME_PLUGIN_FILE, a:start_dir .. ';')
+
+  " echomsg 'Find-up for plug from: ' .. a:start_dir .. ' / found: ' .. l:trustme_vim
+
+  return l:trustme_vim
+endfunction
+
 
 " -------------------------------------------------------------------------
 " 2017-12-01: Show the :highlight of the word under the cursor.
