@@ -1072,14 +1072,19 @@ imap <Leader>ct <C-o><Plug>CT_CharTable<ESC>
 "           i.e., Alt-Shift-2 followed by
 "                 Alt-Shift-1
 
-" Alt-Shift-6 // Toggle Tag List
-" --------------------------------
+" Alt-Shift-1 // S-M-! // Toggle Tag List
+" ---------------------------------------
+" - ~~Alt-Shift-6~~ // Toggle Tag List
 " Show the ctags list.
-" SYNC_ME: Dubs Vim's <M-????> mappings are spread across plugins. [M-S-6]
-nmap <M-^> :TlistToggle<CR>
-imap <M-^> <C-O>:TlistToggle<CR>
-"cmap <M-^> <C-C>TlistToggle<ESC>
-"omap <M-^> <C-C>TlistToggle<ESC>
+" - WASAT/2024-04-29: Previously at <Shift-Alt-6>. Promoted to see if
+"   tag list will get used now. Decade-long A/B testing.
+"     nmap <M-^> :TlistToggle<CR>
+"     imap <M-^> <C-O>:TlistToggle<CR>
+"     " cmap <M-^> <C-C>TlistToggle<ESC>
+"     " omap <M-^> <C-C>TlistToggle<ESC>
+" SYNC_ME: Dubs Vim's <M-????> mappings are spread across plugins. [M-S-1]
+nmap <M-!> :TlistToggle<CR>
+imap <M-!> <C-O>:TlistToggle<CR>
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Setup ctags
