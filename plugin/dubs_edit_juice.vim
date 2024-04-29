@@ -1040,8 +1040,9 @@ endfunc
 " Simple keyboard mappings to toggle special windows to help insert text.
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-" Alt-Shift-1 // Toggle Cliptext
-" --------------------------------
+" <Leader>ct // \ct // Toggle Cliptext
+" ------------------------------------
+" - ~~Alt-Shift-1~~ // Toggle Cliptext
 " EditPlus has a cool ANSI chart you can bring up
 " quickly (who isn't always referring to ANSI
 " charts?). Our Vim substitute is an even
@@ -1049,15 +1050,16 @@ endfunc
 " Habermann,
 "  CharTab <http://www.vim.org/scripts/script.php?script_id=898>
 " NOTE Does not work: nnoremap <M-!> <Leader>ct
-" SYNC_ME: Dubs Vim's <M-????> mappings are spread across plugins. [M-S-1]
+" SYNC_ME: Dubs Vim's <M-????> mappings are spread across plugins. [\ct]
 "
 " MAYBE/2021-01-23: Remove this? I use the Cmd-u Unicode list from DepoXy Ambers.
 
-nmap <M-!> <Plug>CT_CharTable
-imap <M-!> <C-o><Plug>CT_CharTable<ESC>
-" Another common mapping:
-"  nmap <Leader>ct <Plug>CT_CharTable
-"  imap <Leader>ct <C-o><Plug>CT_CharTable<ESC>
+" ISOFF/2024-04-29: These used to be more prominent bindings, but this
+" resource is rarely (if ever) accessed.
+"   nmap <M-!> <Plug>CT_CharTable
+"   imap <M-!> <C-o><Plug>CT_CharTable<ESC>
+nmap <Leader>ct <Plug>CT_CharTable
+imap <Leader>ct <C-o><Plug>CT_CharTable<ESC>
 
 " TODO imap does not restore i-mode when ct done
 " NOTE Modified chartab.vim to alias <ESC> and
