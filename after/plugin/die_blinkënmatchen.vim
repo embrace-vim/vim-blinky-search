@@ -56,9 +56,16 @@ let s:blink_freq = 125
 " How long to blink the match text, in milliseconds. On Vim <8, without
 " +timers, you need a much shorter blink time because Vim blocks while
 " it waits for the blink to complete.
-"let s:blink_length = has('timers') ? 500 : 100
-"let s:blink_length = has('timers') ? 1500 : 100
-let s:blink_length = has('timers') ? float2nr(s:blink_freq * 1.5) : 100
+"  let s:blink_length = has('timers') ? 500 : 100
+"  let s:blink_length = has('timers') ? 1500 : 100
+" At 1.5 times the blink frequency, there's one 'blink', or maybe zero,
+" not sure what to call it:
+"  let s:blink_length = has('timers') ? float2nr(s:blink_freq * 1.5) : 100
+" At 2 times, the same, maybe one blink, or none.
+" At 3 times the blink frequency, you'll see two winks, er, blinks.
+" - In Vim 9, pressing another key interrupts the blinking and does
+"   whatever action the keypress demands.
+let s:blink_length = has('timers') ? float2nr(s:blink_freq * 3) : 100
 
 "let s:use_highlight = 'ErrorMsg'
 let s:use_highlight = 'DiffChange'
