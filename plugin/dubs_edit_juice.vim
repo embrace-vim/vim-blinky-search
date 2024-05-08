@@ -744,7 +744,17 @@ function! s:TransposeCharacters()
     execute 'normal ' . 'Xp'
   endif
 endfunction
+
+" BWARE: This steals Vim's built-in i_CTRL-T, which inserts 'one shiftwidth of
+"        indent'. But this plugin relocates that command to <Shift-Ctrl-D>, which
+"        by default does the same as <C-D> and deletes 'one shiftwidth of indent'.
+"        - Stock Vim: i_CTRL-T indents, and i_CTRL-D (and i_CTRL-SHIFT-D) dedents.
+"        - Dubs Vim: i_CTRL-T transposes; i_CTRL-D dedents; and i_CTRL-SHIFT-D indents.
+
+" SAVVY: This binding findable via `:TabMessage imap`, but not `:TabMessage map`.
+
 inoremap <C-T> <C-o>:call <SID>TransposeCharacters()<CR>
+
 " NOTE Make a mapping for normal mode --
 "      but this obscures the original Ctrl-T
 "      command, which inserts a tab at the
