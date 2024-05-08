@@ -233,6 +233,8 @@ call <SID>wire_keys_cursor_to_line_first_and_last()
 " It was a disaster. These two motions, Alt-Left and Alt-Right, are hardwired
 " in my brain. I use 'em all the time.
 
+" SAVVY/2024-05-07: gvy: `gv` reselects the previous Visual area; `y` yanks.
+
 function! s:wire_keys_cursor_to_line_beg_and_end()
   " Alt-Left moves the cursor to the beginning of the line.
   noremap <M-Left> <Home>
@@ -774,6 +776,7 @@ vnoremap <S-Tab> <gv
 
 " 2012.08.19: Move paragraphs up and down, like how that
 "             one popular app lets you move notes around.
+" - DUNNO/2024-05-08: Lost to the ages: Which 'popular' app?
 
 " Move the paragraph under the cursor up a paragraph.
 function! s:MoveParagraphUp()
