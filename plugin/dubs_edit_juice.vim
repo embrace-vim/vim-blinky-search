@@ -779,6 +779,36 @@ vnoremap <S-Tab> <gv
 " NOTE Also remember that == smartly fixes
 "      the indent of the line-under-cursor
 
+" REFER/2024-05-07: See Vim's built-in i_CTRL-D and i_CTRL-T
+" - i_CTRL-D dedents and i_CTRL-T indents by default.
+"   - There is no i_CTRL-SHIFT-D to dedent (it indents).
+" - Above, Dubs reassigns i_CTRL-T to transpose characters.
+" - Here, Dubs rebinds dedent to i_CTRL-SHIFT-D (so it complements <C-D>).
+inoremap <S-C-D> <C-O>:normal >><CR>
+vnoremap <S-C-D> >gv
+
+" Note that built-in normal mode CTRL-D Scrolls window Downwards
+" (and CTRL-U Upwards).
+" - Author mostly scrolls using PgDown and PgUp, as I'm sure lots of folx,
+"   do, though sometimes I use <C-D> to scroll when my right hand is busy.
+" - Dubs Vim reassigns CTRL-U to moving paragraph up (and CTRL-P down).
+"   - This sorta leave normal CTRL-D all alone, i.e., there's no matching
+"     binding to scroll up.
+" - However, <S-C-D> by default is same as <C-D>.
+"   - So we can assign scroll up to <S-C-D>.
+"   - And then we can say that while Dubs changes the <C-U> binding, it at
+"     least reassigns the original command to a different binding. So in
+"     the end, no original command is left unbound, they've just been moved.
+nnoremap <S-C-D> <C-U><CR>
+
+" Make visual mode <C-D> work like built-in i_CTRL-D: dedent the selection.
+" - Default visual mode <C-D> more like normal mode <C-D>: it scrolls
+"   downward (and extends the selection).
+"   - This strikes the author as counterintuitive. I generally expect
+"     visual mode bindings to behave like their insert mode counterparts.
+"     I.e., I'd except <C-D> to dedent the selection; so we do that here.
+vnoremap <C-D> <gv
+
 " ------------------------------------------------------
 " Ctrl-P/Ctrl-L Moves Paragraphs
 " ------------------------------------------------------
@@ -1740,7 +1770,6 @@ endfunction
 " https://stackoverflow.com/questions/833838/delete-word-after-or-around-cursor-in-vim
 " See:
 "  :help diw
-"imap <C-d> <C-o>diw
 imap <M-d> <C-o>diw
 nmap <M-d> diw
 
