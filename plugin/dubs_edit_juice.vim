@@ -744,8 +744,7 @@ function! s:TransposeCharacters()
     execute 'normal ' . 'Xp'
   endif
 endfunction
-inoremap <C-T>
-  \ <C-o>:call <SID>TransposeCharacters()<CR>
+inoremap <C-T> <C-o>:call <SID>TransposeCharacters()<CR>
 " NOTE Make a mapping for normal mode --
 "      but this obscures the original Ctrl-T
 "      command, which inserts a tab at the
