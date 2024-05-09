@@ -628,7 +628,7 @@ endif
 " Map <Plug> to an <SID> function.
 noremap <silent> <unique> <script>
   \ <Plug>DubsEditJuice_ToggleTabHighlighting
-  \ call <SID>ToggleTabHighlighting()<CR>
+  \ :call <SID>ToggleTabHighlighting()<CR>
 " The function.
 function! s:ToggleTabHighlighting()
   " Visualizing tabs <http://tedlogan.com/techblog3.html>
