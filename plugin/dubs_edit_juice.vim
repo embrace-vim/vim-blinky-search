@@ -811,6 +811,10 @@ inoremap <S-C-D> <C-O>:call CursorFriendlyIndent(1)<CR>
 " Not necessary (builtin <C-D> behaves the same):
 "  inoremap <C-D> <C-O>:call CursorFriendlyIndent(0)<CR>
 "
+" But we can 'enchance' built-in << and >>:
+nnoremap >> :call CursorFriendlyIndent(1)<cr>
+nnoremap << :call CursorFriendlyIndent(0)<cr>
+"
 " Visual mode is easy, because cursor position doesn't matter.
 vnoremap <S-C-D> >gv
 
