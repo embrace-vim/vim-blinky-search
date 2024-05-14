@@ -784,7 +784,34 @@ vnoremap <S-Tab> <gv
 "   - There is no i_CTRL-SHIFT-D to dedent (it indents).
 " - Above, Dubs reassigns i_CTRL-T to transpose characters.
 " - Here, Dubs rebinds dedent to i_CTRL-SHIFT-D (so it complements <C-D>).
-inoremap <S-C-D> <C-O>:normal >><CR>
+"
+" SAVVY- This naive approach works, but it either moves the cursor to the first
+" non-blank character (:set startofline); or it keeps the cursor position which
+" changes relative to the text as you indent (:set nostartofline):
+" 
+"   inoremap <S-C-D> <C-O>:normal >><CR>
+"
+" REFER- Fortunately I found copy-pasta:
+"   https://vi.stackexchange.com/questions/18310/keep-relative-cursor-position-after-indenting-with
+func! CursorFriendlyIndent(ind)
+  if &sol
+    set nostartofline
+  endif
+  let vcol = virtcol('.')
+  if a:ind
+    norm! >>
+    exe "norm!". (vcol + shiftwidth()) . '|'
+  else
+    norm! <<
+    exe "norm!". (vcol - shiftwidth()) . '|'
+  endif
+endfunc
+"
+inoremap <S-C-D> <C-O>:call CursorFriendlyIndent(1)<CR>
+" Not necessary (builtin <C-D> behaves the same):
+"  inoremap <C-D> <C-O>:call CursorFriendlyIndent(0)<CR>
+"
+" Visual mode is easy, because cursor position doesn't matter.
 vnoremap <S-C-D> >gv
 
 " Note that built-in normal mode CTRL-D Scrolls window Downwards
