@@ -1400,8 +1400,8 @@ command! -nargs=+ -complete=command
 "   :TabMessage highlight
 "   :TabMessage ec g:
 " Shortcut
-"   :Ta<TAB> invokes autocompletion
-"   :ta<TAB><TAB> also works.
+"   :Tab<TAB>     using autocompletion
+"   :ta<TAB><TAB> also works
 
 " ------------------------------------------------------
 " Start Command w/ Selected Text
