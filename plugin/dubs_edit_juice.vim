@@ -809,7 +809,7 @@ endfunc
 "
 inoremap <S-C-D> <C-O>:call CursorFriendlyIndent(1)<CR>
 " Not necessary (builtin <C-D> behaves the same):
-"  inoremap <C-D> <C-O>:call CursorFriendlyIndent(0)<CR>
+inoremap <C-D> <C-O>:call CursorFriendlyIndent(0)<CR>
 "
 " But we can 'enchance' built-in << and >>:
 nnoremap >> :call CursorFriendlyIndent(1)<cr>
