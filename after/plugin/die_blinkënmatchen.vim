@@ -89,8 +89,13 @@ if has('timers')
   endfunction
 
   " Remove the blink highlight.
+  " - Note there's a race condition here, hence the 'silent!'
+  "   - Otherwise sometimes, e.g.,
+  "       Error detected while processing function BlinkStop[28]..BlinkClear:
+  "       line    1:
+  "       E803: ID not found: 1001
   function! BlinkClear()
-    call matchdelete(s:blink_match_id)
+    silent! call matchdelete(s:blink_match_id)
     let s:blink_match_id = 0
     redraw
   endfunction
