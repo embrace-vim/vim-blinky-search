@@ -235,7 +235,7 @@ call <SID>wire_keys_cursor_to_line_first_and_last()
 
 " SAVVY/2024-05-07: gvy: `gv` reselects the previous Visual area; `y` yanks.
 
-function! s:wire_keys_cursor_to_line_beg_and_end()
+function! s:add_alt_left_alt_right_maps_move_cursor_to_line_beg_line_end()
   " Alt-Left moves the cursor to the beginning of the line.
   noremap <M-Left> <Home>
   inoremap <M-Left> <C-O><Home>
@@ -246,7 +246,21 @@ function! s:wire_keys_cursor_to_line_beg_and_end()
   vnoremap <M-Right> :<C-U> <CR>gvy :execute "normal! $"<CR>
 endfunction
 
-call <SID>wire_keys_cursor_to_line_beg_and_end()
+call <SID>add_alt_left_alt_right_maps_move_cursor_to_line_beg_line_end()
+
+" For macOS Parity (where <Cmd-Left>/<Cmd-Right> move cursor to line start/end).
+function! s:add_cmd_left_cmd_right_maps_move_cursor_to_line_beg_line_end()
+  " Cmd-Left moves the cursor to the beginning of the line.
+  noremap <D-Left> <Home>
+  inoremap <D-Left> <C-O><Home>
+  vnoremap <D-Left> :<C-U> <CR>gvy :execute "normal! 0"<CR>
+  " Cmd-Right moves the cursor to the end of the line.
+  noremap <D-Right> <End>
+  inoremap <D-Right> <C-O><End>
+  vnoremap <D-Right> :<C-U> <CR>gvy :execute "normal! $"<CR>
+endfunction
+
+call <SID>add_cmd_left_cmd_right_maps_move_cursor_to_line_beg_line_end()
 
 " -------
 
