@@ -767,7 +767,7 @@ endfunction
 
 " SAVVY: This binding findable via `:TabMessage imap`, but not `:TabMessage map`.
 
-inoremap <C-T> <C-o>:call <SID>TransposeCharacters()<CR>
+inoremap <M-t> <C-o>:call <SID>TransposeCharacters()<CR>
 
 " NOTE Make a mapping for normal mode --
 "      but this obscures the original Ctrl-T
