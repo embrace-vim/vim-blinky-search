@@ -1096,6 +1096,9 @@ imap <C-CR> <C-o><Home><Down><CR><Up>
 " Center each substitution candidate as it's selected and highlighted!
 com! -nargs=* -complete=command ZZWrap let &scrolloff=999 | exec <q-args> | let &so=0
 noremap <Leader>s "sy:ZZWrap .,$s/<C-r>s//gc<Left><Left><Left>
+" 2024-08-07: Alternative \S# uses '#' delims instead of '/', e.g., to
+"             make it easier to write patterns that include path strings.
+noremap <Leader>S# "sy:ZZWrap .,$s#<C-r>s##gc<Left><Left><Left>
 
 " See also: QuickfixSubstituteAll in plugin/dubs_quickfix_wrap.vim,
 " which defines <Leader>S (\S) which find-replaces in all files
