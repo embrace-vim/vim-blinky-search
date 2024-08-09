@@ -318,11 +318,22 @@ call <SID>wire_key_insert_mode_middle_line()
 "  (if this selects more characters than you want, see :set iskeyword)
 noremap <F1> /<C-R><C-W><CR>
 inoremap <F1> <C-O>/<C-R><C-W><CR>
-" NOTE Same as <C-F3>
+" SAVVY: Note that normal and insert mode <F1> searches the Word under
+"        the cursor (inserted be <C-R><C-W>). It doesn't include path
+"        characters (like, say, <C-R><C-A> to insert the WORD under the
+"        cursor, or <C-R><C-F> the Filename under the cursor).
+"        - Because we know the user has not *typed* the query themselves,
+"          we can insert escape characters so that if the selection
+"          contains forward-slases, they don't break the search (if left
+"          unescaped, the search still works, but the query won't match
+"          past the first unescaped forward slash).
+"        - Here's that basic approach used for eons in this code:
+"            /<C-R>"<CR>
+" USYNC: <F3> vnoremap is the same
 vnoremap <F1> :<C-U>
   \ <CR>gvy
   \ gV
-  \ /<C-R>"<CR>
+  \ /<C-R>=substitute("<C-R>"", "/", "\\\\/", "g")<CR><CR>
 
 " ------------------------------------------------------
 " Cased Transforms! [DRY: This code was copy-pasted! because (lb) Lazy!]
@@ -386,7 +397,7 @@ inoremap <S-F1> <C-O>*<C-O>?<CR>
 vnoremap <S-F1> :<C-U>
   \ <CR>gvy
   \ gV
-  \ /<C-R>"<CR>
+  \ /<C-R>=substitute("<C-R>"", "/", "\\\\/", "g")<CR><CR>
   \ ?<CR>
 
 " 2017-11-12: A similar approach to the same feature.
@@ -526,10 +537,12 @@ inoremap <F3> <C-O>/<CR>
 "vnoremap <F3> <ESC>gVn
 " NOTE The gV comes before the search, else the cursor ends up at the second
 "      character at the next search word that matches
+" USYNC: Same map as <F1>, tho <S-F3> slightly different than <S-F1>.
 vnoremap <F3> :<C-U>
   \ <CR>gvy
   \ gV
-  \ /<C-R>"<CR>
+  \ /<C-R>=substitute("<C-R>"", "/", "\\\\/", "g")<CR><CR>
+
 " Backwards:
 noremap <S-F3> ?<CR>
 inoremap <S-F3> <C-O>?<CR>
@@ -538,7 +551,7 @@ inoremap <S-F3> <C-O>?<CR>
 vnoremap <S-F3> :<C-U>
   \ <CR>gvy
   \ gV
-  \ ?<C-R>"<CR>?<CR>
+  \ ?<C-R>=substitute("<C-R>"", "/", "\\\\/", "g")<CR><CR>?<CR>
 
 " Find next/previous (Deprecated Approach)
 " --------------------------------
