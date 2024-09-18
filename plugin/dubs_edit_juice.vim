@@ -834,7 +834,17 @@ func! CursorFriendlyIndent(ind)
   endif
 endfunc
 "
+" CRUMB: <Shift-Ctrl-D> <S-C-D> <Ctrl-Shift-D> <C-S-D>
 inoremap <S-C-D> <C-O>:call CursorFriendlyIndent(1)<CR>
+" Except in MacVim where <S-C-*> maps to <C-*>, use <Shift-Alt-D> instead.
+" - CRUMB: <Shift-Alt-D> (aka <M-S-D> <S-M-D> <Alt-Shift-D>)
+" - Note that macOS `vim`/MacVim does not distinguish <Shift-Ctrl-D> apart
+"   from <Ctrl-D> (they're both intrepeted as the same escape sequence),
+"   so we'll also map <Shift-Alt-D> to indent.
+" - REFER: Note there is a crafty way to make <Ctrl-Shift> work in vim/MacVim.
+"   - See comment re: DepoXy in plugin/ctrl-backspace.vim
+inoremap <S-M-D> <C-O>:call CursorFriendlyIndent(1)<CR>
+"
 " Not necessary (builtin <C-D> behaves the same):
 inoremap <C-D> <C-O>:call CursorFriendlyIndent(0)<CR>
 "
@@ -844,6 +854,8 @@ nnoremap << :call CursorFriendlyIndent(0)<cr>
 "
 " Visual mode is easy, because cursor position doesn't matter.
 vnoremap <S-C-D> >gv
+" For MacVim, where <S-C> input is stripped of the <S> (see comment above).
+vnoremap <S-M-D> >gv
 
 " Note that built-in normal mode CTRL-D Scrolls window Downwards
 " (and CTRL-U Upwards).
