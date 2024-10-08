@@ -764,8 +764,9 @@ vnoremap <C-Y> :<C-U>
 "      cursor is anywhere but the first column,
 "      but use 'xp' otherwise.
 function! s:TransposeCharacters()
-  let cursorCol = col('.')
-  if 1 == cursorCol
+  let l:cursorCol = col('.')
+
+  if 1 == l:cursorCol
     execute 'normal ' . 'xp'
   else
     execute 'normal ' . 'Xp'
