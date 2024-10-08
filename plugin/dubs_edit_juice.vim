@@ -774,11 +774,11 @@ function! s:TransposeCharacters()
 endfunction
 
 " BWARE: This steals Vim's built-in i_CTRL-T, which inserts 'one shiftwidth of
-"        indent'. But this plugin relocates that command to <Shift-Ctrl-D>, which
-"        by default does the same as <C-D> and deletes 'one shiftwidth of indent'.
-"        - Stock Vim: i_CTRL-T indents, and i_CTRL-D (and i_CTRL-SHIFT-D) dedents.
-"        - Dubs Vim: i_CTRL-T transposes; i_CTRL-D dedents; and i_CTRL-SHIFT-D indents.
-
+" indent'. But this plugin relocates that command to <Shift-Ctrl-D>, which by
+" default does the same as <C-D> and deletes 'one shiftwidth of indent'.
+" - Stock Vim: i_CTRL-T indents, and i_CTRL-D (and i_CTRL-SHIFT-D) dedents.
+" - Dubs Vim: i_CTRL-T transposes; i_CTRL-D dedents; and i_CTRL-SHIFT-D indents.
+"
 " SAVVY: This binding findable via `:TabMessage imap`, but not `:TabMessage map`.
 
 inoremap <M-t> <C-o>:call <SID>TransposeCharacters()<CR>
@@ -804,10 +804,10 @@ inoremap <M-t> <C-o>:call <SID>TransposeCharacters()<CR>
 " Thusly, use Tab/Shift-Tab to add/remove indents
 vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
-" NOTE Also remember that == smartly fixes
-"      the indent of the line-under-cursor
+" SAVVY: Also remember that == smartly fixes
+"        the indent of the line-under-cursor.
 
-" REFER/2024-05-07: See Vim's built-in i_CTRL-D and i_CTRL-T
+" REFER: See Vim's built-in i_CTRL-D and i_CTRL-T
 " - i_CTRL-D dedents and i_CTRL-T indents by default.
 "   - There is no i_CTRL-SHIFT-D to dedent (it indents).
 " - Above, Dubs reassigns i_CTRL-T to transpose characters.
