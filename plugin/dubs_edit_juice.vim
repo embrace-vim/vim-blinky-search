@@ -779,14 +779,17 @@ endfunction
 " - Stock Vim: i_CTRL-T indents, and i_CTRL-D (and i_CTRL-SHIFT-D) dedents.
 " - Dubs Vim: i_CTRL-T transposes; i_CTRL-D dedents; and i_CTRL-SHIFT-D indents.
 "
-" SAVVY: This binding findable via `:TabMessage imap`, but not `:TabMessage map`.
+" SAVVY: Not adding a normal mode map. So CTRL-T still the Vim default,
+"          'Jump to [count] older entry in the tag stack (default 1).'
+" - Consequently, this binding findable via `:TabMessage imap`, but not `:TabMessage map`.
 
-inoremap <M-t> <C-o>:call <SID>TransposeCharacters()<CR>
-
-" NOTE Make a mapping for normal mode --
-"      but this obscures the original Ctrl-T
-"      command, which inserts a tab at the
-"      beginning of the line; see :help Ctrl-t
+inoremap <C-T> <C-o>:call <SID>TransposeCharacters()<CR>
+" For parity with DepoXy/dot-inputrc:
+"   \et": transpose-chars
+"   \eT": transpose-words
+" https://github.com/DepoXy/dot-inputrc#🎛️
+" - Though note we're not adding transpose-words.
+inoremap <M-T> <C-o>:call <SID>TransposeCharacters()<CR>
 
 " ------------------------------------------------------
 " Indent Selected Text
@@ -810,10 +813,21 @@ vnoremap <S-Tab> <gv
 " REFER: See Vim's built-in i_CTRL-D and i_CTRL-T
 " - i_CTRL-D dedents and i_CTRL-T indents by default.
 "   - There is no i_CTRL-SHIFT-D to dedent (it indents).
+"     - This is because many terminals (and MacVim) don't distinguish
+"       between <Ctrl> and <Shift-Ctrl> keypresses.
 " - Above, Dubs reassigns i_CTRL-T to transpose characters.
 " - Here, Dubs rebinds dedent to i_CTRL-SHIFT-D (so it complements <C-D>).
+"   - Note that this relies on external mechanisms to work, as detailed next.
 "
-" SAVVY- This naive approach works, but it either moves the cursor to the first
+" SAVVY: On macOS, sending <Shift-Ctrl> is tricky business.
+" - It requires Alacritty (or similar terminal) bindings to work from terminal Vim:
+"     https://github.com/DepoXy/depoxy/blob/1.2.13/home/.config/alacritty/alacritty.toml#L282-L350
+" - And it requires Hammerspoon (or similar event interceptor) bindings to work from MacVim:
+"     https://github.com/DepoXy/depoxy/blob/1.2.13/home/.hammerspoon/depoxy-hs.lua#L124-L175
+" - From DepoXy development environment orchestrator:
+"     https://github.com/DepoXy/depoxy#🍯
+
+" SAVVY: This naive approach works, but it either moves the cursor to the first
 " non-blank character (:set startofline); or it keeps the cursor position which
 " changes relative to the text as you indent (:set nostartofline):
 " 
