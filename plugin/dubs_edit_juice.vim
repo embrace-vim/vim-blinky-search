@@ -1850,7 +1850,6 @@ function! HighlightNearCursor()
   endif
 endfunction
 
-
 " -------------------------------------------------------------------------
 " 2018-02-20: Remove word under cursor. Sorta like Bash's Alt-d.
 " -------------------------------------------------------------------------
