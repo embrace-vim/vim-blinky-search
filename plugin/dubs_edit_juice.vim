@@ -1839,7 +1839,29 @@ map <F10> :echo "hi<" . synIDattr(synID(line("."),col("."),1),"name") . '> trans
 "   this function really is very crude.
 " This screws <TAB>:
 "   inoremap <C-I> <C-O>:call HighlightNearCursor()<CR>
-inoremap <C-B> <C-O>:call HighlightNearCursor()<CR>
+" HSTRY/2024-12-03 02:52: I've never used this, and, as I commented
+" in 2017, it's crude and works weirdly. E.g., if you <F1> to start
+" a search on some word, those words are highlighted; but then you
+" can <C-B> another word, and that word (but not others like it)
+" will *also* be highlighted. And it's unaffected by <C-H>, which
+" clears the search highlight. And if you page-up/page-down, the
+" highlight jumps to some other word, or if you move the cursor
+" <Left> or <Right> repeatedly, the highlight also moves around.
+" Then if you leave/re-enter the buffer, the highlight disappears,
+" but not the toggle state, so then you need two <C-B> presses to
+" start it back up.
+" - But more importantly, coc.nvim defaults to (or at least its README
+"   congiguration suggests) using <C-b> to scroll the floating window.
+"   - Not that we couldn't use a different scroll mapping for coc.nvim,
+"     but that alerted me to this stale feature that we might as well nix.
+"     - Though I do sorta like the realtime `match` usage, kinda nifty.
+"     - ALTLY: Change <C-B> → <S-C-B>, long live HighlightNearCursor!
+"       - Well, not <S-C-B>, MacVim doesn't honor <Shift-Ctrl>, so
+"         how about <S-M-B>.
+"       - We'll keep this alive as a zombie feature that you'll forget
+"         about, but when you rediscover this comment, at least you can
+"         demo the feature without needing to change anything.
+inoremap <S-M-B> <C-O>:call HighlightNearCursor()<CR>
 function! HighlightNearCursor()
   if !exists("s:highlightcursor")
     match Todo /\k*\%#\k*/
