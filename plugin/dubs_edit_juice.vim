@@ -20,8 +20,9 @@
 
 " -------------------------------------------------------------------
 
-" MEH: 2018-06-27: (lb): This file is not to be made reentrant (<F9>)
-" very easily. We'd have to call hasmapto() a lot....
+" USAGE: After editing this file, disable this `finish`, then
+" press <F9> to reload this file.
+" - CXREF: https://github.com/landonb/vim-source-reloader
 if exists("g:plugin_edit_juice_vim") || &cp
   finish
 endif
@@ -636,11 +637,11 @@ let &cpo = s:save_cpo | unlet s:save_cpo
 if !hasmapto('<Plug>DubsEditJuice_ToggleTabHighlighting')
   map <silent> <unique> <Leader>tab
     \ <Plug>DubsEditJuice_ToggleTabHighlighting
+  " Map <Plug> to an <SID> function.
+  noremap <silent> <unique> <script>
+    \ <Plug>DubsEditJuice_ToggleTabHighlighting
+    \ :call <SID>ToggleTabHighlighting()<CR>
 endif
-" Map <Plug> to an <SID> function.
-noremap <silent> <unique> <script>
-  \ <Plug>DubsEditJuice_ToggleTabHighlighting
-  \ :call <SID>ToggleTabHighlighting()<CR>
 " The function.
 function! s:ToggleTabHighlighting()
   " Visualizing tabs <http://tedlogan.com/techblog3.html>
@@ -1594,6 +1595,7 @@ iabbrev <expr> ttt strftime("%H:%M")
 "   not a keyword character, and neither is ':', so doesn't work well.
 " - Trying instead <F5>, which saves 8 keypresses '/TTTtt: '
 "
+silent! iunmap <Leader>t
 inoremap <silent> <unique> <Leader>t <C-R>=strftime("/%Y-%m-%d: ")<CR>
 inoremap <F12> <C-R>=strftime("/%Y-%m-%d %H:%M: ")<CR>
 
