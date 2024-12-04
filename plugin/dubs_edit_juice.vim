@@ -37,12 +37,16 @@
 " edit text, move the cursor around the buffer, and
 " perform single-key text searches within the buffer.
 
+" -------------------------------------------------------------------
+
 " MEH: 2018-06-27: (lb): This file is not to be made reentrant (<F9>)
 " very easily. We'd have to call hasmapto() a lot....
 if exists("g:plugin_edit_juice_vim") || &cp
   finish
 endif
 let g:plugin_edit_juice_vim = 1
+
+" -------------------------------------------------------------------
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Editing Features -- Deleting Text
