@@ -1,33 +1,14 @@
 " File: dubs_edit_juice.vim
-" Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Project Page: https://github.com/landonb/dubs_edit_juice
+" Author: Landon Bouma <https://tallybark.com/> 
+" Project: https://github.com/landonb/dubs_edit_juice#🧃
 " Summary: EditPlus-inspired editing mappings
 " License: GPLv3
 " vim:tw=0:ts=2:sw=2:et:norl:
+
 " -------------------------------------------------------------------
-" Copyright © 2009, 2015-2023 Landon Bouma.
-"
-" This file is part of Dubs Vim.
-"
-" Dubs Vim is free software: you can redistribute it and/or
-" modify it under the terms of the GNU General Public License
-" as published by the Free Software Foundation, either version
-" 3 of the License, or (at your option) any later version.
-"
-" Dubs Vim is distributed in the hope that it will be useful,
-" but WITHOUT ANY WARRANTY; without even the implied warranty
-" of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See
-" the GNU General Public License for more details.
-"
-" You should have received a copy of the GNU General Public License
-" along with Dubs Vim. If not, see <http://www.gnu.org/licenses/>
-" or write Free Software Foundation, Inc., 51 Franklin Street,
-"                     Fifth Floor, Boston, MA 02110-1301, USA.
-" ===================================================================
 
-" ------------------------------------------
-" About:
-
+" ABOUT:
+"
 " This script originally started to make Vim emulate
 " EditPlus, but it's grown considerably since then to
 " just make Vim a more comfortable editor all around.
