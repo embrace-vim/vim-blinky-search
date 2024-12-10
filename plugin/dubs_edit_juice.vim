@@ -1501,7 +1501,7 @@ vnoremap :? :<C-U><CR>gvy:help <C-R>"<CR>
 "   http://github.com/hgimenez/vimfiles/blob/c07ac584cbc477a0619c435df26a590a88c3e5a2/vimrc#L72-122
 
 " Define :Lorem command to dump a paragraph of lorem ipsum
-command! -nargs=0 Lorem :normal iLorem ipsum dolor sit amet, consectetur
+command! -nargs=0 Lorem :normal! iLorem ipsum dolor sit amet, consectetur
       \ adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore
       \ magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation
       \ ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute
