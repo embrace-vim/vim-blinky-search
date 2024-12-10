@@ -640,8 +640,12 @@ vmap <kMultiply> *
 "    nmap <unique> <Leader>vl <Plug>DubsEditJuice_VLToggle
 "  endif
 "
+" HSTRY/2024-12-09: Was <Leader>vl but I've been coalescing Dubs Vim
+" <Leader> commands under the same first character, \d, esp. because
+" I rarely use most of these maps.
+"   - Mnemonic: \ds → Dubs Search (eh?)
 if !hasmapto("<Plug>DubsEditJuice_VLToggle")
-  nmap <unique> <Leader>vl <Plug>DubsEditJuice_VLToggle
+  nmap <unique> <Leader>ds <Plug>DubsEditJuice_VLToggle
 endif
 noremap <silent> <Plug>DubsEditJuice_VLToggle :let g:VeryLiteral = !g:VeryLiteral
   \\| echo "VeryLiteral " . (g:VeryLiteral ? "On" : "Off")<CR>
@@ -652,7 +656,10 @@ let &cpo = s:save_cpo | unlet s:save_cpo
 " ------------------------------------------------------
 
 if !hasmapto('<Plug>DubsEditJuice_ToggleTabHighlighting')
-  map <silent> <unique> <Leader>tab
+  " HSTRY/2024-12-09: Was <Leader>tab (as in \-t-a-b) but this feature
+  " is rarely used, and I want to reclaim <Leader>t for motion commands).
+  " - Moved under \d prefix along with other Dubs maps.
+  map <silent> <unique> <Leader>dt
     \ <Plug>DubsEditJuice_ToggleTabHighlighting
   " Map <Plug> to an <SID> function.
   noremap <silent> <unique> <script>
