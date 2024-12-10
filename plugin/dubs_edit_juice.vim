@@ -1484,6 +1484,15 @@ vnoremap :: :<C-U>
   \ <CR>gvy
   \ :<C-R>"
 
+" SAVVY/2024-12-09: Select text and type `:?` to run help on it.
+" - Question is, what's a visual mode binding you're not likely to type
+"   normally? I'll often select text and start typing to replace it.
+"   - I considered ':h' at first (seems obvious; matches the `:h` command).
+"   - But ':?' is also an interesting choice, and it's quicker to type
+"     (you can hold down <Shift> with your right hand and thump-thump
+"     colon-question easily with another finger).
+vnoremap :? :<C-U><CR>gvy:help <C-R>"<CR>
+
 " ------------------------------------------------------
 " Lorem Ipsum Dump
 " ------------------------------------------------------
