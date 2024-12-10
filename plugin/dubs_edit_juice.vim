@@ -316,6 +316,8 @@ inoremap <F1> <C-O>/<C-R><C-W><CR>
 "        - Here's that basic approach used for eons in this code:
 "            /<C-R>"<CR>
 " USYNC: <F3> vnoremap is the same
+" CALSO: The '*'/'#' vmaps (below) can ignore whitespace when searching,
+"        and they work across multiple lines, unlike <F1> vmap.
 vnoremap <F1> :<C-U>
   \ <CR>gvy
   \ gV
@@ -563,26 +565,38 @@ vnoremap <S-F3> :<C-U>
 
 " This function is based on Vim Tip 171
 "   Search for visually selected text
-"  http://vim.wikia.com/wiki/Search_for_visually_selected_text
+" http://vim.wikia.com/wiki/Search_for_visually_selected_text
 "
 " This complements the built-in '*' and '#' commands
-" by enabling the same features in select mode.
+" by enabling a similar features in select mode.
+"
+" - When g:VeryLiteral is toggled off, ignores differences
+"   in whitespace, e.g., finds both 'foo bar' and 'foo   bar'.
+" - When g:VeryLiteral is toggled on, accounts for whitespace.
+" - In either case, supports multiline search term, i.e., you
+"   can select text across multiple lines and search that.
+"
+" CALSO: <F1> vmap, which is always literal and doesn't work across lines.
 
-" The Simple, Les Functional Implementation
-" -----------------------------------------
-"  " Search for selected text, forwards or backwards.
-"vnoremap <silent> * :<C-U>
-"  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
-"  \gvy/<C-R><C-R>=substitute(
-"  \escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
-"  \gV:call setreg('"', old_reg, old_regtype)<CR>
-"vnoremap <silent> # :<C-U>
-"  \let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
-"  \gvy?<C-R><C-R>=substitute(
-"  \escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
-"  \gV:call setreg('"', old_reg, old_regtype)<CR>
+" The Simple, Less Functional Implementation
+" ------------------------------------------
+"
+"   " Search for selected text, forwards or backwards.
+"   vnoremap <silent> * :<C-U>
+"   \ let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+"   \ gvy/<C-R><C-R>=substitute(
+"   \ escape(@", '/\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+"   \ gV:call setreg('"', old_reg, old_regtype)<CR>
+"
+"   vnoremap <silent> # :<C-U>
+"   \ let old_reg=getreg('"')<Bar>let old_regtype=getregtype('"')<CR>
+"   \ gvy?<C-R><C-R>=substitute(
+"   \ escape(@", '?\.*$^~['), '\_s\+', '\\_s\\+', 'g')<CR><CR>
+"   \ gV:call setreg('"', old_reg, old_regtype)<CR>
 
 " Search for selected text.
+" - Note unless g:VeryLiteral that whitespace is ignored, e.g.,
+"   searching 'foo   bar   baz' also finds 'foo bar baz'.
 " http://vim.wikia.com/wiki/VimTip171
 let s:save_cpo = &cpo | set cpo&vim
 if !exists('g:VeryLiteral')
@@ -598,8 +612,11 @@ function! s:VSetSearch(cmd)
   else
     let pat = escape(@@, a:cmd.'\')
     if g:VeryLiteral
+      " Change actual newlines to escape sequence for multi-line
+      " search term to work.
       let pat = substitute(pat, '\n', '\\n', 'g')
     else
+      " Ignore differences in whitespace when searching.
       let pat = substitute(pat, '^\_s\+', '\\s\\+', '')
       let pat = substitute(pat, '\_s\+$', '\\s\\*', '')
       let pat = substitute(pat, '\_s\+', '\\_s\\+', 'g')
