@@ -1510,6 +1510,38 @@ command! -nargs=0 Lorem :normal! iLorem ipsum dolor sit amet, consectetur
       \ proident, sunt in culpa qui officia deserunt mollit anim id est
       \ laborum.
 
+" HSTRY/2024-12-09: Not that we need a metasyntactic jargon dumper, but
+" I just added :?, looked down, saw :Lorem, and adding a foobar dumper
+" immediately came to mind!
+" - REFER: https://en.wikipedia.org/wiki/Metasyntactic_variable#General_usage
+"          https://en.wikipedia.org/wiki/Foobar
+"          https://en.wikipedia.org/wiki/Colossal_Cave_Adventure
+"          https://en.wikipedia.org/wiki/Jargon_File
+"   - Wibble, wobble, wubble, and flob are also used in the UK.
+"       http://www.catb.org/~esr/jargon/html/M/metasyntactic-variable.html
+"         "Ah, that's the quux of the matter!”"
+command! -nargs=0 Foobar :normal! ifoo, bar, baz, qux, quux, quuz, corge, grault,
+      \ garply, waldo, fred, plugh, xyzzy, thud,
+      \ wibble, wobble, wubble, flob, bazola, ztesch,
+      \ foo, bar, thud, grunt,
+      \ foo, bar, bletch,
+      \ foo, bar, fum,
+      \ fred, barney, jim, sheila,
+      \ flarp,
+      \ zxc, spqr, wombat,
+      \ shme,
+      \ foo, bar, baz, bongo, 
+      \ spam, eggs,
+      \ snork,
+      \ foo, bar, zot,
+      \ blarg, wibble,
+      \ toto, titi, tata, tutu,
+      \ pippo, pluto, paperino,
+      \ aap, noot, mies,
+      \ oogle, foogle, boogle; zork, gork, bork,
+      \ foobar, foobaz, barf, mumble, baaaaaaz,
+      \ quuxo, quuxare, quuxandum, quux, quuces, quuxes, quuxu, quuxuum.
+
 " ------------------------------------------------------
 " From /usr/share/vim/vim74/vimrc_example.vim
 "      /usr/share/vim/vim74/gvimrc_example.vim
