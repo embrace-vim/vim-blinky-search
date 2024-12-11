@@ -1,9 +1,7 @@
-" File: dubs_edit_juice.vim
+" vim:tw=0:ts=2:sw=2:et:norl:
 " Author: Landon Bouma <https://tallybark.com/> 
 " Project: https://github.com/landonb/dubs_edit_juice#🧃
-" Summary: EditPlus-inspired editing mappings
 " License: GPLv3
-" vim:tw=0:ts=2:sw=2:et:norl:
 
 " -------------------------------------------------------------------
 
@@ -11,7 +9,11 @@
 "
 " This script originally started to make Vim emulate
 " EditPlus, but it's grown considerably since then to
-" just make Vim a more comfortable editor all around.
+" just make Vim a more comfortable editor all around
+" (at least comfortable for the author, well, until
+" I got more comfortable with Vim built-in commands
+" and motions; but this script still provides some
+" familiar GUI text editor niceties).
 "
 " This file maps a bunch of editing-related features
 " to key combinations to help delete text, select text,
@@ -1235,17 +1237,19 @@ endfunc
 " Toggle ASCII Character Table
 " ----------------------------
 " - ~~Alt-Shift-1~~ // Toggle Cliptext
-" EditPlus has a cool ANSI chart you can bring up
-" quickly (who isn't always referring to ANSI
-" charts?). Our Vim substitute is an even
-" awesomer interactive ASCII table by Christian
-" Habermann,
-"  CharTab <http://www.vim.org/scripts/script.php?script_id=898>
-" NOTE Does not work: nnoremap <M-!> <Leader>ct
-" SYNC_ME: Dubs Vim's <M-????> mappings are spread across plugins. [\ct]
+" EditPlus has a cool ANSI chart you can bring up quickly (<Alt-Shift-1>)
+" (who isn't always referring to ANSI charts?).
+" - Our Vim substitute is an even awesomer interactive ASCII table
+"   by Christian Habermann,
+"   - CharTab
+"     http://www.vim.org/scripts/script.php?script_id=898
+" - SAVVY: Does not work: nnoremap <M-!> <Leader>ct
 "
-" MAYBE/2021-01-23: Remove this? I use the Cmd-u Unicode list from DepoXy Ambers.
-
+" REFER/2024-12-10: Author for past number of years has referred
+" to a Unicode table instead. I have it wired to OS <Cmd-U>, so
+" I can open it from any app.
+"   https://github.com/DepoXy/emoji-lookup#🙄
+"
 " ISOFF/2024-04-29: These used to be more prominent bindings, but this
 " resource is rarely (if ever) accessed.
 "   nmap <M-!> <Plug>CT_CharTable
@@ -1269,13 +1273,12 @@ imap <Leader>ct <C-o><Plug>CT_CharTable<ESC>
 " Toggle Tag List
 " ---------------------------------------
 " Show the ctags list.
-" - WASAT/2024-04-29: Previously at <Shift-Alt-6>. Promoted to see if
-"   tag list will get used now. Decade-long A/B testing.
+" - HSTRY/2024-04-29: Previously at <Shift-Alt-6>. Promoted to see
+"   if tag list will get used now. (Decade-long A/B testing.)
 "     nmap <M-^> :TlistToggle<CR>
 "     imap <M-^> <C-O>:TlistToggle<CR>
 "     " cmap <M-^> <C-C>TlistToggle<ESC>
 "     " omap <M-^> <C-C>TlistToggle<ESC>
-" SYNC_ME: Dubs Vim's <M-????> mappings are spread across plugins. [M-S-1]
 nmap <M-!> :TlistToggle<CR>
 imap <M-!> <C-O>:TlistToggle<CR>
 
@@ -1318,8 +1321,9 @@ imap <M-!> <C-O>:TlistToggle<CR>
 "
 inoremap <silent> <M-[> <C-]>
 
-" Ctrl-] jumps to the tag under the cursor, but only in normal mode. Let's
-" make it work in Insert mode, too.
+" Ctrl-] jumps to the tag under the cursor, but only in normal mode.
+" Let's make it work in Insert mode, too.
+" - SPIKE/2024-12-11: Does this inhibit <C-]> from completing iabbrev?
 "noremap <silent> <C-]> :call <SID>GrepPrompt_Auto_Prev_Location("<C-R><C-W>")<CR>
 inoremap <silent> <C-]> <C-O>:tag <C-R><C-W><CR>
 "cnoremap <silent> <C-]> <C-C>:call <SID>GrepPrompt_Auto_Prev_Location("<C-R><C-W>")<CR>
@@ -1506,6 +1510,13 @@ nnoremap Q @q
 " ------------------------------------------------------
 " Advanced Ex output Capture
 " ------------------------------------------------------
+
+" SAVVY/2024-12-11: You can also print command output to
+" the current buffer.
+"
+" - E.g., to see messages, run:
+"
+"     pu=execute('messages')
 
 " TabMessage runs the specified command
 " and pastes the output to a new buffer
