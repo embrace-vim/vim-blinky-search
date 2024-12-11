@@ -1250,12 +1250,14 @@ endfunc
 " I can open it from any app.
 "   https://github.com/DepoXy/emoji-lookup#🙄
 "
-" ISOFF/2024-04-29: These used to be more prominent bindings, but this
-" resource is rarely (if ever) accessed.
-"   nmap <M-!> <Plug>CT_CharTable
-"   imap <M-!> <C-o><Plug>CT_CharTable<ESC>
-nmap <Leader>ct <Plug>CT_CharTable
-imap <Leader>ct <C-o><Plug>CT_CharTable<ESC>
+" HSTRY/2024-12-10: Was \ct but I've been moving Dubs maps under \d prefix.
+" - HSTRY/2024-04-29: These used to be more prominent bindings, but this
+"   resource is rarely (if ever) accessed.
+"     nmap <M-!> <Plug>CT_CharTable
+"     imap <M-!> <C-o><Plug>CT_CharTable<ESC>
+" - Mnemonic: \dA → Dubs ASCII
+nmap <Leader>dA <Plug>CT_CharTable
+imap <Leader>dA <C-o><Plug>CT_CharTable<ESC>
 
 " TODO imap does not restore i-mode when ct done
 " NOTE Modified chartab.vim to alias <ESC> and
