@@ -929,6 +929,19 @@ nnoremap <S-C-D> <C-U><CR>
 "     I.e., I'd except <C-D> to dedent the selection; so we do that here.
 vnoremap <C-D> <gv
 
+" ***
+
+" -------------------------
+" Left Justify Current Line
+" -------------------------
+
+" This just left-justifies (completed dedents) the current line.
+" - HSTRY/2024-12-11: This was previously \x.
+"   - But I've since moved most Dubs maps under \d.
+"   - Trying \dd, mnemonic: dedent.
+nnoremap <silent> <leader>dd :left<cr><END>a
+inoremap <silent> <leader>dd <C-O>:left<cr><END>
+
 " -------------------------------------------------------------------
 
 " ------------------------------------------------------
@@ -1662,18 +1675,6 @@ nmap <silent> <leader>dr :call DiffToggle(3)<cr>
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Other Functions
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-
-" -------------------------------------------------------------------
-
-" -------------------------
-" Left Justify Current Line
-" -------------------------
-
-" This just left-justifies the current line.
-" - HSTRY/2024-12-11: Just \x, but moving Dubs maps under \d.
-"   - Trying \dd, mnemonic: dedent.
-nnoremap <silent> <leader>dd :left<cr><END>a
-inoremap <silent> <leader>dd <C-O>:left<cr><END>
 
 " -------------------------------------------------------------------
 
