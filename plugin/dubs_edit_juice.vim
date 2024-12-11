@@ -1679,9 +1679,9 @@ function! DiffToggle(window)
   call setpos('.', l:save_cursor)
 endfunction
 " Toggle diff view on the left, center, or right windows
-nmap <silent> <leader>dl :call DiffToggle(1)<cr>
-nmap <silent> <leader>dc :call DiffToggle(2)<cr>
-nmap <silent> <leader>dr :call DiffToggle(3)<cr>
+nmap <silent> <Leader>dTl :call DiffToggle(1)<cr>
+nmap <silent> <Leader>dTc :call DiffToggle(2)<cr>
+nmap <silent> <Leader>dTr :call DiffToggle(3)<cr>
 
 " -------------------------------------------------------------------
 
