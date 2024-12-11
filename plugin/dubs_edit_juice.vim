@@ -1669,9 +1669,11 @@ nmap <silent> <leader>dr :call DiffToggle(3)<cr>
 " Left Justify Current Line
 " -------------------------
 
-" \x just left-justifies the current line.
-nnoremap <silent> <leader>x :left<cr><END>a
-inoremap <silent> <leader>x <C-O>:left<cr><END>
+" This just left-justifies the current line.
+" - HSTRY/2024-12-11: Just \x, but moving Dubs maps under \d.
+"   - Trying \dd, mnemonic: dedent.
+nnoremap <silent> <leader>dd :left<cr><END>a
+inoremap <silent> <leader>dd <C-O>:left<cr><END>
 
 " -------------------------------------------------------------------
 
