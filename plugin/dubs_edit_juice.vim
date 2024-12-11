@@ -53,6 +53,8 @@ inoremap <c-u> <c-g>u<c-u>
 inoremap <c-w> <c-g>u<c-w>
 
 " -------------------------------------------------------------------
+
+" -------------------------------------------------------------------
 " Wire Ctrl-Left/-Right to Jumping Cursor by Word
 " -------------------------------------------------------------------
 
@@ -72,6 +74,8 @@ function! s:wire_keys_move_to_word_previous_and_next()
 endfunction
 
 call <SID>wire_keys_move_to_word_previous_and_next()
+
+" -------------------------------------------------------------------
 
 " -------------------------------------------------------------------
 " Wire Alt-Shift-Left/-Right to Selecting from Cursor to Edge of Line
@@ -96,6 +100,8 @@ function! s:wire_keys_select_text_to_line_beg_and_end()
 endfunction
 
 call <SID>wire_keys_select_text_to_line_beg_and_end()
+
+" -------------------------------------------------------------------
 
 " ---------------------------------------------------------------------------
 " Wire Ctrl-Shift-PageUp/-PageDown to Selecting from Cursor to Edge of Window
@@ -124,12 +130,14 @@ endfunction
 
 call <SID>wire_keys_select_lines_to_window_first_and_last()
 
+" -------------------------------------------------------------------
+
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Document Navigation -- Moving the Cursor
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 " ------------------------------------------------------
-" Sane Scrolling
+" Better Scrolling
 " ------------------------------------------------------
 
 " Map Ctrl-Up and Ctrl-Down to scrolling
@@ -152,6 +160,8 @@ function! s:wire_keys_scroll_window_sticky_cursor()
 endfunction
 
 call <SID>wire_keys_scroll_window_sticky_cursor()
+
+" -------------------------------------------------------------------
 
 " ------------------------------------------------------
 " Quick Cursor Jumping
@@ -276,6 +286,8 @@ endfunction
 
 call <SID>wire_key_insert_mode_middle_line()
 
+" -------------------------------------------------------------------
+
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Document Navigation -- Searching Within a Buffer
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -323,11 +335,11 @@ vnoremap <F1> :<C-U>
   \ gV
   \ /<C-R>=substitute("<C-R>"", "/", "\\\\/", "g")<CR><CR>
 
+" -------------------------------------------------------------------
+
 " ------------------------------------------------------
 " Cased Transforms! [DRY: This code was copy-pasted! because (lb) Lazy!]
 " ------------------------------------------------------
-
-" ***
 
 " STOLEN! From vim-abolish. Shameless!!
 " FIXME/2018-06-27/DRY: Make a util plugin for this!
@@ -360,7 +372,7 @@ function! s:uppercase(word)
   return toupper(s:snakecase(a:word))
 endfunction
 
-" ***
+" -------------------------------------------------------------------
 
 " ------------------------------------------------------
 " Start a whole-word *-search w/ Shift-F1
@@ -440,6 +452,8 @@ function! YankSelectedTextAutomatically_ExceptOnmacOS()
 endfunction
 call YankSelectedTextAutomatically_ExceptOnmacOS()
 
+" -------------------------------------------------------------------
+
 " Make [Enter] toggle highlighting for the current word on and off.
 " Also from:
 "   http://vim.wikia.com/wiki/Highlight_all_search_pattern_matches
@@ -514,6 +528,8 @@ function! InstallHighlightOnEnter()
 endfunction
 call InstallHighlightOnEnter()
 
+" -------------------------------------------------------------------
+
 " Repeat previous search fwd or back w/ F3 and Shift-F3
 " NOTE Using /<CR> instead of n because n repeats the last / or *
 noremap <F3> /<CR>
@@ -558,6 +574,8 @@ vnoremap <S-F3> :<C-U>
 ""onoremap <S-F3> <C-O>#
 "" Start a *-search w/ Ctrl-F3
 ""map <C-F3> *
+
+" -------------------------------------------------------------------
 
 " ------------------------------------------------------
 " VSearch
@@ -651,8 +669,10 @@ noremap <silent> <Plug>DubsEditJuice_VLToggle :let g:VeryLiteral = !g:VeryLitera
   \\| echo "VeryLiteral " . (g:VeryLiteral ? "On" : "Off")<CR>
 let &cpo = s:save_cpo | unlet s:save_cpo
 
+" -------------------------------------------------------------------
+
 " ------------------------------------------------------
-" Map <Leader>tab to Toggling Tab Highlighting
+" Toggle Tab Highlighting
 " ------------------------------------------------------
 
 if !hasmapto('<Plug>DubsEditJuice_ToggleTabHighlighting')
@@ -666,6 +686,7 @@ if !hasmapto('<Plug>DubsEditJuice_ToggleTabHighlighting')
     \ <Plug>DubsEditJuice_ToggleTabHighlighting
     \ :call <SID>ToggleTabHighlighting()<CR>
 endif
+
 " The function.
 function! s:ToggleTabHighlighting()
   " Visualizing tabs <http://tedlogan.com/techblog3.html>
@@ -699,9 +720,7 @@ function! s:ToggleTabHighlighting()
   endif
 endfunction
 
-" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-" Obsolete Functions
-" ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+" -------------------------------------------------------------------
 
 " ------------------------------------------------------
 " Count of Characters Selected
@@ -710,7 +729,7 @@ endfunction
 " NOTE I'm using Ctrl-# for now. It hurts my fingers to
 "      combine such keys, but I don't use this command
 "      that often and using the pound key seems intuitive.
-" FIXME Make this work on word-under-cursor
+" DEBAR/FIXEM Make this work on word-under-cursor
 " NOTE Cannot get this to work on <C-3>, so using Alt instead
 "vnoremap <M-3> :<C-U>
 "  \ :.s/\S/&/g<CR>
@@ -728,6 +747,8 @@ endfunction
 " DO THIS INSTEAD:
 " I couldn't get the previous to work, so just do this:
 "  Select your text, type <Ctrl-o>, then g<Ctrl-g>
+
+" -------------------------------------------------------------------
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Editing Features -- Editing Text
@@ -761,6 +782,8 @@ vnoremap <C-Y> :<C-U>
 " Doesn't work: noremap <C-S-Z> :redo<CR>
 " 2015.01.14: Experience shows that the Ctrl-[a-z] key mappings
 "             are case insensitive... oh, well, too bad for us.
+
+" -------------------------------------------------------------------
 
 " ------------------------------------------------------
 " Character Transposition
@@ -800,6 +823,8 @@ inoremap <C-T> <C-o>:call <SID>TransposeCharacters()<CR>
 " https://github.com/DepoXy/dot-inputrc#🎛️
 " - Though note we're not adding transpose-words.
 inoremap <M-T> <C-o>:call <SID>TransposeCharacters()<CR>
+
+" -------------------------------------------------------------------
 
 " ------------------------------------------------------
 " Indent Selected Text
@@ -904,6 +929,8 @@ nnoremap <S-C-D> <C-U><CR>
 "     I.e., I'd except <C-D> to dedent the selection; so we do that here.
 vnoremap <C-D> <gv
 
+" -------------------------------------------------------------------
+
 " ------------------------------------------------------
 " Ctrl-P/Ctrl-L Moves Paragraphs
 " ------------------------------------------------------
@@ -1001,6 +1028,8 @@ onoremap <C-p> <C-C>:call <sid>MoveParagraphDown()<CR>
 " though CtrlP seems like the other CtrlP, the "Full path fuzzy
 " file buffer, mru, tag, ... finder with an intuitive interface."
 
+" -------------------------------------------------------------------
+
 " ------------------------------------------------------
 " Auto-format selected rows of text
 " ------------------------------------------------------
@@ -1096,6 +1125,8 @@ vnoremap <M-S-F2> :<C-U>execute "'<,'>!parT " . (virtcol("$") - 1) . "qr"<CR>
 "
 "   http://www.gnu.org/prep/standards/html_node/Formatting.html
 
+" -------------------------------------------------------------------
+
 " ------------------------------------------------------
 " Change Path Delimiters Quickly
 " ------------------------------------------------------
@@ -1115,6 +1146,8 @@ vnoremap <M-S-F2> :<C-U>execute "'<,'>!parT " . (virtcol("$") - 1) . "qr"<CR>
 :nnoremap <silent> f<Bslash>
   \ :let tmp=@/<CR>:s:/:\\:ge<CR>:let @/=tmp<CR>
 
+" -------------------------------------------------------------------
+
 " ------------------------------------------------------
 " Ctrl-Return is Your Special Friend (Who Won't Comment)
 " ------------------------------------------------------
@@ -1122,6 +1155,8 @@ vnoremap <M-S-F2> :<C-U>execute "'<,'>!parT " . (virtcol("$") - 1) . "qr"<CR>
 " Ctrl-<CR> starts a new line without the comment leader.
 nmap <C-CR> <C-o><Home><Down>i<CR><Up>
 imap <C-CR> <C-o><Home><Down><CR><Up>
+
+" -------------------------------------------------------------------
 
 " ------------------------------------------------------
 " Start Substitution Under Cursor
@@ -1154,6 +1189,8 @@ noremap <Leader>S# "sy:ZZWrap .,$s#<C-r>s##gc<Left><Left><Left>
 " which defines <Leader>S (\S) which find-replaces in all files
 " listed in the quickfix window.
 
+" -------------------------------------------------------------------
+
 " ------------------------------------------------------
 " Truncate and Pad Line to Specific Width
 " ------------------------------------------------------
@@ -1176,12 +1213,14 @@ endfunc
 " AtOnce same as:
 "  :g/^/exe "norm! 100A" | call cursor(getline('.'), 79) | norm d$
 
+" -------------------------------------------------------------------
+
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Simple keyboard mappings to toggle special windows to help insert text.
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-" <Leader>ct // \ct // Toggle Cliptext
-" ------------------------------------
+" Toggle ASCII Character Table
+" ----------------------------
 " - ~~Alt-Shift-1~~ // Toggle Cliptext
 " EditPlus has a cool ANSI chart you can bring up
 " quickly (who isn't always referring to ANSI
@@ -1212,9 +1251,10 @@ imap <Leader>ct <C-o><Plug>CT_CharTable<ESC>
 "           i.e., Alt-Shift-2 followed by
 "                 Alt-Shift-1
 
-" Alt-Shift-1 // S-M-! // Toggle Tag List
+" -------------------------------------------------------------------
+
+" Toggle Tag List
 " ---------------------------------------
-" - ~~Alt-Shift-6~~ // Toggle Tag List
 " Show the ctags list.
 " - WASAT/2024-04-29: Previously at <Shift-Alt-6>. Promoted to see if
 "   tag list will get used now. Decade-long A/B testing.
@@ -1225,6 +1265,8 @@ imap <Leader>ct <C-o><Plug>CT_CharTable<ESC>
 " SYNC_ME: Dubs Vim's <M-????> mappings are spread across plugins. [M-S-1]
 nmap <M-!> :TlistToggle<CR>
 imap <M-!> <C-O>:TlistToggle<CR>
+
+" -------------------------------------------------------------------
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Setup ctags
@@ -1340,6 +1382,8 @@ vnoremap <M-]> :<C-U>
 ":ptselect /<pattern>
 ":ptjump /<pattern>
 
+" -------------------------------------------------------------------
+
 " ------------------------------------------------------
 " easytags configuration
 " ------------------------------------------------------
@@ -1362,6 +1406,8 @@ let g:easytags_async = 1
 
 let g:easytags_auto_update = 0
 
+" -------------------------------------------------------------------
+
 " ------------------------------------------------------
 " Vim Wild Menu (wildmenu)
 " ------------------------------------------------------
@@ -1371,6 +1417,8 @@ let g:easytags_auto_update = 0
 " Completion happens according to wildmode.
 " See also :help cmdline-completion
 set wildmode=list:longest,full
+
+" -------------------------------------------------------------------
 
 " ------------------------------------------------------
 " Obsolete ActionScript tags code...
@@ -1402,6 +1450,8 @@ let tlist_actionscript_settings = 'actionscript;c:class;f:method;p:property;v:va
 
 "--regex-actionscript=/^[ \t]*[(override)[ \t]+]?[(private|protected|public)][ \t]+[(static)[ \t]+]?function[ \t]+[(set|get)]*[ \t]+([A-Za-z0-9_]+)[ \t]*\(/\1 \2/p,property, properties/
 
+" -------------------------------------------------------------------
+
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Macros
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -1418,6 +1468,8 @@ let tlist_actionscript_settings = 'actionscript;c:class;f:method;p:property;v:va
 "      Ctrl-o q if in Insert mode)
 "   3. Playback with Q
 nnoremap Q @q
+
+" -------------------------------------------------------------------
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Developer Specials
@@ -1470,6 +1522,8 @@ command! -nargs=+ -complete=command
 "   :Tab<TAB>     using autocompletion
 "   :ta<TAB><TAB> also works
 
+" -------------------------------------------------------------------
+
 " ------------------------------------------------------
 " Start Command w/ Selected Text
 " ------------------------------------------------------
@@ -1492,6 +1546,8 @@ vnoremap :: :<C-U>
 "     (you can hold down <Shift> with your right hand and thump-thump
 "     colon-question easily with another finger).
 vnoremap :? :<C-U><CR>gvy:help <C-R>"<CR>
+
+" -------------------------------------------------------------------
 
 " ------------------------------------------------------
 " Lorem Ipsum Dump
@@ -1541,6 +1597,8 @@ command! -nargs=0 Foobar :normal! ifoo, bar, baz, qux, quux, quuz, corge, grault
       \ oogle, foogle, boogle; zork, gork, bork,
       \ foobar, foobaz, barf, mumble, baaaaaaz,
       \ quuxo, quuxare, quuxandum, quux, quuces, quuxes, quuxu, quuxuum.
+
+" -------------------------------------------------------------------
 
 " ------------------------------------------------------
 " From /usr/share/vim/vim74/vimrc_example.vim
@@ -1598,6 +1656,8 @@ endfunction
 nmap <silent> <leader>dl :call DiffToggle(1)<cr>
 nmap <silent> <leader>dc :call DiffToggle(2)<cr>
 nmap <silent> <leader>dr :call DiffToggle(3)<cr>
+
+" -------------------------------------------------------------------
 
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Other Functions
@@ -1666,6 +1726,8 @@ iabbrev <expr> TTTTtt strftime("%Y-%m-%dT%H:%M")
 "iabbrev <expr> tt strftime("%H:%M")
 iabbrev <expr> ttt strftime("%H:%M")
 
+" ***
+
 " TRYME/2023-06-03: For use after a FIVER -->
 "     Type `FIVER\t` and you get `FIVER/TTT: `
 "     Type `FIVER<F5>` and you get `FIVER/TTTtt: `
@@ -1679,6 +1741,8 @@ iabbrev <expr> ttt strftime("%H:%M")
 silent! iunmap <Leader>t
 inoremap <silent> <unique> <Leader>t <C-R>=strftime("/%Y-%m-%d: ")<CR>
 inoremap <F12> <C-R>=strftime("/%Y-%m-%d %H:%M: ")<CR>
+
+" -------------------------------------------------------------------
 
 " (lb): 2018-05-31: Use `###` to generate a basic datetime section header,
 " e.g.,
@@ -1748,6 +1812,8 @@ iabbrev <expr> ##\| '####################<CR>┃ ' . strftime("%Y-%m-%d %H:%M") 
 " (lb): 2020-09-21: I keep typing `:::`, might as well wire it.
 iabbrev <expr> ::: strftime("%Y-%m-%d %H:%M:")
 
+" -------------------------------------------------------------------
+
 " -------------------------
 " Left Justify Current Line
 " -------------------------
@@ -1755,6 +1821,8 @@ iabbrev <expr> ::: strftime("%Y-%m-%d %H:%M:")
 " \x just left-justifies the current line.
 nnoremap <silent> <leader>x :left<cr><END>a
 inoremap <silent> <leader>x <C-O>:left<cr><END>
+
+" -------------------------------------------------------------------
 
 " -------------------------------------------------------------------------
 " 2017-03-28: [lb] trying a new ESC shortcut, jj.
@@ -1766,6 +1834,8 @@ inoremap <silent> <leader>x <C-O>:left<cr><END>
 "   inoremap jj <ESC>
 " 2018-06-14: What about Alt-J, Alt-J, two of my favorite bands?
 inoremap <M-j><M-j> <ESC>
+
+" -------------------------------------------------------------------
 
 " -------------------------------------------------------------------------------
 " 2017-08-02: Source a .vim file in or up path, to support continuous integration
@@ -1884,6 +1954,7 @@ function! s:SeekForSecurityHolePlugin_SeekUpForTrustmeDotVim(start_dir)
   return l:trustme_vim
 endfunction
 
+" -------------------------------------------------------------------
 
 " -------------------------------------------------------------------------
 " 2017-12-01: Show the :highlight of the word under the cursor.
@@ -1940,6 +2011,8 @@ function! HighlightNearCursor()
   endif
 endfunction
 
+" -------------------------------------------------------------------
+
 " -------------------------------------------------------------------------
 " 2018-02-20: Remove word under cursor. Sorta like Bash's Alt-d.
 " -------------------------------------------------------------------------
@@ -1949,6 +2022,8 @@ endfunction
 "  :help diw
 imap <M-d> <C-o>diw
 nmap <M-d> diw
+
+" -------------------------------------------------------------------
 
 " -------------------------------------------------------------------------
 " 2020-02-05: Change cursor shape in different modes.
