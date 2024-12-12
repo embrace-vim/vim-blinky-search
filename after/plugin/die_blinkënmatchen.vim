@@ -1,6 +1,5 @@
-" File: dubs_appearance.vim
-" Author: Landon Bouma (landonb &#x40; retrosoft &#x2E; com)
-" Project Page: https://github.com/landonb/dubs_appearance
+" Author: Landon Bouma <https://tallybark.com/>
+" Project: https://github.com/landonb/dubs_appearance#💅
 " Summary: Basic Vim configuration (no functions; just settings and mappings)
 " License: GPLv3
 " vim:tw=0:ts=2:sw=2:et:norl:ft=vim
