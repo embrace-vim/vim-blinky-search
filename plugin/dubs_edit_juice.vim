@@ -895,6 +895,7 @@ inoremap <S-C-D> <C-O>:call CursorFriendlyIndent(1)<CR>
 "   so we'll also map <Shift-Alt-D> to indent.
 " - REFER: Note there is a crafty way to make <Ctrl-Shift> work in vim/MacVim.
 "   - See comment re: DepoXy in plugin/ctrl-backspace.vim
+"     ~/.vim/pack/landonb/start/dubs_edit_juice/plugin/ctrl-backspace.vim
 inoremap <S-M-D> <C-O>:call CursorFriendlyIndent(1)<CR>
 "
 " Not necessary (builtin <C-D> behaves the same):
