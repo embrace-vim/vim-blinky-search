@@ -319,7 +319,7 @@ call <SID>wire_key_insert_mode_middle_line()
 noremap <F1> /<C-R><C-W><CR>
 inoremap <F1> <C-O>/<C-R><C-W><CR>
 " SAVVY: Note that normal and insert mode <F1> searches the Word under
-"        the cursor (inserted be <C-R><C-W>). It doesn't include path
+"        the cursor (inserted by <C-R><C-W>). It doesn't include path
 "        characters (like, say, <C-R><C-A> to insert the WORD under the
 "        cursor, or <C-R><C-F> the Filename under the cursor).
 "        - Because we know the user has not *typed* the query themselves,
