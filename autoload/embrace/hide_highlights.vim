@@ -22,14 +22,18 @@
 "       just turn it off), but nohlsearch doesn't
 "       work that way
 " NOTE: Set this after calling `behave mswin`, which overrides C-h.
-noremap <C-h> :nohlsearch<CR>
-inoremap <C-h> <C-O>:nohlsearch<CR>
-cnoremap <C-h> <C-C>:nohlsearch<CR>
-onoremap <C-h> <C-C>:nohlsearch<CR>
+
 " (NEWB|NOTE: From Insert mode, Ctrl-o
 "  is used to enter one command and
 "  execute it. If it's a :colon
 "  command, you'll need a <CR>, too.
 "  Ctrl-c is used from command and
 "  operator-pending modes.)
+
+function! g:embrace#hide_highlights#CreateMaps() abort
+  noremap <C-h> :nohlsearch<CR>
+  inoremap <C-h> <C-O>:nohlsearch<CR>
+  cnoremap <C-h> <C-C>:nohlsearch<CR>
+  onoremap <C-h> <C-C>:nohlsearch<CR>
+endfunction
 
