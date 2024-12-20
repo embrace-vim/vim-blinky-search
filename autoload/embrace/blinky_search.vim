@@ -1,20 +1,11 @@
 " vim:tw=0:ts=2:sw=2:et:norl:
 " Author: Landon Bouma <https://tallybark.com/> 
-" Project: https://github.com/landonb/dubs_edit_juice#🧃
+" Project: https://github.com/landonb/vim-blinky-search#🕹
 " License: GPLv3
+" Copyright © 2015, 2017-2018, 2024 Landon Bouma.
 
 " -------------------------------------------------------------------
   
-" USAGE: After editing this file, disable this `finish`, then
-" press <F9> to reload this file.
-" - CXREF: https://github.com/landonb/vim-source-reloader
-if exists("g:plugin_edit_juice_vim") || &cp
-  finish
-endif
-let g:plugin_edit_juice_vim = 1
-
-" -------------------------------------------------------------------
-
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 " Document Navigation -- Searching Within a Buffer
 " ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
