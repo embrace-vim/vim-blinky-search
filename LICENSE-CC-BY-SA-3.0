@@ -1,10 +1,10 @@
-This license pertains to a single feature:
+This license pertains to a single file:
 
-  s:VSetSearch(cmd)
+  autoload/embrace/visual_search.vim
 
-Found in:
+Which contains the visual search word indentifier and pattern builder:
 
-  autoload/embrace/blinky_search.vim
+  g:embrace#visual_search#SetSearch()
 
 Which was adapted from a Vim Tips Wiki article by Raymond Li:
 
