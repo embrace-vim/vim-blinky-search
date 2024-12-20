@@ -4,7 +4,7 @@ This license pertains to a single feature:
 
 Found in:
 
-  plugin/dubs_edit_juice.vim
+  autoload/embrace/blinky_search.vim
 
 Which was adapted from a Vim Tips Wiki article by Raymond Li:
 
