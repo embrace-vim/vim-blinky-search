@@ -11,46 +11,50 @@
 " -------------------------------------------------------------------------
 "  [2018-06-11: Just created this. I am so behind the Vim-times!]
 
-" How did I not Google this before? Such an obvious feature!
-" NOTE: You could :set scrolloff=999 to keep the cursor centered, but then
-"       it applies not just to every command, but to the whole interaction.
-"       I.e., the cursor will always be centered! You won't be able to arrow-
-"       up, arrow-down, Ctrl-PgUp, etc. to move the cursor outside the middle.
-"       So that's not an option.
-" Use `zz` after search commands to center the cursor, so your eye doesn't
+" You can `zz` after search commands to center the cursor, so your eye doesn't
 " have to scan to see where where the cursor is. Also, if you have more than
-" one search result highlighted in view, and if your syntax colors sometimes
-" make it difficult to see upon which highlight is the cursor is situated,
-" centering the cursor makes it obvious.
+" one search result highlighted in view, and if your syntax colors sometime
+" make it difficult to see upon which highlight the cursor is situated, you
+" can center the cursor to make it more obvious.
 
-function g:embrace#middle_matches#CreateMaps() abort
-  " BLARGH/2018-06-13: The n/N maps do not stick. You can set manually and they
-  " work, but something is clobbering them on startup...
-  " - Ha! I even put these two lines at the bottom and ~/.vimrc, and it still
-  "   doesn't stick!
-  " - As suspected: You can map another key, e.g., m/M, and it'll stick to them.
-  " DISABLE/MAYBE/2018-06-13: I feel weird leaving this code uncommented, because
-  "   it doesn't work; however, I'd like to see if it even magically starts working
-  "   again...
-  nnoremap n nzz
-  nnoremap N Nzz
-  " WHATEVER/2018-06-13: So be it! We can map Alt-n/N, at least in the GUI; in the
-  "   terminal, I think I'm stuck with */#.
-  nnoremap <M-n> nzz
-  nnoremap <M-N> Nzz
+" ALTLY: Here's an interesting toggle idea.
+" - If you :set scrolloff=999, it'll keep the cursor centered. But then
+"   it applies continuously. I.e., the cursor will always be centered!
+"   - Every `j`, `k`, <Up>, <Down>, etc., scrolls the window.
+"
+"  :nnoremap <Leader>zz :let &scrolloff=999-&scrolloff<CR>
 
-  nnoremap * *zz
-  nnoremap # #zz
-  " (lb): Ha. I don't use the g-commands. g* is like '*' but without \<word\>
-  " boundaries. And g# is like '#" (reverse-'*'), but without word boundaries.
-  nnoremap g* g*zz
-  nnoremap g# g#zz
+function g:embrace#middle_matches#CreateMaps_AppendMiddling(cmd) abort
+  " E.g., `nnoremap n nzz`
+  execute 'nnoremap ' .. a:cmd .. ' ' .. a:cmd .. 'zz'
+endfunction
 
-  " Meh. If you find other instances where you want to enable the centering
-  " behavior, you could add a toggle command. But I think I've got all the
-  " bases covered that I care about. (And I'm not a sports fan, so not sure
-  " why the baseball reference.)
-  "
-  "  :nnoremap <Leader>zz :let &scrolloff=999-&scrolloff<CR>
+function g:embrace#middle_matches#CreateMaps_AddMiddling(cmds) abort
+  for l:cmd in a:cmds
+    call g:embrace#middle_matches#CreateMaps_AppendMiddling(l:cmd)
+  endfor
+endfunction
+
+" -------------------------------------------------------------------
+
+function g:embrace#middle_matches#CreateMaps(cmds = []) abort
+  let l:cmds = a:cmds
+
+  " By default, add `zz` to each of the start new search commands,
+  " and also to the next/prev search match commands.
+  " - SAVVY: g* is like '*' but without \<word\> boundaries.
+  "      And g# is like '#" (reverse-'*'), also boundaryless.
+  if empty(l:cmds)
+    let l:cmds = [
+      \ 'n',
+      \ 'N',
+      \ '*',
+      \ '#',
+      \ 'g*',
+      \ 'g#',
+      \ ]
+    endif
+
+  call g:embrace#middle_matches#CreateMaps_AddMiddling(l:cmds)
 endfunction
 

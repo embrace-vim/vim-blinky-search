@@ -32,9 +32,8 @@ endif
 " Wire <F1>, <Shift-F1>, <F3>, <Shift-F3>, *, #, \ds
 call g:embrace#blinky_search#CreateMaps()
 
-" Wire normal mode search commands to call `zz`:
-"   n, N, <M-n>, <M-N>, *, #, g*, g#
-call g:embrace#middle_matches#CreateMaps()
+" Wire normal mode search commands to call `zz`.
+call g:embrace#middle_matches#CreateMaps(['n', 'N', '*', '#', 'g*', 'g#'])
 
 " - SAVVY: <C-h> is wired after/, to avoid mswin.vim conflict.
 "   call g:embrace#hide_highlights#CreateMaps()
