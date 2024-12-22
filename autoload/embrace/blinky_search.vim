@@ -43,12 +43,25 @@ let s:save_cpo = &cpo | set cpo&vim
 " REFER: Here's another way to select the current word under the cursor:
 "   " b goes to start of word,
 "   " "zyw yanks into the z register to start of next word
-"   :nnoremap <F1> b"zyw:echo 'The word is: ' .. @z<CR>
+"   nnoremap <F1> b"zyw:echo 'The word is: ' .. @z<CR>
+"
+" REFER: Here's the basic impl., but this won't histadd('input') nor does
+" it support multi-word indentifier "multicase" searches:
+"   execute 'noremap ' .. a:key_sequence .. ' /<C-R><C-W><CR>'
+"   execute 'inoremap ' .. a:key_sequence .. ' <C-O>/<C-R><C-W><CR>'
 
 " Map a sequence (defaults <F1>) to essentially g* but with more flexibility.
 function! g:embrace#blinky_search#CreateMaps_GStarSearch(key_sequence = '<F1>') abort
-  execute 'noremap ' .. a:key_sequence .. ' /<C-R><C-W><CR>'
-  execute 'inoremap ' .. a:key_sequence .. ' <C-O>/<C-R><C-W><CR>'
+  " restrict_word = 0, multicase = 0, toggle_highlight = 0, cmd = '/'
+  " SAVVY: Vim complains 'E474: Invalid argument' if <Plug> name is too long!
+  " - I don't see anything noted in the docs, but:
+  "     blinky-search-norestrict-nomulticase-notoggleX
+  "   is one character too long (46 characters).
+  "   - So we'll use abbreviations.
+  nnoremap <silent> <expr> <Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)
+    \ g:embrace#blinky_search#StartSearchNormalInsert(0, 0, 0, '/')
+  execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)'
+  execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O><Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)'
 
   let l:cmd = '/'
   let l:jump = 1
@@ -298,7 +311,7 @@ endfunction
 function! g:embrace#blinky_search#CreateMaps_StarSearchStayPut(key_sequence = '<S-F1>') abort
   " restrict_word = 1, multicase = 0, toggle_highlight = 0
   nnoremap <silent> <expr> <Plug>(blinky-search-wson-mcon-tgoff)
-    \ g:embrace#blinky_search#StartSearchStayPut(1, 0, 0)
+    \ g:embrace#blinky_search#StartSearchNormalInsert(1, 0, 0)
   execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-wson-mcon-tgoff)'
   execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O><Plug>(blinky-search-wson-mcon-tgoff)'
 
@@ -314,7 +327,7 @@ endfunction
 function! g:embrace#blinky_search#CreateMaps_GStarSearchStayPut(key_sequence = '<F8>') abort
   " restrict_word = 0, multicase = 1, toggle_highlight = 0
   nnoremap <silent> <expr> <Plug>(blinky-search-wsoff-mcon-tgoff)
-    \ g:embrace#blinky_search#StartSearchStayPut(0, 1, 0)
+    \ g:embrace#blinky_search#StartSearchNormalInsert(0, 1, 0)
   execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-wsoff-mcon-tgoff)'
   execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O><Plug>(blinky-search-wsoff-mcon-tgoff)'
 
@@ -330,8 +343,8 @@ endfunction
 " ***
 
 " HSTRY: This shows how to add Normal and Insert mode maps using the
-" map command to do all the word. It's similar to StartSearchStayPut
-" except that StartSearchStayPut uses `map <expr> <Plug>` to call a
+" map command to do all the word. It's similar to StartSearchNormalInsert
+" except that StartSearchNormalInsert uses `map <expr> <Plug>` to call a
 " function, whereas this just does it all inline. (And we prefer the
 " fcn. because we want to get *complicated* (search all the cases).)
 "
@@ -374,8 +387,8 @@ endfunction
 
 let s:is_highlighting = 0
 
-function! g:embrace#blinky_search#StartSearchStayPut(
-  \ restrict_word = 0, multicase = 0, toggle_highlight = 0,
+function! g:embrace#blinky_search#StartSearchNormalInsert(
+  \ restrict_word = 0, multicase = 0, toggle_highlight = 0, cmd = ''
 \ ) abort
   if &ft == 'qf'
     " Don't break quickfix <Enter>.
@@ -449,7 +462,13 @@ function! g:embrace#blinky_search#StartSearchStayPut(
     let s:is_highlighting = 1
   endif
 
-  return ":silent set hlsearch\<CR>"
+  let l:eval = ":silent set hlsearch"
+
+  if a:cmd != ''
+    let l:eval = l:eval .. ' | :execute "normal ' .. a:cmd .. '\<CR>"'
+  endif
+
+  return l:eval .. "\<CR>"
 endfunction
 
 " SAVVY: This overrides Vim's built-in <CR>, which also overides
@@ -460,7 +479,7 @@ endfunction
 function! g:embrace#blinky_search#CreateMaps_ToggleHighlight(key_sequence = '<CR>') abort
   " restrict_word = 1, multicase = 1, toggle_highlight = 1
   nnoremap <silent> <expr> <Plug>(blinky-search-toggle-restrict)
-    \ g:embrace#blinky_search#StartSearchStayPut(1, 1, 1)
+    \ g:embrace#blinky_search#StartSearchNormalInsert(1, 1, 1)
 
   execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-toggle-restrict)'
 endfunction
