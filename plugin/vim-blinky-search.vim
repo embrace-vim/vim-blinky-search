@@ -53,6 +53,7 @@ function! s:CreateMaps__BlinkySearch() abort
   call g:embrace#blinky_search#CreateMaps_SearchBackward('<S-F3>')
   call g:embrace#blinky_search#CreateMaps_StarPound_VisualMode()
   call g:embrace#blinky_search#CreateMaps_ToggleStrict('<Leader>ds')
+  call g:embrace#blinky_search#CreateMaps_ToggleMulticase('<Leader>dc')
 endfunction
 
 call s:CreateMaps__BlinkySearch()

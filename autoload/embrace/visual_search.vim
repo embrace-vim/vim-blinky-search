@@ -194,8 +194,19 @@ endfunction
 " USYNC: See also g:DubsGrepSteady_GrepAllTheCases and GrepPrompt_Simple()
 "          https://github.com/landonb/dubs_grep_steady#🧐
 
+" g:blinky_search_multicase options:
+"    -1: Reset (use defaults)
+"     0: Disable (all commands)
+"     1: Enable (all commands)
+
 function! g:embrace#visual_search#CaseTheJoint(pat, restrict_word = 0, multicase = 0) abort
-  if a:multicase
+  let l:multicase = a:multicase
+  if get(g:, 'blinky_search_multicase', -1) != -1
+    " User toggled always-on or always-off (via, e.g., \ds command).
+    let l:multicase = g:blinky_search_multicase
+  endif
+
+  if l:multicase
     let l:varies = 0
 
     let l:ccase = tolower(g:embrace#multicase#camelcase(a:pat))
