@@ -1,3 +1,57 @@
+" vim:tw=0:ts=2:sw=2:et:norl:ft=vim
+" Author: Landon Bouma <https://tallybark.com/>
+" Project: https://github.com/landonb/vim-blinky-search#🕹
+" License: <Unknown>
+" Authors: This is a modified version
+"   of Rich's modified version
+"   of Damian Conway's search highlight blinker,
+"     Die Blinkënmatchen.
+"
+" - The original `die_blinkënmatchen.vim` is by Damian Conway,
+"   as found in *More Instantly Better Vim - OSCON 2013*, which
+"   you can watch here:
+"
+"     https://www.youtube.com/watch?v=aHm36-na4-4
+"
+"   (lb): I have not been able to find the original tar archive
+"   that was circulating around.
+"
+"   But you can find another version of HLNext() et al in
+"   Damian's Vim Setup repo:
+"
+"     https://github.com/thoughtstream/Damian-Conway-s-Vim-Setup/tree/master/plugin
+"
+"     https://github.com/thoughtstream/Damian-Conway-s-Vim-Setup/blob/47c3aec4522e/plugin/hlnext.vim
+"
+"   Albeit that version just highlights each match, and neither
+"   blinks nor disable itself automatically.
+"
+" - The file you're looking at here in vim-blinky-search is
+"   based on modifications by Rich:
+"
+"     https://vi.stackexchange.com/users/343/rich
+"
+"   That added timer logic to automate the blinking:
+"
+"     https://vi.stackexchange.com/questions/8851/interrupting-blink-highlighting-function-if-mapping-is-invoked-again/13551#13551
+"
+" - To compare against the unmodified Stack Exchange version, run:
+"
+"     git diff be5d7b5..HEAD -- autoload/embrace/die_blinkënmatchen.vim
+"
+" - (lb): My changes:
+"
+"   - Change the match highlight from 'ErrorMsg' to 'DiffChange'.
+"
+"   - Make the `map` sequences user-configurable (so user can
+"     set whatever bindings they want).
+"
+"   - Integrate with g:embrace#visual_search#SetSearch() so all the
+"     vim-blinky-search search commands blink on their first match,
+"     and not just the `n` and `N` commands.
+
+" ----------------------------------------------------------------------------
+
 " Modified version of Damian Conway's Die Blinkënmatchen: highlight matches
 "
 " This is how long you want the blinking to last in milliseconds. If you're
