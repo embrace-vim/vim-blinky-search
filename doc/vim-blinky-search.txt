@@ -1,0 +1,419 @@
+*vim-blinky-search.txt*		`Visual Search Plugin`	2024 Dec 19
+
+VIM BLINKY SEARCH 🕹 Visual search enhancements for Vim~
+
+VIM BLINKY SEARCH			*vim-blinky-search*
+
+1. About This Plugin			|vim-blinky-search-about|
+2. Inspiration				|vim-blinky-search-inspiration|
+3. Search Commands			|vim-blinky-search-search-commands|
+4. User Configuration			|vim-blinky-search-user-configuration|
+5. Similar Plugins			|vim-blinky-search-similar-plugins|
+
+==============================================================================
+1. About This Plugin			*vim-blinky-search-about*
+
+This plugin supercharges the familiar Vim |star| (`*`) and |#| search
+commands and adds the following features:
+
+- Search across newlines.
+
+  - You can select text spanning a line break and search that.
+
+- Search without regard for whitespace.
+
+  - A search for "foo  bar   baz" will match "foo bar baz".
+
+  - You can toggle this effect on and off (the toggle defaults
+    to `<Leader>ds` (`\ds`)).
+
+- Search variations of multiple-word identifiers (multi-case).
+
+  - A search for "foo-bar", "fooBar" or "foo_bar" will find
+    all of these case variations.
+
+  - You can toggle this effect to be always-on, always-off,
+    or to use the default behavior (the toggle defaults to
+    `<Leader>dc` (`\dc`)).
+
+   - By default, only <F8> and <Enter> enable multi-case.
+
+    If you run `\dc` once, you'll enable multi-case for all
+    search commands. And if you run it again, you'll disable
+    multi-case for all commands. Run a third time to reset
+    the default behavior (where only `<F8>` and `<Enter>`
+    enable multi-case.)
+
+- Momentarily blink the match under the cursor.
+
+  - Depending on your Vim |colorscheme|, especially the cursor shape
+    and its color compared to the match highlight color, it might be
+    difficult to spot the cursor while matching. This blink feature
+    can help!
+
+  - You can toggle this effect on and off (the toggle defaults
+    to `<Leader>dB` (`\dB`)).
+
+- Center the cursor line vertically.
+
+  - When you advance the cursor to the next match, some of the plugin
+    commands will reposition the cursor line in the middle of the window.
+
+    - But not all of them — it depends on which map command you use.
+
+      By default, `g*`, |g#|, |n| and |N| will call |zz| to center the
+      line in the window.
+
+      But not the commands `*`, |#|, <F1>, <S-F1>, <F3>, <S-F3>,
+      `<F8>`, or `<Enter>`.
+
+    - You can also easily configure the plugin to not do this, or to
+      choose different keybindings.
+
+      See |vim-blinky-search-user-configuration| for details on how to
+      pick your own command maps.
+
+This plugins maps a number of F-keys and other keys to help you search:
+
+- Start a search using <F1> and <Shift-F1>. <F1> is similar to using
+  `g*` and will jump to the next match. <S-F1> is similar to using
+  `*` and stays put.
+
+  Advance to the next match using <F3> and <Shift-F3> instead of |n| and |N|.
+
+  Start a multi-case search using <F8> or <Enter> (or toggle that feature
+  always-on with `\dc`).
+
+  You can use any of the F-key commands from visual mode to start a new
+  search.
+
+  See the table under |vim-blinky-search-search-commands| for more details
+  about how these commands each work, and how they differ from one another.
+
+Project page: https://github.com/embrace-vim/vim-blinky-search
+
+==============================================================================
+2. Inspiration				*vim-blinky-search-inspiration*
+
+The newline and whitespace features are inspired by a classic Vim tip:
+
+  https://vim.fandom.com/wiki/Search_for_visually_selected_text
+
+The blinky feature is inspired by a Stack Exchange answer that the
+author happened to run across (and that only has 5 upvotes! But it's
+way cooler than that =):
+
+  https://vi.stackexchange.com/questions/8851/interrupting-blink-highlighting-function-if-mapping-is-invoked-again/13551#13551
+
+- Their post is based on Damian Conway's work, `die_blinkënmatchen.vim`,
+  as found in `More Instantly Better Vim - OSCON 2013`.
+
+  https://www.youtube.com/watch?v=aHm36-na4-4
+
+- Albeit since then the `die_blinkënmatchen.vim` feature has been
+  replaced by a much more concise blink function, which has been
+  lovingly grifted from `vim-slash`:
+
+  https://github.com/junegunn/vim-slash
+
+The multi-word identifier † feature is my creation, because sometimes I work
+on React code where variables have multiple identities (e.g., `embraceVim`
+and `embrace-vim`) and I got annoyed after about the fifth time I hand-typed
+something like `embrace.\?vim` so that I could search both at the same time.
+
+† https://en.wikipedia.org/wiki/Naming_convention_(programming)#Multiple-word_identifiers
+
+- Though I "borrowed" the case filters from `tpope/vim-abolish`
+  <https://github.com/tpope/vim-abolish> (it's only 19 lines of code,
+  but it's 19 lines of |regexp| which is, like, 19 hours of work ;).
+  Thank you, Tim Pope!
+
+==============================================================================
+3. Search Commands			*vim-blinky-search-search-commands*
+
+In stock Vim, `*`, |#|, `g*`, |g#|, |/|, and |?| start a buffer search. You can then
+advance to the next match using |n| (forward match) and |N| (backward match).
+
+- Refer to |search-commands| for more details on the builtin search commands.
+
+This plugin modifies `*`, |#|, and `g*` and |g#| as described below, and it
+adds a number of additional commands.
+
+It's also easy to choose your own key sequences for the commands listed
+below. See the next section for more: |vim-blinky-search-user-configuration|
+
+				*blinky-star*
+*			Search buffer for exact word under cursor.
+
+			In stock Vim, this works from normal and visual mode.
+			With this plugin, it also works from select mode.
+
+			When used from visual or select mode, this plugin
+			supports multiline searching (if the selected text
+			contains newlines). It can also be configured to
+			ignore, or not to ignore, differences in whitespace
+			(which you can toggle using |\ds|).
+
+			This plugin also centers the match line vertically
+			in the window (by calling |zz|).
+
+				*blinky-#*
+#			Same as "blinky-*", but search backward.
+
+				*blinky-gstar*
+g*			Like "*", but don't put "\<" and "\>" around the word.
+			This makes the search also find matches that are not a
+			whole word.
+
+			This command also centers the match line vertically
+			in the window (by calling |zz|).
+
+				*blinky-g#*
+g#			Like "#", but don't put "\<" and "\>" around the word.
+			This makes the search also find matches that are not a
+			whole word.
+
+			This command also centers the match line vertically
+			in the window (by calling |zz|).
+
+				*<F1>*
+<F1>			Search buffer for substring under cursor.
+
+			Similar to `g*` — it searches more loosely.
+
+			- For example, searching "foo" will also match the
+			  "foo" in "foobar" (like `g*`, but not like `*`).
+
+			When used from visual or select mode, this command
+			supports multiline search (i.e., so you select text
+			across newlines). And it will ignore differences in
+			whitespace if the |\ds| toggle is not disabled.
+
+			This command works in the four main modes —
+			normal, insert, visual and select.
+
+			Hint: To easily start a search, put the cursor on
+			a term to search, or select some text, and hit
+			<F1>. Then use <F3> to continue searching.
+
+			Caveat: If |ignorecase| and |smartcase| are enabled,
+			and if the search term is lowercase, you'll get
+			case-insensitive matches. But if the search term
+			is mixed- or upper-case, you'll get case-sensitive
+			matches.
+
+                        Note that in stock Vim, <F1> opens the |:help|.
+
+				*blinky-n*
+n			Move cursor forward to and highlight next search match.
+
+			This works similar to the builtin |n| command, but
+			it also centers the match line vertically in the
+			window (using |zz|) and momentarily blinks the match.
+
+				*blinky-N*
+N			Move cursor backward to and highlight previous search match.
+
+			This works similar to the builtin |N| command, but
+			it also centers the match line vertically in the
+			window (using |zz|) and it quickly blinks the match.
+
+				*<F3>*
+<F3>			Move cursor forward to and highlight next search match.
+
+			This works similar to the |blinky-n| command, but it
+			does not center the match line (so it works like
+			the builtin |n| command).
+
+			From visual or select mode, behaves like <F1> and
+			starts a search for the selected text, and jumps
+			to the next search match. The search may contain
+			newlines, and |\ds| can be toggled to disable/enable
+			wildcard whitespace matching.
+
+			Hint: The search wraps at the end of the buffer.
+			When it wraps, you'll see a message highlighted in
+			red in the status window that reads, "search hit
+			BOTTOM, continuing at TOP".
+
+				*<Shift-F3>* *<S-F3>*
+<Shift-F3>		Move cursor backward to and highlight previous search match.
+
+			This works similar to the |blinky-N| command, but it
+			does not center the match line (so it works like
+			the builtin |N| command).
+
+			From visual or select mode, behaves like <F1> and
+			starts a search for the selected text, and it jumps
+			to the previous search match. The search may contain
+			newlines, and |\ds| can be toggled to disable/enable
+			wildcard whitespace matching.
+
+			Like <F3>, this command also wraps at the start
+			of the file and continues from the end, back up to
+			the cursor. It'll also report, e.g., "search hit TOP,
+			continuing at BOTTOM".
+
+				*<F8>*
+<F8>			Start a search like <F1>, but match different case
+			variations for the term.
+
+			- For example, if you search the following word: >
+				fooBar
+<			  the search will also find these two words: >
+				foo_bar
+				foo-bar
+<
+				*n_<Enter>*
+<Enter>			Toggle highlighting of the word under the cursor and
+			use to start a search query. Press <Enter> again to
+			turn off highlighting.
+
+			The search also finds different case variations for
+			the term, like it does for <F8>.
+
+				*<Shift-F1>* *<S-F1>*
+<Shift-F1>              Start a search on the word under the cursor from
+			normal or insert mode. From visual or select mode,
+			start a search using the selected text. Does not
+			jump to the next search match.
+
+			Starting a search with <S-F1> is similar to using
+			`*` and searches for the exact word under the
+			cursor, unlike <F1> which searches more loosely.
+
+			Otherwise the search follows the same rules as
+			searching with <F1> — it supports multiline
+			searches (the selected text may contain newlines).
+			It can also be configured to ignore, or not to
+			ignore, differences in whitespace (using |\ds|).
+
+				*<Ctrl-H>* *<C-H>*
+<Ctrl-H>		Hide search highlights (calls |:nohlsearch|).
+
+			After you initiate a search, the matching words in
+			the buffers are highlighted. Use <Ctrl-H> to
+			disable the highlights.
+
+				*<Leader>ds* *\ds*
+<Leader>ds		Toggle whitespace matching behavior, which is used
+			by each search command in visual and select mode.
+
+			The toggle defaults to matching loosely (wildcard
+			matching), such that selecting text that includes
+			whitespace and then using that selection to start
+			a search will ignore differences in whitespace.
+
+			- For instance, if you select and search
+			  "foo bar baz", then it would also match
+			  "foo  bar   baz".
+
+			- Likewise, searching "it " (with a space)
+			  matches "it" (without a space).
+
+			If you'd like to change the default behavior to
+			be strict about whitespace instead, you can set
+			a global variable from your config: >
+
+			  let g:vim_blinky_search_strict = 1
+<
+			In the Vim tip this feature was lifted from, it
+			was known by its variable name, `g:VeryLiteral`.
+
+				*<Leader>dc* *\dc*
+<Leader>dc		Toggle multi-case matching behavior.
+
+			By default, multi-case behavior is only enabled
+			for `<F8>` and `<Enter>`.
+
+			This toggle lets you enable multi-case behavior
+			for all commands, or to disable it for all commands.
+			Toggle it a third time to restore defaults.
+
+==============================================================================
+4. User Configuration			*vim-blinky-search-user-configuration*
+
+If you'd like to define your own maps, set the disable flag, and then
+call the create-map functions from your own config.
+
+- First, set the disable flag from your config: >
+
+    let g:blinky_search_disable = 1
+<
+- Then call the map setup commands from your config.
+
+  Consult the `after/plugin/vim-blinky-search.vim` script to see how this
+  plugin configures all the commands listed above:
+
+  https://github.com/embrace-vim/vim-blinky-search/blob/release/after/plugin/vim-blinky-search.vim
+
+  You could simply copy that file and modify it to taste.
+
+  Or, you could copy the following and edit it to your liking: >
+
+    " Wire various command to start search with different behavior
+    call g:embrace#blinky_search#CreateMaps_GStarSearch('<F1>')
+    call g:embrace#blinky_search#CreateMaps_StarSearchStayPut('<S-F1>')
+
+    " These two commands also enable multicase matching by default
+    call g:embrace#blinky_search#CreateMaps_GStarSearchStayPut('<F8>')
+    call g:embrace#blinky_search#CreateMaps_ToggleHighlight('<CR>')
+
+    " Wire two F-key commmands to next/prev match
+    call g:embrace#blinky_search#CreateMaps_SearchForward('<F3>')
+    call g:embrace#blinky_search#CreateMaps_SearchBackward('<S-F3>')
+
+    " Wire '*' and '#' from visual mode
+    call g:embrace#blinky_search#CreateMaps_StarPound_VisualMode()
+
+    " Wire the three feature toggles
+    call g:embrace#blinky_search#CreateMaps_ToggleBlinking('<Leader>dB')
+    call g:embrace#blinky_search#CreateMaps_ToggleMulticase('<Leader>dc')
+    call g:embrace#blinky_search#CreateMaps_ToggleStrict('<Leader>ds')
+
+    " Change builtins to also center match line with `zz`
+    call g:embrace#middle_matches#CreateMaps(['n', 'N', '*', '#', 'g*', 'g#'])
+
+    " Hide highlights with <Ctrl-H>
+    call g:embrace#hide_highlights#CreateMaps('<C-h>')
+
+    " Blink the current match momentarily — twice for 75 msec. each time
+    if has('timers')
+      nnoremap <expr> <Plug>(blinky-search-after) g:embrace#slash_blink#blink(2, 75)
+    endif
+<
+==============================================================================
+5. Similar Plugins			*vim-blinky-search-similar-plugins*
+
+See also these plugins the author found along the way:
+
+- `thinca/vim-visualstar`: "star(*) for Visual-mode":
+
+  https://github.com/thinca/vim-visualstar
+
+  https://www.vim.org/scripts/script.php?script_id=2944
+
+- `junegunn/vim-slash`: "Enhancing in-buffer search experience":
+
+  https://github.com/junegunn/vim-slash
+
+  - "Automatically clears search highlight when cursor is moved".
+
+  - Also changes `*` search to highlight without moving
+    (although scrolls the match line to the middle of window).
+
+  - Its blink highlight code is incorporated into
+    `vim-blinky-search`'s `slash_blink.vim` file:
+    
+    https://github.com/embrace-vim/vim-blinky-search/blob/release/autoload/embrace/slash_blink.vim
+
+- `vim-evanesco`: *Automatically clears search highlight*:
+
+  https://github.com/pgdouyon/vim-evanesco
+
+  - `vim-blinky-search` wires a hide-highlight command you can use
+    (which defaults to <Ctrl-H>), but if you'd like a more automated
+    solution that hides when you move the cursor or leave insert mode,
+    check out `junegunn/vim-slash` or `pgdouyon/vim-evanesco`.
+
+ vim:tw=78:ts=8:ft=help:norl:noet:
