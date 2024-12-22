@@ -297,10 +297,10 @@ endfunction
 
 function! g:embrace#blinky_search#CreateMaps_StarSearchStayPut(key_sequence = '<S-F1>') abort
   " restrict_word = 1, multicase = 0, toggle_highlight = 0
-  nnoremap <silent> <expr> <Plug>(blinky-search-notoggle-restrict-nomulticase)
+  nnoremap <silent> <expr> <Plug>(blinky-search-wson-mcon-tgoff)
     \ g:embrace#blinky_search#StartSearchStayPut(1, 0, 0)
-  execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-notoggle-restrict-nomulticase)'
-  execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O><Plug>(blinky-search-notoggle-restrict-nomulticase)'
+  execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-wson-mcon-tgoff)'
+  execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O><Plug>(blinky-search-wson-mcon-tgoff)'
 
   let l:cmd = '/'
   let l:jump = 0
@@ -313,10 +313,10 @@ endfunction
 
 function! g:embrace#blinky_search#CreateMaps_GStarSearchStayPut(key_sequence = '<F8>') abort
   " restrict_word = 0, multicase = 1, toggle_highlight = 0
-  nnoremap <silent> <expr> <Plug>(blinky-search-notoggle-norestrict-multicase)
+  nnoremap <silent> <expr> <Plug>(blinky-search-wsoff-mcon-tgoff)
     \ g:embrace#blinky_search#StartSearchStayPut(0, 1, 0)
-  execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-notoggle-norestrict-multicase)'
-  execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O><Plug>(blinky-search-notoggle-norestrict-multicase)'
+  execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-wsoff-mcon-tgoff)'
+  execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O><Plug>(blinky-search-wsoff-mcon-tgoff)'
 
   let l:cmd = '/'
   let l:jump = 0
