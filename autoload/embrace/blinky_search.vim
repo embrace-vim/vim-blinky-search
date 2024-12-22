@@ -296,10 +296,11 @@ endfunction
 " map
 
 function! g:embrace#blinky_search#CreateMaps_StarSearchStayPut(key_sequence = '<S-F1>') abort
-  " toggle_highlight = 0, restrict_word = 1, multicase = 0
-  nnoremap <silent> <expr> <Plug>(blinky-search-notoggle-restrict) g:embrace#blinky_search#StartSearchStayPut(0, 1, 0)
-  execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-notoggle-restrict)'
-  execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O><Plug>(blinky-search-notoggle-restrict)'
+  " restrict_word = 1, multicase = 0, toggle_highlight = 0
+  nnoremap <silent> <expr> <Plug>(blinky-search-notoggle-restrict-nomulticase)
+    \ g:embrace#blinky_search#StartSearchStayPut(1, 0, 0)
+  execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-notoggle-restrict-nomulticase)'
+  execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O><Plug>(blinky-search-notoggle-restrict-nomulticase)'
 
   let l:cmd = '/'
   let l:jump = 0
@@ -311,10 +312,11 @@ function! g:embrace#blinky_search#CreateMaps_StarSearchStayPut(key_sequence = '<
 endfunction
 
 function! g:embrace#blinky_search#CreateMaps_GStarSearchStayPut(key_sequence = '<F8>') abort
-  " toggle_highlight = 0, restrict_word = 0, multicase = 1
-  nnoremap <silent> <expr> <Plug>(blinky-search-notoggle-norestrict) g:embrace#blinky_search#StartSearchStayPut(0, 0, 1)
-  execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-notoggle-norestrict)'
-  execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O><Plug>(blinky-search-notoggle-norestrict)'
+  " restrict_word = 0, multicase = 1, toggle_highlight = 0
+  nnoremap <silent> <expr> <Plug>(blinky-search-notoggle-norestrict-multicase)
+    \ g:embrace#blinky_search#StartSearchStayPut(0, 1, 0)
+  execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-notoggle-norestrict-multicase)'
+  execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O><Plug>(blinky-search-notoggle-norestrict-multicase)'
 
   let l:cmd = '/'
   let l:jump = 0
@@ -373,7 +375,7 @@ endfunction
 let s:is_highlighting = 0
 
 function! g:embrace#blinky_search#StartSearchStayPut(
-  \ toggle_highlight = 0, restrict_word = 0, multicase = 0
+  \ restrict_word = 0, multicase = 0, toggle_highlight = 0,
 \ ) abort
   if &ft == 'qf'
     " Don't break quickfix <Enter>.
@@ -456,8 +458,9 @@ endfunction
 "          yet, `[count]↓` also jumps [count] lines downward.
 "        - So don't be surprised when <C-M> also highlights.
 function! g:embrace#blinky_search#CreateMaps_ToggleHighlight(key_sequence = '<CR>') abort
-  " toggle_highlight = 1, restrict_word = 1, multicase = 1
-  nnoremap <silent> <expr> <Plug>(blinky-search-toggle-restrict) g:embrace#blinky_search#StartSearchStayPut(1, 1, 1)
+  " restrict_word = 1, multicase = 1, toggle_highlight = 1
+  nnoremap <silent> <expr> <Plug>(blinky-search-toggle-restrict)
+    \ g:embrace#blinky_search#StartSearchStayPut(1, 1, 1)
 
   execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-toggle-restrict)'
 endfunction
