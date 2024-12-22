@@ -586,22 +586,6 @@ endfunction
 
 " -------------------------------------------------------------------
 
-if !exists('g:blinky_search_strict')
-  let g:blinky_search_strict = 0
-endif
-
-" Mnemonic: Do Strict (eh)
-function! g:embrace#blinky_search#CreateMaps_ToggleStrict(key_sequence = '<Leader>ds') abort
-  nnoremap <silent> <Plug>(blinky-search-toggle-strict)
-    \ :let g:blinky_search_strict = !g:blinky_search_strict
-    \ \| echo (g:blinky_search_strict ? 'Disable' : 'Enabled')
-    \ .. ' Wildcard Whitespace Matching (vim-blinky-search)'<CR>
-
-  execute 'nnoremap ' .. a:key_sequence .. ' <Plug>(blinky-search-toggle-strict)'
-endfunction
-
-" -------------------------------------------------------------------
-
 " Multicase options: -1: Reset (use defaults)
 "                     0: Disable (all commands)
 "                     1: Enable (all commands)
@@ -620,6 +604,22 @@ function! g:embrace#blinky_search#CreateMaps_ToggleMulticase(key_sequence = '<Le
     \ .. ' Multicase Matching (vim-blinky-search)'<CR>
 
   execute 'nnoremap ' .. a:key_sequence .. ' <Plug>(blinky-search-toggle-multicase)'
+endfunction
+
+" -------------------------------------------------------------------
+
+if !exists('g:blinky_search_strict')
+  let g:blinky_search_strict = 0
+endif
+
+" Mnemonic: Do Strict (eh)
+function! g:embrace#blinky_search#CreateMaps_ToggleStrict(key_sequence = '<Leader>ds') abort
+  nnoremap <silent> <Plug>(blinky-search-toggle-strict)
+    \ :let g:blinky_search_strict = !g:blinky_search_strict
+    \ \| echo (g:blinky_search_strict ? 'Disable' : 'Enabled')
+    \ .. ' Wildcard Whitespace Matching (vim-blinky-search)'<CR>
+
+  execute 'nnoremap ' .. a:key_sequence .. ' <Plug>(blinky-search-toggle-strict)'
 endfunction
 
 " -------------------------------------------------------------------
