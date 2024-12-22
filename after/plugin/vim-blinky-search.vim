@@ -33,5 +33,5 @@ endif
 " - Must call after/ because mswin.vim sets <C-H> to ":promptrepl\<CR>",
 "   which opens the GUI (e.g., MacVim) Find dialog.
 "     /Applications/MacVim.app/Contents/Resources/vim/runtime/mswin.vim
-call g:embrace#hide_highlights#CreateMaps()
+call g:embrace#hide_highlights#CreateMaps('<C-h>')
 

@@ -36,5 +36,6 @@ call g:embrace#blinky_search#CreateMaps()
 call g:embrace#middle_matches#CreateMaps(['n', 'N', '*', '#', 'g*', 'g#'])
 
 " - SAVVY: <C-h> is wired after/, to avoid mswin.vim conflict.
-"   call g:embrace#hide_highlights#CreateMaps()
+"
+"  call g:embrace#hide_highlights#CreateMaps('<C-h>')
 
