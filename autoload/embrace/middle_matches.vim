@@ -24,9 +24,12 @@
 "
 "  :nnoremap <Leader>zz :let &scrolloff=999-&scrolloff<CR>
 
+" Append `zz`. For example, basically `nnoremap n nzz`.
+" - Also append blink command. Note the Vim silent ignores a missing <Plug>.
 function g:embrace#middle_matches#CreateMaps_AppendMiddling(cmd) abort
-  " E.g., `nnoremap n nzz`
-  execute 'nnoremap ' .. a:cmd .. ' ' .. a:cmd .. 'zz'
+  let l:blink_after = ':execute "normal \<Plug>(blinky-search-after)"<CR>'
+
+  execute 'nnoremap ' .. a:cmd .. ' ' .. a:cmd .. 'zz' .. l:blink_after
 endfunction
 
 function g:embrace#middle_matches#CreateMaps_AddMiddling(cmds) abort

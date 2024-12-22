@@ -1,3 +1,14 @@
+" vim:tw=0:ts=2:sw=2:et:norl:
+" Author: Junegunn Choi <https://junegunn.github.io/>
+" Adopter: Landon Bouma <https://tallybark.com/>
+"   My changes include: *All* comments except the license;
+"   I converted the plugin/ to autoload/; I renamed the
+"   fcn.; and I made the highlight group configurable.
+" Project: https://github.com/landonb/vim-blinky-search#🕹
+" License: MIT — This file only. See LICENSE-MIT
+
+" -------------------------------------------------------------------
+
 " The MIT License (MIT)
 "
 " Copyright (c) 2016 Junegunn Choi
@@ -20,58 +31,17 @@
 " OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 " THE SOFTWARE.
 
-function! s:wrap(seq)
-  if mode() == 'c' && stridx('/?', getcmdtype()) < 0
-    return a:seq
-  endif
-  silent! autocmd! slash
-  set hlsearch
-  return a:seq."\<plug>(slash-trailer)"
-endfunction
+" (lb): Use a differnt highlight group.
+if !exists('g:blinky_search_blink_group')
+  " The junegunn/vim-slash project uses IncSearch
+  "   let g:blinky_search_blink_group = 'IncSearch'
+  " but I think DiffChange looks better with the
+  " default Vim DepoXy colorscheme:
+  "   https://github.com/landonb/dubs_after_dark#🌃
+  let g:blinky_search_blink_group = 'DiffChange'
+endif
 
-function! s:immobile(seq)
-  let s:winline = winline()
-  let s:pos = getpos('.')
-  return a:seq."\<plug>(slash-prev)"
-endfunction
-
-function! s:trailer()
-  augroup slash
-    autocmd!
-    autocmd CursorMoved,CursorMovedI * set nohlsearch | autocmd! slash
-  augroup END
-
-  let seq = foldclosed('.') != -1 ? 'zv' : ''
-  if exists('s:winline')
-    let sdiff = winline() - s:winline
-    unlet s:winline
-    if sdiff > 0
-      let seq .= sdiff."\<c-e>"
-    elseif sdiff < 0
-      let seq .= -sdiff."\<c-y>"
-    endif
-  endif
-  let after = len(maparg("<plug>(slash-after)", mode())) ? "\<plug>(slash-after)" : ''
-  return seq . after
-endfunction
-
-function! s:trailer_on_leave()
-  augroup slash
-    autocmd!
-    autocmd InsertLeave * call <sid>trailer()
-  augroup END
-  return ''
-endfunction
-
-function! s:prev()
-  return getpos('.') == s:pos ? '' : '``'
-endfunction
-
-function! s:escape(backward)
-  return '\V'.substitute(escape(@", '\' . (a:backward ? '?' : '/')), "\n", '\\n', 'g')
-endfunction
-
-function! slash#blink(times, delay)
+function! g:embrace#slash_blink#blink(times, delay)
   let s:blink = { 'ticks': 2 * a:times, 'delay': a:delay }
 
   function! s:blink.tick(_)
@@ -80,7 +50,7 @@ function! slash#blink(times, delay)
 
     if !self.clear() && active && &hlsearch
       let [line, col] = [line('.'), col('.')]
-      let w:blink_id = matchadd('IncSearch',
+      let w:blink_id = matchadd(g:blinky_search_blink_group,
             \ printf('\%%%dl\%%>%dc\%%<%dc', line, max([0, col-2]), col+2))
     endif
     if active
@@ -104,21 +74,5 @@ function! slash#blink(times, delay)
   return ''
 endfunction
 
-map      <expr> <plug>(slash-trailer) <sid>trailer()
-imap     <expr> <plug>(slash-trailer) <sid>trailer_on_leave()
-cnoremap        <plug>(slash-cr)      <cr>
-noremap  <expr> <plug>(slash-prev)    <sid>prev()
-inoremap        <plug>(slash-prev)    <nop>
 noremap!        <plug>(slash-nop)     <nop>
 
-cmap <expr> <cr> <sid>wrap("\<cr>")
-map  <expr> n    <sid>wrap('n')
-map  <expr> N    <sid>wrap('N')
-map  <expr> gd   <sid>wrap('gd')
-map  <expr> gD   <sid>wrap('gD')
-map  <expr> *    <sid>wrap(<sid>immobile('*'))
-map  <expr> #    <sid>wrap(<sid>immobile('#'))
-map  <expr> g*   <sid>wrap(<sid>immobile('g*'))
-map  <expr> g#   <sid>wrap(<sid>immobile('g#'))
-xmap <expr> *    <sid>wrap(<sid>immobile("y/\<c-r>=<sid>escape(0)\<plug>(slash-cr)\<plug>(slash-cr)"))
-xmap <expr> #    <sid>wrap(<sid>immobile("y?\<c-r>=<sid>escape(1)\<plug>(slash-cr)\<plug>(slash-cr)"))
