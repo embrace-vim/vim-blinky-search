@@ -584,29 +584,5 @@ let &cpo = s:save_cpo | unlet s:save_cpo
 
 " -------------------------------------------------------------------
 
-" SAVVY: Visual mode <F1> same as Visual mode <F3> — start g*-like
-" search and match forward.
-" - CALSO: <S-F1>, <F8>, and <ENTER> start g*-like search but stay put.
-"   - <S-F1> and <Enter> are strict (like star), whereas <F8> is not
-"     strict (like gstar). And <F8> and <Enter> add multi-identifiers.
-" - REFER: The dubs_grep_steady :grep search uses a toggle to enable
-"   and disable multi-identifier searching (whereas this script uses
-"   a toogle to enable and disable strict whitespace matching). (Not
-"   that we couldn't make a toggle for multiident matching, but right
-"   now there's just a myriad of different keybindings instead.)
-"   - See \cg to toggle grep-steady mutliident.
-"     ~/.vim/pack/landonb/start/dubs_grep_steady/plugin/dubs_grep_steady.vim
-
-function! g:embrace#blinky_search#CreateMaps() abort
-  call g:embrace#blinky_search#CreateMaps_GStarSearch('<F1>')
-  call g:embrace#blinky_search#CreateMaps_StarSearchStayPut('<S-F1>')
-  call g:embrace#blinky_search#CreateMaps_GStarSearchStayPut('<F8>')
-  call g:embrace#blinky_search#CreateMaps_ToggleHighlight('<CR>')
-  call g:embrace#blinky_search#CreateMaps_SearchForward('<F3>')
-  call g:embrace#blinky_search#CreateMaps_SearchBackward('<S-F3>')
-  call g:embrace#blinky_search#CreateMaps_StarPound_VisualMode()
-  call g:embrace#blinky_search#CreateMaps_ToggleStrict('<Leader>ds')
-endfunction
-
 " LEAVE_THIS_FOR_TESTING
 
