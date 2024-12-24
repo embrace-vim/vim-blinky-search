@@ -9,11 +9,11 @@
 " GUARD: Press <F9> to reload this plugin (or :source it).
 " - Via: https://github.com/embrace-vim/vim-source-reloader#↩️
 
-if expand("%:p") ==# expand("<sfile>:p")
-  unlet g:loaded_vim_blinky_search_after_plugin
+if expand('%:p') ==# expand('<sfile>:p')
+  unlet! g:loaded_vim_blinky_search_after_plugin
 endif
 
-if exists("g:loaded_vim_blinky_search_after_plugin") || &cp
+if exists('g:loaded_vim_blinky_search_after_plugin') || &cp
 
   finish
 endif
