@@ -157,9 +157,9 @@ function! g:embrace#blinky_search#CreateMaps_GStarSearch_VisualMode(
     let l:postfix = ''
     if a:jump
       " E.g., `/<CR>` or `?<CR>`.
-      let l:postfix = ' \| execute "normal ' .. a:cmd .. '<C-V><CR>"'
+      let l:postfix = ' \| silent execute "normal ' .. a:cmd .. '<C-V><CR>"'
     endif
-    let l:blink_after = '\| execute "normal \<Plug>(blinky-search-after)"'
+    let l:blink_after = '\| silent execute "normal \<Plug>(blinky-search-after)"'
     execute 'snoremap <silent> ' .. a:key_sequence .. ' '
       \ .. '<C-G>:<C-U><CR>'
       \ .. ':call g:embrace#visual_search#SetSearch("' .. a:cmd .. '", '
@@ -467,12 +467,12 @@ function! g:embrace#blinky_search#StartSearchNormalInsert(
   let l:eval = ":silent set hlsearch"
 
   if a:cmd != ''
-    let l:eval = l:eval .. ' | :execute "normal ' .. a:cmd .. '\<CR>"'
+    let l:eval = l:eval .. ' | silent execute "normal ' .. a:cmd .. '\<CR>"'
   endif
 
   " SAVVY: If the <Plug> is absent, Vim doesn't complain.
   if g:blinky_search_blink_map == ''
-    let l:eval = l:eval .. ' | execute "normal \<Plug>(blinky-search-after)"'
+    let l:eval = l:eval .. ' | silent execute "normal \<Plug>(blinky-search-after)"'
   endif
 
   return l:eval .. "\<CR>"
@@ -526,8 +526,8 @@ function! g:embrace#blinky_search#CreateMaps_SearchForward(key_sequence = '<F3>'
   " SAVVY: If the <Plug> is absent, Vim doesn't complain.
   let l:blink_after = ':execute "normal \<Plug>(blinky-search-after)"<CR>'
   " SAVVY: Using /<CR> instead of n because n repeats the last / OR ?
-  execute 'noremap ' .. a:key_sequence .. ' /<CR>' .. l:blink_after
-  execute 'inoremap ' .. a:key_sequence .. ' <C-O>/<CR>' .. '<C-O>' .. l:blink_after
+  execute 'noremap <silent> ' .. a:key_sequence .. ' /<CR>' .. l:blink_after
+  execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O>/<CR>' .. '<C-O>' .. l:blink_after
 
   " USYNC: Visual mode <F1> same as Visual mode <F3> — start g*-like
   " search and match forward.
@@ -543,8 +543,8 @@ endfunction
 function! g:embrace#blinky_search#CreateMaps_SearchBackward(key_sequence = '<S-F3>') abort
   let l:blink_after = ':execute "normal \<Plug>(blinky-search-after)"<CR>'
   " SAVVY: Using ?<CR> instead of N because N repeats the last / OR ?
-  execute 'noremap ' .. a:key_sequence .. ' ?<CR>' .. l:blink_after
-  execute 'inoremap ' .. a:key_sequence .. ' <C-O>?<CR>' .. '<C-O>' .. l:blink_after
+  execute 'noremap <silent> ' .. a:key_sequence .. ' ?<CR>' .. l:blink_after
+  execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O>?<CR>' .. '<C-O>' .. l:blink_after
 
   " Here's a basic command to just jump, but not to start a new search:
   "   vnoremap <S-F3> <ESC>gVN
@@ -609,7 +609,7 @@ endfunction
 
 function! s:ToggleBlinking() abort
   if g:blinky_search_blink_map != ''
-    execute 'nnoremap <expr> <Plug>(blinky-search-after) ' .. g:blinky_search_blink_map
+    execute 'nnoremap <silent> <expr> <Plug>(blinky-search-after) ' .. g:blinky_search_blink_map
 
     let g:blinky_search_blink_map = ''
   else
