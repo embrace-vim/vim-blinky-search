@@ -32,9 +32,7 @@
 
 function! g:embrace#hide_highlights#CreateMaps(key_sequence = '<C-h>') abort
   " E.g., `noremap <C-h> :nohlsearch<CR>`
-  execute 'noremap ' .. a:key_sequence .. ' :nohlsearch<CR>'
+  execute 'nnoremap ' .. a:key_sequence .. ' :nohlsearch<CR>'
   execute 'inoremap ' .. a:key_sequence .. ' <C-O>:nohlsearch<CR>'
-  execute 'cnoremap ' .. a:key_sequence .. ' <C-C>:nohlsearch<CR>'
-  execute 'onoremap ' .. a:key_sequence .. ' <C-C>:nohlsearch<CR>'
 endfunction
 
