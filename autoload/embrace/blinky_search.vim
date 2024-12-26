@@ -501,21 +501,17 @@ endfunction
 "   - Author long, long ago, and probably for not long,
 "     used <F3> and <S-F3> as simple * and #`shortcuts.
 "
-"       noremap <F3> *
+"       nnoremap <F3> *
 "       inoremap <F3> <C-O>*
-"       " cnoremap <F3> :<C-R><C-W>*
-"       " onoremap <F3> :<C-R><C-W>*
 "
-"       noremap <S-F3> #
+"       nnoremap <S-F3> #
 "       inoremap <S-F3> <C-O>#
-"       " cnoremap <S-F3> <C-O>#
-"       " onoremap <S-F3> <C-O>#
 "
 "   - I later moved * to <C-F3>, then to <F1>, and I dropped
 "     the # map. And I used <F3> and <S-F3> for next/prev match.
 "
-"       noremap <F3> n
-"       noremap <S-F3> N
+"       nnoremap <F3> n
+"       nnoremap <S-F3> N
 "
 "     But n and N are relative to the previous search. I.e., if you
 "     start a search backwards ? then press n, the search keeps going
