@@ -1,8 +1,7 @@
 " vim:tw=0:ts=2:sw=2:et:norl:
 " Author: Landon Bouma <https://tallybark.com/> 
 " Project: https://github.com/landonb/vim-blinky-search#🕹
-" License: GPLv3
-" Copyright © 2015, 2017-2018, 2024 Landon Bouma.
+" License: GPLv3 | Copyright © 2015, 2017-2018, 2024 Landon Bouma.
 
 " -------------------------------------------------------------------
 
