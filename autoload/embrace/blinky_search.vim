@@ -390,9 +390,9 @@ endfunction
 let s:is_highlighting = 0
 
 function! g:embrace#blinky_search#StartSearchNormalInsert(
-  \ restrict_word = 0, multicase = 0, toggle_highlight = 0, cmd = ''
+  \ restrict_word = 0, multicase = 0, toggle_highlight = 0, cmd = '', key_sequence = ''
 \ ) abort
-  if &ft == 'qf'
+  if &ft == 'qf' && a:key_sequence == '<CR>'
     " Don't break quickfix <Enter>.
 
     return 0
@@ -486,7 +486,7 @@ endfunction
 function! g:embrace#blinky_search#CreateMaps_ToggleHighlight(key_sequence = '<CR>') abort
   " restrict_word = 1, multicase = 1, toggle_highlight = 1
   nnoremap <silent> <expr> <Plug>(blinky-search-toggle-restrict)
-    \ g:embrace#blinky_search#StartSearchNormalInsert(1, 1, 1)
+    \ g:embrace#blinky_search#StartSearchNormalInsert(1, 1, 1, '', a:key_sequence)
 
   execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-toggle-restrict)'
 endfunction
