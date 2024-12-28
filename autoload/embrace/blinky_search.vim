@@ -10,7 +10,8 @@
 " DEVEL: After editing this file, :source it, then :source the loader
 " to redeploy all yours maps:
 "
-"   :source ~/.vim/pack/embrace-vim/start/vim-blinky-search/after/plugin/vim-blinky-search.vim
+"   :e ~/.vim/pack/embrace-vim/start/vim-blinky-search/after/plugin/vim-blinky-search.vim
+"   :source
 
 " -------------------------------------------------------------------
 

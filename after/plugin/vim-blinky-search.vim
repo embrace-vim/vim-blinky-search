@@ -66,10 +66,26 @@ call g:embrace#middle_matches#CreateMaps(['n', 'N', '*', '#', 'g*', 'g#'])
 
 " ***
 
-" Wire <C-h>
-" - Must call via after/plugin/ because mswin.vim sets <C-H> to
-"   ":promptrepl\<CR>", which opens the GUI (e.g., MacVim) Find dialog.
+" Wire <C-h> to :nohlsearch
+"
+" BWARE: This map may conflict with mswin.vim's <C-h> binding (which opens
+" the replace dialog, ":promptrepl\<CR>"). But if you're a true Vimmer,
+" you probably replace using the |:s| substitute command. (The author uses
+" mswin.vim to wire the familiar Cut, Copy, Paste and Save maps... though
+" not that I couldn't just make a custom copy of mswin.vim, but I don't.)
+" - If your Vimrc calls mswin.vim from a plugin/, this map will replace it.
+" - But if your Vimrc calls mswin.vim from an after/plugin, there's no
+"   telling if mswin.vim runs before this function call or not.
+" - Fortunately, you can save and restore maps before and after
+"   loading mswin.vim by using |maparg| to capture the maps first,
+"   then recreating the map command and feeding it to |execute|.
+" REFER: See dubs_edit_juice's `enable-behave-mswin.vim` if you want to
+" see how to save and restore <C-H> (and <C-F>) after enabling mswin.vim:
+"   https://github.com/landonb/dubs_edit_juice#🧃
+"     https://github.com/landonb/dubs_edit_juice/blob/release/after/plugin/enable-behave-mswin.vim
+" - See also mswin.vim itself:
 "     /Applications/MacVim.app/Contents/Resources/vim/runtime/mswin.vim
+"     /usr/share/vim/vim*/mswin.vim
 call g:embrace#hide_highlights#CreateMaps('<C-h>')
 
 " ***
