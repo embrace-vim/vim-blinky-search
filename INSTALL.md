@@ -159,7 +159,7 @@ keeping your Vim plugins up-to-date.
       lib = remote_set origin https://github.com/embrace-vim/vim-blinky-search.git
 
       [DEFAULT]
-      skip = false
+      skip = mr_exclusive
       ```
 </details>
 
