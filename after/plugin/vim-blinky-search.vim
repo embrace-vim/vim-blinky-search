@@ -112,7 +112,14 @@ function! s:CreateMaps__BlinkySearch() abort
     return
   endif
 
-  nnoremap <expr> <Plug>(blinky-search-after) g:embrace#slash_blink#blink(2, 75)
+  " ISOFF/2024-12-23: N/n are *slow* when blink is enabled.
+  " - MAYBE: Author might add classic die_blinkënmatchen.vim functionality
+  "   (which I've used previously and seems performant).
+  "   - In the meantime, consider running a GUI with blink options,
+  "     e.g., Neovide has cursor animations that help you see the
+  "     current search match.
+  "
+  "  nnoremap <expr> <Plug>(blinky-search-after) g:embrace#slash_blink#blink(2, 75)
 endfunction
 
 call s:CreateMaps__BlinkySearch()
