@@ -42,7 +42,7 @@ endif
 "   that we couldn't make a toggle for multiident matching, but right
 "   now there's just a myriad of different keybindings instead.)
 "   - See \dg to toggle grep-steady mutliident.
-"     ~/.vim/pack/landonb/start/dubs_grep_steady/plugin/dubs_grep_steady.vim
+"     ~/.kit/nvim/landonb/start/dubs_grep_steady/plugin/dubs_grep_steady.vim
 
 function! s:CreateMaps__SearchCommands() abort
   call g:embrace#blinky_search#CreateMaps_GStarSearch('<F1>')
