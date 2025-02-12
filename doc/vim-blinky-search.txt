@@ -1,6 +1,6 @@
 *vim-blinky-search.txt*		`Visual Search Plugin`	2024 Dec 19
 
-VIM BLINKY SEARCH 🕹 Visual search enhancements for Vim~
+VIM BLINKY SEARCH 🕹 Visual search enhancements for Vim ~
 
 VIM BLINKY SEARCH			*vim-blinky-search*
 
