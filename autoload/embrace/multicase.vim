@@ -20,7 +20,7 @@
 "            https://github.com/tpope/vim-abolish/blob/master/plugin/abolish.vim
 "
 "          https://github.com/landonb/dubs_grep_steady#🧐
-"            ~/.kit/nvim/landonb/start/dubs_grep_steady/plugin/dubs_grep_steady.vim
+"            ~/.kit/nvim/landonb/dubs_grep_steady/plugin/dubs_grep_steady.vim
 
 " REFER: These filters are useful for dealing with multiple-word identifiers
 "        for similar items. E.g., in React, you'll find the same names used
