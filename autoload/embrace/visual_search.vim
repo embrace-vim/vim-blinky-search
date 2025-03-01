@@ -207,26 +207,20 @@ function! g:embrace#visual_search#CaseTheJoint(pat, restrict_word = 0, multicase
   endif
 
   if l:multicase
-    let l:varies = 0
-
     let l:ccase = tolower(g:embrace#multicase#camelcase(a:pat))
     let l:scase = tolower(g:embrace#multicase#snakecase(a:pat))
     let l:tcase = tolower(g:embrace#multicase#traincase(a:pat))
+    let l:variations = uniq(sort([a:pat, l:ccase, l:scase, l:tcase]))
 
-    let l:cased = l:ccase
-    if l:scase != l:ccase
-      let l:cased = l:cased .. "\\|" .. l:scase
-      let l:varies = 1
-    endif
-    if l:tcase != l:ccase && l:tcase != l:scase
-      let l:cased = l:cased .. "\\|" .. l:tcase
-      let l:varies = 1
-    endif
+    let l:cased = l:variations[0]
+    for l:casevar in l:variations[1:]
+      let l:cased = l:cased .. "\\|" .. l:casevar
+    endfor
 
     let l:vim_pat = l:cased
     let l:grep_pat = l:cased
 
-    if l:varies
+    if len(l:variations) > 1
       let l:vim_pat = '\(' .. l:vim_pat .. '\)'
       let l:grep_pat = '(' .. l:grep_pat .. ')'
     endif
