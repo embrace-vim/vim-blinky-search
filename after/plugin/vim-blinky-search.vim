@@ -52,9 +52,9 @@ function! s:CreateMaps__SearchCommands() abort
   call g:embrace#blinky_search#CreateMaps_SearchForward('<F3>')
   call g:embrace#blinky_search#CreateMaps_SearchBackward('<S-F3>')
   call g:embrace#blinky_search#CreateMaps_StarPound_VisualMode()
-  call g:embrace#blinky_search#CreateMaps_ToggleBlinking('<Leader>dB')
-  call g:embrace#blinky_search#CreateMaps_ToggleMulticase('<Leader>dc')
-  call g:embrace#blinky_search#CreateMaps_ToggleStrict('<Leader>ds')
+  call g:embrace#blinky_search#CreateMaps_ToggleBlinking('<LocalLeader>dB')
+  call g:embrace#blinky_search#CreateMaps_ToggleMulticase('<LocalLeader>dc')
+  call g:embrace#blinky_search#CreateMaps_ToggleStrict('<LocalLeader>ds')
 endfunction
 
 call s:CreateMaps__SearchCommands()
