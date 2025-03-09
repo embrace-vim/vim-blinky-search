@@ -639,6 +639,7 @@ function! g:embrace#blinky_search#CreateMaps_ToggleMulticase(key_sequence = '<Le
     \ .. ' Multicase Matching (vim-blinky-search)'<CR>
 
   execute 'nnoremap ' .. a:key_sequence .. ' <Plug>(blinky-search-toggle-multicase)'
+  execute 'inoremap ' .. a:key_sequence .. ' <C-O><Plug>(blinky-search-toggle-multicase)'
 endfunction
 
 " -------------------------------------------------------------------
@@ -655,6 +656,7 @@ function! g:embrace#blinky_search#CreateMaps_ToggleStrict(key_sequence = '<Leade
     \ .. ' Wildcard Whitespace Matching (vim-blinky-search)'<CR>
 
   execute 'nnoremap ' .. a:key_sequence .. ' <Plug>(blinky-search-toggle-strict)'
+  execute 'inoremap ' .. a:key_sequence .. ' <C-O><Plug>(blinky-search-toggle-strict)'
 endfunction
 
 " -------------------------------------------------------------------
