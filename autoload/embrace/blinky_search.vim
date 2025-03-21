@@ -448,8 +448,12 @@ function! g:embrace#blinky_search#StartSearchNormalInsert(
 \   cmd = '',
 \   key_sequence = ''
 \ ) abort
-  if &ft == 'qf' && a:key_sequence == '<CR>'
-    " Don't break quickfix <Enter>.
+
+  " Don't break quickfix <Enter>.
+  " - Note because this fcn. called via map, it's an actual newline.
+  if &ft == 'qf' && a:key_sequence == "\<CR>"
+    " REFER: |feedkeys| mode String: n — Do not remap keys.
+    call feedkeys("\<CR>", "n")
 
     return 0
   endif
