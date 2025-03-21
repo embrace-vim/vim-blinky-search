@@ -50,14 +50,15 @@ let s:save_cpo = &cpo | set cpo&vim
 " does it support multi-word identifier "multicase" searches:
 "   execute 'nnoremap ' .. a:key_sequence .. ' /<C-R><C-W><CR>'
 "   execute 'inoremap ' .. a:key_sequence .. ' <C-O>/<C-R><C-W><CR>'
+"
+" SAVVY: Vim complains 'E474: Invalid argument' if <Plug> name is too long!
+" - I don't see anything noted in the docs, but:
+"     <Plug>blinky-search-norestrict-nomulticase-notoggleX
+"   is one character too long (46 characters).
+"   - So we'll use plug names less verbose than that.
 
 " Map a sequence (defaults <F1>) to essentially g* but more featureful.
 function! g:embrace#blinky_search#CreateMaps_GStarSearch(key_sequence = '<F1>') abort
-  " SAVVY: Vim complains 'E474: Invalid argument' if <Plug> name is too long!
-  " - I don't see anything noted in the docs, but:
-  "     blinky-search-norestrict-nomulticase-notoggleX
-  "   is one character too long (46 characters).
-  "   - So we'll use abbreviations.
   " PRAMS: restrict_word = 0, multicase = 0, toggle_highlight = 0, cmd = ''
   nnoremap <silent> <expr> <Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)
     \ g:embrace#blinky_search#StartSearchNormalInsert(0, 0, 0, '/')
