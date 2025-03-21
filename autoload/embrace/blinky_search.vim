@@ -88,12 +88,17 @@ endfunction
 let s:gstar_search_be_naive = 0
 
 function! g:embrace#blinky_search#CreateMaps_GStarSearch_VisualMode(
-  \ key_sequence, cmd = '/', jump = 0, restrict_word = 0, multicase = 0
+\   key_sequence,
+\   cmd = '/',
+\   jump = 0,
+\   restrict_word = 0,
+\   multicase = 0
 \ ) abort
   if s:gstar_search_be_naive
     " Mostly for posterity, to better understand how this all works.
     let l:postfix = jump ? (foo == '/' ? '?' : '/') .. '<CR>' : ''
-    call g:embrace#blinky_search#CreateMaps_GStarSearch_VisualBasic(a:key_sequence, a:cmd, l:postfix)
+    call g:embrace#blinky_search#CreateMaps_GStarSearch_VisualBasic(
+      \ a:key_sequence, a:cmd, l:postfix)
   else
     " Visual mode map modes:
     " - After `:<C-U><CR>`, `:echo mode(1)<CR>` reports mode is 'n'.
@@ -200,7 +205,7 @@ endfunction
 "     before adding the =substitute().
 "   - UTEST: this/foo/ finds within this/foo/bar/bar/.
 function! g:embrace#blinky_search#CreateMaps_GStarSearch_VisualBasic(
-  \ key_sequence, cmd = '/', postfix = ''
+\   key_sequence, cmd = '/', postfix = ''
 \ ) abort
   execute 'vnoremap ' .. a:key_sequence .. ' '
     \ .. ':<C-U>'
@@ -391,7 +396,11 @@ endfunction
 let s:is_highlighting = 0
 
 function! g:embrace#blinky_search#StartSearchNormalInsert(
-  \ restrict_word = 0, multicase = 0, toggle_highlight = 0, cmd = '', key_sequence = ''
+\   restrict_word = 0,
+\   multicase = 0,
+\   toggle_highlight = 0,
+\   cmd = '',
+\   key_sequence = ''
 \ ) abort
   if &ft == 'qf' && a:key_sequence == '<CR>'
     " Don't break quickfix <Enter>.
