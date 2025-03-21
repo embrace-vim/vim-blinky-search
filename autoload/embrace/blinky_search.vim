@@ -32,26 +32,26 @@ let s:save_cpo = &cpo | set cpo&vim
 " so that the search term also find substrings, e.g., "foo" finds
 " "foobar".
 
-" REFER: The easy way to get the word under the cursor is to invoke insert
-" (paste) on object under the cursor (<Ctrl-R>) and to select the Word under
-" the cursor (<Ctrl-W>). This command uses :iskeyword to find the boundary.
-" :help c_CTRL-R_CTRL-W
-" - Compare this to the <C-R><C-A>, which picks the WORD under the cursor
+" REFER: A convenient method for getting the word under the cursor is
+" using |c_CTRL-R_CTRL-W|, which inserts it into the command line.
+" - This command uses |'iskeyword'| to determine the word boundary.
+" - ASIDE: See also <C-R><C-A>, which picks the WORD under the cursor
 "   and uses using abutting whitespace as the boundary (and is not
 "   configurable).)
-" - USAGE: If this selects more characters than you want, check :set iskeyword
+" - USAGE: If the start-search command defined here selects more
+"   characters than you want, check &iskeyword.
 "
 " REFER: Here's another way to select the current word under the cursor:
 "   " b goes to start of word,
 "   " "zyw yanks into the z register to start of next word
 "   nnoremap <F1> b"zyw:echo 'The word is: ' .. @z<CR>
 "
-" REFER: Here's the basic impl., but this won't histadd('input') nor does
-" it support multi-word indentifier "multicase" searches:
-"   execute 'noremap ' .. a:key_sequence .. ' /<C-R><C-W><CR>'
+" REFER: Here's the basic impl., but this won't histadd('input'), nor
+" does it support multi-word identifier "multicase" searches:
+"   execute 'nnoremap ' .. a:key_sequence .. ' /<C-R><C-W><CR>'
 "   execute 'inoremap ' .. a:key_sequence .. ' <C-O>/<C-R><C-W><CR>'
 
-" Map a sequence (defaults <F1>) to essentially g* but with more flexibility.
+" Map a sequence (defaults <F1>) to essentially g* but more featureful.
 function! g:embrace#blinky_search#CreateMaps_GStarSearch(key_sequence = '<F1>') abort
   " restrict_word = 0, multicase = 0, toggle_highlight = 0, cmd = '/'
   " SAVVY: Vim complains 'E474: Invalid argument' if <Plug> name is too long!
