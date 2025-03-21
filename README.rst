@@ -370,8 +370,7 @@ call the create-map functions from your own config.
     " Wire '*' and '#' from visual mode
     call g:embrace#blinky_search#CreateMaps_StarPound_VisualMode()
 
-    " Wire the three feature toggles
-    call g:embrace#blinky_search#CreateMaps_ToggleBlinking('<Leader>dB')
+    " Wire the two feature toggles
     call g:embrace#blinky_search#CreateMaps_ToggleMulticase('<Leader>dc')
     call g:embrace#blinky_search#CreateMaps_ToggleStrict('<Leader>ds')
 
@@ -380,11 +379,6 @@ call the create-map functions from your own config.
 
     " Hide highlights with <Ctrl-H>
     call g:embrace#hide_highlights#CreateMaps('<C-h>')
-
-    " Blink the current match momentarily — twice for 75 msec. each time
-    if has('timers')
-      nnoremap <expr> <Plug>(blinky-search-after) g:embrace#slash_blink#blink(2, 75)
-    endif
 
 Similar plugins
 ===============

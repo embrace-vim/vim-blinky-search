@@ -52,7 +52,6 @@ function! s:CreateMaps__SearchCommands() abort
   call g:embrace#blinky_search#CreateMaps_SearchForward('<F3>')
   call g:embrace#blinky_search#CreateMaps_SearchBackward('<S-F3>')
   call g:embrace#blinky_search#CreateMaps_StarPound_VisualMode()
-  call g:embrace#blinky_search#CreateMaps_ToggleBlinking('<LocalLeader>dB')
   call g:embrace#blinky_search#CreateMaps_ToggleMulticase('<LocalLeader>dc')
   call g:embrace#blinky_search#CreateMaps_ToggleStrict('<LocalLeader>ds')
 endfunction
@@ -87,40 +86,4 @@ call g:embrace#middle_matches#CreateMaps(['n', 'N', '*', '#', 'g*', 'g#'])
 "     /Applications/MacVim.app/Contents/Resources/vim/runtime/mswin.vim
 "     /usr/share/vim/vim*/mswin.vim
 call g:embrace#hide_highlights#CreateMaps('<C-h>')
-
-" ***
-
-" USAGE: If you don't want to blink matches, either remove this map
-" (don't call the following function), or use the toggle (defaults \dB).
-
-" Note that at fast blinking, some of the blink behavior is inconsistent.
-" - E.g., at 2 blinks, 75 msec. each, e.g.,:
-"     nnoremap <expr> <plug>(blinky-search-after) g:embrace#slash_blink#blink(2, 75)
-"   an <F1> insert mode search (which starts a new search and jumps
-"   forward) appears to only blink once. But an <F3> command (which
-"   calls 'n') blinks accordingly.
-"   - But if you increase the blink length, e.g.,
-"       nnoremap <expr> <plug>(blinky-search-after) g:embrace#slash_blink#blink(3, 200)
-"     then you'll see that an <F1> command blinkins the requisite
-"     number of times.
-" - But I'm not gonna investigate further, no matter how much
-"   this might irritate me. ( ಠ ʖ̯ ಠ)
-
-function! s:CreateMaps__BlinkySearch() abort
-  if !has('timers')
-
-    return
-  endif
-
-  " ISOFF/2024-12-23: N/n are *slow* when blink is enabled.
-  " - MAYBE: Author might add classic die_blinkënmatchen.vim functionality
-  "   (which I've used previously and seems performant).
-  "   - In the meantime, consider running a GUI with blink options,
-  "     e.g., Neovide has cursor animations that help you see the
-  "     current search match.
-  "
-  "  nnoremap <expr> <Plug>(blinky-search-after) g:embrace#slash_blink#blink(2, 75)
-endfunction
-
-call s:CreateMaps__BlinkySearch()
 
