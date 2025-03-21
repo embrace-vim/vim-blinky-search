@@ -328,7 +328,7 @@ endfunction
 "     " times you want to highlight whole-words without losing your position.
 "     " - SAVVY: `?` returns to prev match, where cursor was before `*` moved it.
 "     function! s:CreateMaps_GStarSearchStayNaive(key_sequence = '<S-F1>') abort
-"       execute 'noremap ' .. a:key_sequence .. ' *?<CR>'
+"       execute 'nnoremap ' .. a:key_sequence .. ' *?<CR>'
 "       execute 'inoremap ' .. a:key_sequence .. ' <C-O>*<C-O>?<CR>'
 "       execute 'vnoremap ' .. a:key_sequence .. ' '
 "         \ .. ':<C-U>'
@@ -419,7 +419,7 @@ endfunction
 "     let l:set_hlsearch = ''
 "       \ .. ':set hls<CR>'
 "
-"     execute 'noremap ' .. a:key_sequence .. ' '
+"     execute 'nnoremap ' .. a:key_sequence .. ' '
 "       \ .. l:capture_word
 "       \ .. l:set_search_register
 "       \ .. l:set_histadd
@@ -565,15 +565,15 @@ endfunction
 "       inoremap <S-F3> <C-O>#
 "
 "   - I later moved * to <C-F3>, then to <F1>, and I dropped
-"     the # map. And I used <F3> and <S-F3> for next/prev match.
+"     the # map. And I added <F3> and <S-F3> for next/prev match.
 "
 "       nnoremap <F3> n
 "       nnoremap <S-F3> N
 "
 "     But n and N are relative to the previous search.
 "
-"     - I.e., if you start a backwards ?-search, then press n, it
-"       matches backwards. And N goes the opposite way.
+"     - I.e., if you start a backwards ?-search, then press n,
+"       it matches backwards. And N goes the opposite way.
 "
 "     - So then I switched to using /<CR> and ?<CR>, which
 "       just runs the previous search command, so that <F3>
@@ -608,7 +608,7 @@ endfunction
 "         - Specifically, if you use these two maps:
 "
 "             " SAVVY: Using /<CR> instead of |n| b/c |n| repeats last / OR ?
-"             execute 'noremap <silent> <F3> /<CR>'
+"             execute 'nnoremap <silent> <F3> /<CR>'
 "             execute 'inoremap <silent> <F3> <C-O>/<CR>'
 "
 "           and then `:let @/ = ...`, when you <F3> you'll see
