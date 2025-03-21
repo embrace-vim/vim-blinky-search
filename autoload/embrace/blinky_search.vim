@@ -56,14 +56,28 @@ let s:save_cpo = &cpo | set cpo&vim
 "     <Plug>blinky-search-norestrict-nomulticase-notoggleX
 "   is one character too long (46 characters).
 "   - So we'll use plug names less verbose than that.
+"
+" SAVVY: To enable |searchcount| messages (that you might see in the
+" command line, or that Noice shows as virtual text at line's end),
+" run /<CR> at the end of the map. Note that running /<CR> inside the
+" <Plug> won't do it. See comments elsewhere in this file.
+" - I.e., this won't show |searchcount| messages:
+"     nnoremap <silent> <expr> <Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)
+"       \ g:embrace#blinky_search#StartSearchNormalInsert(0, 0, 0, '/')
+"     execute 'nnoremap <silent> ' .. a:key_sequence
+"       \ .. ' <Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)'
+"     execute 'inoremap <silent> ' .. a:key_sequence
+"       \ .. ' <C-O><Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)'
 
 " Map a sequence (defaults <F1>) to essentially g* but more featureful.
 function! g:embrace#blinky_search#CreateMaps_GStarSearch(key_sequence = '<F1>') abort
   " PRAMS: restrict_word = 0, multicase = 0, toggle_highlight = 0, cmd = ''
   nnoremap <silent> <expr> <Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)
-    \ g:embrace#blinky_search#StartSearchNormalInsert(0, 0, 0, '/')
-  execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)'
-  execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O><Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)'
+    \ g:embrace#blinky_search#StartSearchNormalInsert(0, 0, 0, '')
+  execute 'nnoremap <silent> ' .. a:key_sequence
+    \ .. ' <Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)/<CR>'
+  execute 'inoremap <silent> ' .. a:key_sequence
+    \ .. ' <C-O><Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)<C-O>/<CR>'
 
   let l:cmd = '/'
   let l:jump = 1
@@ -161,15 +175,25 @@ function! g:embrace#blinky_search#CreateMaps_GStarSearch_VisualMode(
     "       \ .. '<C-G>:<C-U><CR>'
     "       \ .. ':call g:embrace#visual_search#SetSearch("/") \| execute "normal /<C-V><CR>"<CR>'
     let l:postfix = ''
+    let l:postfix2 = ''
     if a:jump
       " E.g., `/<CR>` or `?<CR>`.
       let l:postfix = ' \| silent execute "normal ' .. a:cmd .. '<C-V><CR>"'
+      " DUNNO: If I omit the l:postfix from the pipeline and use l:postfix2,
+      " the search jumps two matches. If I use 0/<CR> for l:postfix2, the
+      " search jumps unpredictably. If we omit l:postfix2, then the Noice
+      " searchcount virtualtext isn't shown until you use n, N, or /<CR>.
+      " - I really have no idea why this works! If doesn't cause the search to
+      "   jump again (even though, e.g., /<CR> called twice), and it ensures
+      "   the searchcount virtualtext shows (which Noice shows after the end
+      "   of the line, highlighted by DiagnosticVirtualTextInfo).
+      let l:postfix2 = '<C-O>1' .. a:cmd .. '<CR>'
     endif
     execute 'snoremap <silent> ' .. a:key_sequence .. ' '
       \ .. '<C-G>:<C-U><CR>'
       \ .. ':call g:embrace#visual_search#SetSearch("' .. a:cmd .. '", '
                 \ .. a:restrict_word .. ', ' .. a:multicase .. ')'
-      \ .. l:postfix .. '<CR>'
+      \ .. l:postfix .. '<CR>' .. l:postfix2
   endif
 endfunction
 
@@ -331,6 +355,29 @@ function! g:embrace#blinky_search#CreateMaps_StarSearchStayPut(key_sequence = '<
     \ )
 endfunction
 
+" Re: |searchcount|, I'm not sure you can generate events without
+" running a /<CR> or ?<CR> command.
+" - You'll see each event message in the command line, or, if you
+"   run Noice, as virtual text after the end of the line with the
+"   current match.
+" - AFAICT (from trial and error), the event is not generated
+"   unless you use /, ?, n, or N, and even then it depends on the
+"   context — e.g., running /<CR> from within an autoload# function
+"   does not generate the event, but running at the end of a :map
+"   does.
+" - Because the stay-put searches use `:let @/ = ...` to start a
+"   search, I'm not sure we can start showing the search count, too.
+"   - At least for the start-search-and-jump-to-next-match commands
+"     (the <F1>, <F3>, and <S-F3> default maps), we can add a final
+"     /<CR> or ?<CR> to the map to trigger the |sourcecount| event.
+"   - But for the start-search-and-stay-put commands (the <S-F1>, <F8>
+"     and <Enter> default maps), unless we want to match forward and then
+"     match backward — and make the window *blip* — I'm not sure there's
+"     another mechanism to force a sourcecount event (e.g., I tried
+"     calling sourcecount() to "update" the count, but it didn't
+"     generate an event, AFAICT).
+"   - Ultimately, this is *not* a Big Deal, but at least we know
+"     why the blinky-search UX is inconsistent betweens maps.
 function! g:embrace#blinky_search#CreateMaps_GStarSearchStayPut(key_sequence = '<F8>') abort
   " PRAMS: restrict_word = 0, multicase = 1, toggle_highlight = 0
   nnoremap <silent> <expr> <Plug>(blinky-search-wsoff-mcon-tgoff)
@@ -467,6 +514,10 @@ function! g:embrace#blinky_search#StartSearchNormalInsert(
   " HSRTY: Without |'d terms:
   "   let @/ = l:restricted_term
 
+  " SAVVY: Setting the search pattern via `@/ =` does not generate a
+  " |sourcecount| event like /<CR> or n, etc. (Obvi, because it does
+  " not move the cursor to a match.)
+
   let @/ = l:vim_pat
 
   if a:toggle_highlight
@@ -499,11 +550,13 @@ endfunction
 
 " Repeat previous search fwd and back.
 
-"   HSTRY: Previous <F3> maps
-"   --------------------------------
+" FEATR: Always search forward on <F3>, and always backward on <S-F3>.
 "
-"   - Author long, long ago, and probably for not long,
-"     used <F3> and <S-F3> as simple * and #`shortcuts.
+"   HSTRY: Previous <F3> maps
+"   -------------------------
+"
+"   - Long ago, and probably for not long, the author
+"     used <F3> and <S-F3> as simple * and # shortcuts.
 "
 "       nnoremap <F3> *
 "       inoremap <F3> <C-O>*
@@ -517,15 +570,138 @@ endfunction
 "       nnoremap <F3> n
 "       nnoremap <S-F3> N
 "
-"     But n and N are relative to the previous search. I.e., if you
-"     start a search backwards ? then press n, the search keeps going
-"     backwards. And N goes the opposite way. So we use / and ? so
-"     that <F3> always matches forward, and <Shift-F3> backwards.
+"     But n and N are relative to the previous search.
+"
+"     - I.e., if you start a backwards ?-search, then press n, it
+"       matches backwards. And N goes the opposite way.
+"
+"     - So then I switched to using /<CR> and ?<CR>, which
+"       just runs the previous search command, so that <F3>
+"       always matches forward, and <Shift-F3> backwards.
+"
+"   - But then I started using LazyVim, and Noice, which shows
+"     the |searchcount| message using virtual text after the end
+"     of the line. And I noticed that not all the blinky-search
+"     commands generate |searchcount| messages.
+"
+"     - E.g., if you run `nvim --noplugin`, you'll see the
+"       searchcount event message in the command line after
+"       you execute /<CR>. E.g., if you run
+"
+"         :let @/ = "foobarbat"
+"         /<CR>
+"
+"       you'll see the |searchcount| message in the command line:
+"
+"         /foobarbat                                      [2/3]
+"
+"       with the command prefix "/" and search term "foobarbat"
+"       on the left, and the progress count on the right.
+"
+"     - But when the /<CR> is run via :map commands, it doesn't
+"       always trigger an event message (e.g., if it's run from
+"       an autoload# fcn.), or it doesn't behave normally.
+"
+"       - When run at the end of the map, the event message is
+"         incomplete — it's missing the left-justified "/term".
+"
+"         - Specifically, if you use these two maps:
+"
+"             " SAVVY: Using /<CR> instead of |n| b/c |n| repeats last / OR ?
+"             execute 'noremap <silent> <F3> /<CR>'
+"             execute 'inoremap <silent> <F3> <C-O>/<CR>'
+"
+"           and then `:let @/ = ...`, when you <F3> you'll see
+"           only the right-justified count in the command line.
+"
+"           Or, if you're running Noice, rather than virtual
+"           text, you'll see a weird-looking toast notification,
+"           e.g., `                [4/28]` (yes, with all those
+"           leading spaces).
+"
+"   REFER: |searchcount| event messages
+"   -----------------------------------
+"
+"   - These notes are mostly anecdotal, because I didn't find much
+"     information about the (experimental) nvim UI interface. And
+"     Noice is, well, just so tight and clean it's not entirely
+"     clear from looking at its source. (Which basically leaves
+"     looking at the Neovim sources.)
+"
+"   - In normal (Neo)Vim, the searchcount is shown right-justified in
+"     the command line when you use a search command (/, ?, n, and N).
+"
+"     - The command line also normally shows the search term
+"       left-justified, e.g.,
+"
+"         /term                                      [1/4]
+"
+"       Except, as noted, when you use maps that use /<CR>
+"       then you only see the count, e.g.,
+"
+"                                                    [1/4]
+"
+"       Which has something to do with the map, though not sure
+"       what... because if you run /<CR> manually, you'll see the
+"       "/term" text on the left. Or, if you run n or N, you'll see
+"       it (or "?term" if you ran a ?-search command).
+"
+"   - If you're using Noice, Noice displays the |searchcount| event message
+"     as virtual text after the end of the line.
+"
+"     - E.g., if you /-search for "bar", you might see the following:
+"
+"         foo bar baz bat    /bar   [1/1]
+"         ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑    ↑↑↑↑↑↑↑↑↑↑↑↑
+"         buffer text        virtual text
+"
+"     - Or, if you ?-search for "baz", you might see the following:
+"
+"         foo bar baz bat    ?baz   [1/1]
+"         ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑    ↑↑↑↑↑↑↑↑↑↑↑↑
+"         buffer text        virtual text
+"
+"     - ASIDE: The virtual text is highlighted with |DiagnosticVirtualTextInfo|.
+"
+"   - As such, for Vim to generate the searchcount message event, and for Noice
+"     to show the virtual text — we need to use |n|/|N|.
+"
+"     - As mentioned atop this long comment, we originally avoided
+"       n and N because their direction depends on the last / or ?
+"       search command.
+"
+"     - Fortunately, this problem's been solved, and quite cleverly!
+"       as offered by mhinz/vim-galore (and described further in the
+"       next section).
+"
+"   REFER: Picking n or N to always search in the same direction
+"   ------------------------------------------------------------
+"   https://github.com/mhinz/vim-galore#saner-behavior-of-n-and-n
+"
+"   - The idea is to always search forward on n, and backwards on N.
+"
+"   - The plain Vim maps (from mhinz/vim-galore) look like this:
+"
+"       nnoremap <expr> n 'Nn'[v:searchforward]
+"       nnoremap <expr> N 'nN'[v:searchforward]
+"
+"   - Note that v:searchforward is set to 1 after a forward /-search,
+"     and set to 0 after a backward ?-search, so that [v:searchforward]
+"     is used as an array index into the previous string array.
+"
+"     I.e., n runs 'Nn'[0] or 'Nn'[1] — |N| after a backward
+"     ?-search to reverse it, or |n| after a forward /-search.
+"     And N runs the opposite.
+"
+"   - Note also the old maps ensure the match is visible, because
+"     /<CR> opens any folds around the cursor. But not so with the
+"     |n|/|N| commands. So we'll add a |zv| to open cursor folds.
 
 function! g:embrace#blinky_search#CreateMaps_SearchForward(key_sequence = '<F3>') abort
-  " SAVVY: Using /<CR> instead of n because n repeats the last / OR ?
-  execute 'noremap <silent> ' .. a:key_sequence .. ' /<CR>'
-  execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O>/<CR>'
+  execute 'noremap <silent> <expr> ' .. a:key_sequence
+    \ .. " 'Nn'[v:searchforward] .. 'zv'"
+  execute 'inoremap <silent> <expr> ' .. a:key_sequence
+    \ .. " '<C-O>' .. 'Nn'[v:searchforward] .. '<C-O>zv'"
 
   " USYNC: Visual mode <F1> same as Visual mode <F3> — start g*-like
   " search and match forward.
@@ -539,9 +715,10 @@ endfunction
 
 " Remember, ? is the "opposite" of /
 function! g:embrace#blinky_search#CreateMaps_SearchBackward(key_sequence = '<S-F3>') abort
-  " SAVVY: Using ?<CR> instead of N because N repeats the last / OR ?
-  execute 'noremap <silent> ' .. a:key_sequence .. ' ?<CR>'
-  execute 'inoremap <silent> ' .. a:key_sequence .. ' <C-O>?<CR>'
+  execute 'noremap <silent> <expr> ' .. a:key_sequence
+    \ .. " 'nN'[v:searchforward] .. 'zv'"
+  execute 'inoremap <silent> <expr> ' .. a:key_sequence
+    \ .. " '<C-O>' .. 'nN'[v:searchforward] .. '<C-O>zv'"
 
   " Here's a basic command to just jump, but not to start a new search:
   "   vnoremap <S-F3> <ESC>gVN
