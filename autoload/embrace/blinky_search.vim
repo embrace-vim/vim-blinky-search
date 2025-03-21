@@ -53,12 +53,12 @@ let s:save_cpo = &cpo | set cpo&vim
 
 " Map a sequence (defaults <F1>) to essentially g* but more featureful.
 function! g:embrace#blinky_search#CreateMaps_GStarSearch(key_sequence = '<F1>') abort
-  " restrict_word = 0, multicase = 0, toggle_highlight = 0, cmd = '/'
   " SAVVY: Vim complains 'E474: Invalid argument' if <Plug> name is too long!
   " - I don't see anything noted in the docs, but:
   "     blinky-search-norestrict-nomulticase-notoggleX
   "   is one character too long (46 characters).
   "   - So we'll use abbreviations.
+  " PRAMS: restrict_word = 0, multicase = 0, toggle_highlight = 0, cmd = ''
   nnoremap <silent> <expr> <Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)
     \ g:embrace#blinky_search#StartSearchNormalInsert(0, 0, 0, '/')
   execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)'
@@ -312,7 +312,7 @@ endfunction
 " map
 
 function! g:embrace#blinky_search#CreateMaps_StarSearchStayPut(key_sequence = '<S-F1>') abort
-  " restrict_word = 1, multicase = 0, toggle_highlight = 0
+  " PRAMS: restrict_word = 1, multicase = 0, toggle_highlight = 0
   nnoremap <silent> <expr> <Plug>(blinky-search-wson-mcon-tgoff)
     \ g:embrace#blinky_search#StartSearchNormalInsert(1, 0, 0)
   execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-wson-mcon-tgoff)'
@@ -328,7 +328,7 @@ function! g:embrace#blinky_search#CreateMaps_StarSearchStayPut(key_sequence = '<
 endfunction
 
 function! g:embrace#blinky_search#CreateMaps_GStarSearchStayPut(key_sequence = '<F8>') abort
-  " restrict_word = 0, multicase = 1, toggle_highlight = 0
+  " PRAMS: restrict_word = 0, multicase = 1, toggle_highlight = 0
   nnoremap <silent> <expr> <Plug>(blinky-search-wsoff-mcon-tgoff)
     \ g:embrace#blinky_search#StartSearchNormalInsert(0, 1, 0)
   execute 'nnoremap <silent> ' .. a:key_sequence .. ' <Plug>(blinky-search-wsoff-mcon-tgoff)'
@@ -485,7 +485,7 @@ endfunction
 "          yet, `[count]↓` also jumps [count] lines downward.
 "        - So don't be surprised when <C-M> also highlights.
 function! g:embrace#blinky_search#CreateMaps_ToggleHighlight(key_sequence = '<CR>') abort
-  " restrict_word = 1, multicase = 1, toggle_highlight = 1
+  " PRAMS: restrict_word = 1, multicase = 1, toggle_highlight = 1
   execute 'nnoremap <silent> <expr> <Plug>(blinky-search-toggle-restrict)'
     \ .. ' g:embrace#blinky_search#StartSearchNormalInsert(1, 1, 1, "", "' .. a:key_sequence .. '")'
 
