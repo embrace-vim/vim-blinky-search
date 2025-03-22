@@ -68,7 +68,7 @@ function! g:embrace#blinky_search#CreateMaps_GStarSearch(key_sequence = '<F1>') 
   execute 'nnoremap ' .. a:key_sequence
     \ .. ' <Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)'
   execute 'inoremap ' .. a:key_sequence
-    \ .. ' <C-O><Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)<C-O>'
+    \ .. ' <C-O><Plug>(blinky-search-wsoff-mcoff-tgoff-fwd)'
 
   let l:cmd = '/'
   let l:jump = 1
