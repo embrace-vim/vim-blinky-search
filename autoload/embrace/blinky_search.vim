@@ -165,35 +165,39 @@ function! g:embrace#blinky_search#CreateMaps_GStarSearch_VisualMode(
     "     execute 'snoremap ' .. a:key_sequence .. ' '
     "       \ .. '<C-G>:<C-U><CR>'
     "       \ .. ':call g:embrace#visual_search#SetSearch("/") \| execute "normal /<C-V><CR>"<CR>'
-    let l:postfix = ''
-    let l:postfix2 = ''
-    if a:jump
-      " E.g., `/<CR>` or `?<CR>`.
-      " - BWARE: Don't use silent here, e.g., "\| silent execute ...",
-      "   which inhibits the |searchcount| message.
-      "   - WEIRD: Actually, it only inhibits it for Select mode, but
-      "     not from Normal, Insert, and even Visual modes.
-      "     - E.g., double-click a word, then <F1> or <F3>, and the
-      "       |searchcount| message is not displayed. But if you
-      "       press <F1> or <F3> from Normal or Insert mode, or from
-      "       a Visual selection, you'll see the |searchcount| message.
-      "   - DUNNO: Before I realized the issue was the 'silent' (which
-      "     wasn't obvious, because it only affected 1 of the 4 modes!),
-      "     I solved the problem another way, by tacking on another cmd:
-      "       let l:postfix2 = '<C-O>1' .. a:cmd .. '<CR>'
-      "       ...
-      "        \ .. l:postfix .. '<CR>' .. l:postfix2
-      "     - Strangely, this didn't cause the search to jump two matches
-      "       (which you'd think, because a:cmd being called twice), but
-      "       if I omitted l:postfix from the pipeline and used only
-      "       l:postfix2, then the search jumped two matches.
-      let l:postfix = ' \| execute "normal ' .. a:cmd .. '<C-V><CR>"'
+    " MAYBE: Make this check configurable.
+    " - For now, avoid '*' or '#' Select mode maps.
+    if a:key_sequence != '*' && a:key_sequence != '#'
+      let l:postfix = ''
+      let l:postfix2 = ''
+      if a:jump
+        " E.g., `/<CR>` or `?<CR>`.
+        " - BWARE: Don't use silent here, e.g., "\| silent execute ...",
+        "   which inhibits the |searchcount| message.
+        "   - WEIRD: Actually, it only inhibits it for Select mode, but
+        "     not from Normal, Insert, and even Visual modes.
+        "     - E.g., double-click a word, then <F1> or <F3>, and the
+        "       |searchcount| message is not displayed. But if you
+        "       press <F1> or <F3> from Normal or Insert mode, or from
+        "       a Visual selection, you'll see the |searchcount| message.
+        "   - DUNNO: Before I realized the issue was the 'silent' (which
+        "     wasn't obvious, because it only affected 1 of the 4 modes!),
+        "     I solved the problem another way, by tacking on another cmd:
+        "       let l:postfix2 = '<C-O>1' .. a:cmd .. '<CR>'
+        "       ...
+        "        \ .. l:postfix .. '<CR>' .. l:postfix2
+        "     - Strangely, this didn't cause the search to jump two matches
+        "       (which you'd think, because a:cmd being called twice), but
+        "       if I omitted l:postfix from the pipeline and used only
+        "       l:postfix2, then the search jumped two matches.
+        let l:postfix = ' \| execute "normal ' .. a:cmd .. '<C-V><CR>"'
+      endif
+      execute 'snoremap ' .. a:key_sequence .. ' '
+        \ .. '<C-G>:<C-U><CR>'
+        \ .. ':call g:embrace#visual_search#SetSearch("' .. a:cmd .. '", '
+                  \ .. a:restrict_word .. ', ' .. a:multicase .. ')'
+        \ .. l:postfix .. '<CR>' .. l:postfix2
     endif
-    execute 'snoremap ' .. a:key_sequence .. ' '
-      \ .. '<C-G>:<C-U><CR>'
-      \ .. ':call g:embrace#visual_search#SetSearch("' .. a:cmd .. '", '
-                \ .. a:restrict_word .. ', ' .. a:multicase .. ')'
-      \ .. l:postfix .. '<CR>' .. l:postfix2
   endif
 endfunction
 
